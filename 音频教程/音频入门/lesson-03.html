@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：3D 声音与混音</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 音频入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 声音与组件</a></li>
+      <li><a href="lesson-02.html">2. 文件与导入</a></li>
+      <li><a href="lesson-03.html" class="active">3. 3D 声音与混音</a></li>
+      <li><a href="lesson-04.html">4. VRChat 音频实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：篝火环境音</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：3D 声音与混音 — 距离衰减、总线、Ducking</h1>
+    <p>会放声音了，现在让它"像真的"：声源有位置、越远越轻，而且所有声音能分组控制。这是音频从"会响"到"好听"的关键一篇。</p>
+
+    <h2>1. 3D 声音：位置感与距离衰减</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_3d_sound.png" alt="3D 声音">
+      <div class="caption">图：3D 衰减曲线（越远越轻）+ 左右声道定位（声源在左，左耳先听到）</div>
+    </div>
+
+    <table>
+      <tr><th>设置</th><th>含义</th><th>建议</th></tr>
+      <tr><td><strong>Spatial Blend</strong></td><td>0 = 2D 恒定，1 = 全 3D</td><td>环境音、交互音 = 1；BGM、UI = 0</td></tr>
+      <tr><td><strong>Min Distance</strong></td><td>小于这个距离音量不再增大</td><td>小物体 1~3m</td></tr>
+      <tr><td><strong>Max Distance</strong></td><td>超过后音量保持最小</td><td>篝火 10m，瀑布 30m</td></tr>
+      <tr><td><strong>Volume Rolloff</strong></td><td>衰减曲线形状</td><td>Logarithmic（对数）最自然</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>3D 声音 = VRChat 世界真实感的核心。</strong>玩家转头时声音跟着变，走近篝火声音渐强 —— 全靠 Spatial Blend = 1 + 合理的 Max Distance。</blockquote>
+
+    <h2>2. Audio Mixer：总线混音</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_mixer_buses.png" alt="混音总线">
+      <div class="caption">图：所有声音 → 各自的总线 → Master。调分组音量，不一个个调</div>
+    </div>
+
+    <p>创建方式：Project 右键 → <code>Create → Audio Mixer</code>。在 Audio Mixer 窗口里：</p>
+    <ol>
+      <li>建 5 条子总线：<strong>Music / SFX / Ambience / UI / Voice</strong>，全部挂到 Master 下</li>
+      <li>每个 AudioSource 的 <strong>Output</strong> 槽指向对应总线</li>
+      <li>调音量时只动总线（例如把 Music 总线 -10dB），不碰单个音源</li>
+    </ol>
+
+    <blockquote class="tip"><strong>为什么必须用总线：</strong>玩家想"关音乐"时，你只需在设置界面调 Music 总线音量 —— 而不是改几百个 AudioSource。这是职业做法。</blockquote>
+
+    <h2>3. Ducking：对白时音乐自动让路</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_03_ducking.png" alt="Ducking">
+      <div class="caption">图：Voice 响时，Music 总线自动压低（-12dB），说完恢复</div>
+    </div>
+
+    <p>在 Music 总线上挂 <strong>Compressor</strong> 效果器，Sidechain 指向 Voice 总线：</p>
+    <table>
+      <tr><th>参数</th><th>值</th><th>作用</th></tr>
+      <tr><td>Threshold</td><td>-30 dB</td><td>对白音量超过它才触发</td></tr>
+      <tr><td>Ratio</td><td>8 : 1</td><td>压多狠（8:1 是明显闪避）</td></tr>
+      <tr><td>Attack</td><td>10 ms</td><td>快速让开，不拖泥带水</td></tr>
+      <tr><td>Release</td><td>300~500 ms</td><td>平滑恢复，不"喘气"</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>别把 Ratio 调太高、Release 调太快</strong>——音乐会出现明显"呼吸感"（pumping），比不闪避还难听。</blockquote>
+
+    <h2>动手：建一条总线</h2>
+    <ol>
+      <li>创建 Audio Mixer，加 Music 和 SFX 两条总线</li>
+      <li>把一个 AudioSource 的 Output 指向 Music</li>
+      <li>把 Music 总线音量调成 -6dB，听变化</li>
+      <li>试试在 Music 上挂 Compressor + Sidechain SFX：按一个按钮（SFX），音乐自己变轻</li>
+    </ol>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解 Spatial Blend、Min/Max Distance 的用途</li>
+      <li>建了一条总线并让音源走它</li>
+      <li>理解了 Ducking 的作用和参数含义</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一章</a>
+      <a class="next-btn" href="lesson-04.html">下一章：VRChat 音频实践 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

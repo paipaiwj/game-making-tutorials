@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：音频文件与导入</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 音频入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 声音与组件</a></li>
+      <li><a href="lesson-02.html" class="active">2. 文件与导入</a></li>
+      <li><a href="lesson-03.html">3. 3D 声音与混音</a></li>
+      <li><a href="lesson-04.html">4. VRChat 音频实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：篝火环境音</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：音频文件与导入 — WAV/MP3/OGG 怎么选</h1>
+    <p>拿到音频文件只是第一步。格式选错、导入设置不对，会白占包体和内存。这一篇解决"选什么格式、怎么导入"。</p>
+
+    <h2>1. 三种常见格式</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_formats.png" alt="音频格式">
+      <div class="caption">图：WAV 无损但大，MP3/OGG 压缩但小 —— 按用途选</div>
+    </div>
+
+    <table>
+      <tr><th>格式</th><th>特点</th><th>适合</th><th>VRChat</th></tr>
+      <tr><td><strong>WAV</strong></td><td>无损、文件大</td><td>短音效、UI 点击</td><td>支持（上传会转码）</td></tr>
+      <tr><td><strong>MP3</strong></td><td>有损、体积小</td><td>音乐、对白</td><td>支持，推荐</td></tr>
+      <tr><td><strong>OGG</strong></td><td>有损、体积小、流式友好</td><td>音乐、环境音</td><td>支持，推荐</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>一句话：</strong>短音效用 WAV，长音频用 MP3/OGG。反正 VRChat 上传时会再转码，你本地源文件小一点，世界包体就小一点。</blockquote>
+
+    <h2>2. 导入设置（Inspector）</h2>
+    <p>把音频文件拖进 Unity 后，选中它，Inspector 里有几个关键选项：</p>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_import_settings.png" alt="导入设置">
+      <div class="caption">图：Load Type、Compression、Quality、Sample Rate 四件套</div>
+    </div>
+
+    <table>
+      <tr><th>选项</th><th>设置</th><th>说明</th></tr>
+      <tr><td><strong>Load Type</strong></td><td>Decompress On Load</td><td>短音效：加载时解压，播放快，占内存</td></tr>
+      <tr><td></td><td>Streaming</td><td>长音乐/环境音：边播边读，省内存</td></tr>
+      <tr><td><strong>Compression</strong></td><td>Vorbis</td><td>压缩格式，体积小音质好（推荐）</td></tr>
+      <tr><td><strong>Quality</strong></td><td>音乐 60~80 / 音效 90+</td><td>越高文件越大</td></tr>
+      <tr><td><strong>Sample Rate</strong></td><td>44100 / 48000</td><td>够了，96000 白占体积</td></tr>
+      <tr><td><strong>Force To Mono</strong></td><td>3D 音效可勾</td><td>体积减半；立体声音乐别勾</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>经验法则：</strong>短音效 = Decompress + 高质量；音乐/环境音 = Streaming + Vorbis 60~80。这样内存和包体都省。</blockquote>
+
+    <h2>3. 音频素材从哪来</h2>
+    <ul>
+      <li><strong>免费音效站</strong>：Freesound、Kenney.nl、opengameart.org（注意看许可证）</li>
+      <li><strong>自己录</strong>：手机录环境音（雨、风、厨房），简单降噪就能用</li>
+      <li><strong>合成</strong>：用 Audacity / 免费 DAW 合成白噪音、音调</li>
+      <li><strong>AI 生成</strong>：部分 AI 音频工具可生成音效（检查商用授权）</li>
+    </ul>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>知道 WAV / MP3 / OGG 各自的适用场景</li>
+      <li>会设置 Load Type 和 Compression</li>
+      <li>为短音效和长音乐分别配了正确的导入设置</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章</a>
+      <a class="next-btn" href="lesson-03.html">下一章：3D 声音与混音 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：声音与 Unity 组件</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 音频入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 声音与组件</a></li>
+      <li><a href="lesson-02.html">2. 文件与导入</a></li>
+      <li><a href="lesson-03.html">3. 3D 声音与混音</a></li>
+      <li><a href="lesson-04.html">4. VRChat 音频实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：篝火环境音</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：声音与 Unity 组件 — 频率、音量、AudioSource</h1>
+    <p>VRChat 世界里，篝火噼啪、泉水叮咚、音乐缭绕 —— 这些声音是怎么被"放出来"的？这一篇先懂声音本身，再懂 Unity 的两个音频组件。</p>
+
+    <h2>1. 声音是什么</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_sound_wave.png" alt="声音基础">
+      <div class="caption">图：声音 = 空气振动。频率决定音高，振幅决定音量，单位分别是 Hz 和 dB</div>
+    </div>
+
+    <table>
+      <tr><th>概念</th><th>单位</th><th>决定什么</th><th>例子</th></tr>
+      <tr><td><strong>频率</strong></td><td>Hz（赫兹）</td><td>音高</td><td>鼓声低沉（低 Hz），鸟叫尖锐（高 Hz）</td></tr>
+      <tr><td><strong>振幅</strong></td><td>dB（分贝）</td><td>音量</td><td>耳语小声，爆炸大声</td></tr>
+      <tr><td><strong>采样率</strong></td><td>kHz</td><td>音质上限</td><td>44100 Hz = 每秒采样 4.4 万次（CD 音质）</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>关键认知：</strong>dB 是<strong>对数单位</strong>。+10 dB ≈ 感觉响 2 倍，0 dBFS 以上就会爆音（破音、失真）。做世界时音量一律按 dB 思考。</blockquote>
+
+    <h2>2. Unity 音频的两大组件</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_audio_components.png" alt="音频组件">
+      <div class="caption">图：AudioSource（声源）→ 传播 → AudioListener（听者）</div>
+    </div>
+
+    <h3>Audio Source（声源）</h3>
+    <ul>
+      <li>挂在<strong>发声的物体</strong>上：篝火、NPC、交互按钮</li>
+      <li><strong>AudioClip</strong>：要播放的音频文件（在 Project 里）</li>
+      <li><strong>Volume</strong>：音量（0~1）</li>
+      <li><strong>Pitch</strong>：音高（1 = 原速，0.5 更慢更低）</li>
+      <li><strong>Loop</strong>：循环播放（音乐、环境音勾上）</li>
+      <li><strong>Play On Awake</strong>：场景加载时自动播</li>
+      <li><strong>Spatial Blend</strong>：0 = 2D 恒定音量，1 = 3D 带距离衰减</li>
+    </ul>
+
+    <h3>Audio Listener（听者）</h3>
+    <ul>
+      <li>挂在<strong>玩家/相机</strong>上，负责"听"</li>
+      <li><strong>全场景只能有一个！</strong>两个 Listeners = 控制台报错</li>
+      <li>VRChat 里听者在玩家身上，所以 3D 声音会自动跟随玩家</li>
+    </ul>
+
+    <blockquote class="tip">世界里有 100 个声源也不卡 —— 声音不是"渲染"，是"播放"。真正影响性能的是同时播放的数量和文件解码开销（第 4 篇讲）。</blockquote>
+
+    <h2>3. 动手：让世界发出第一声</h2>
+    <ol>
+      <li>Project 里导入一个音频文件（拖进去即可）</li>
+      <li>Hierarchy 创建空物体，挂上 <strong>Audio Source</strong></li>
+      <li>把音频文件拖到 <strong>AudioClip</strong> 槽里</li>
+      <li>勾上 <strong>Play On Awake</strong>，点 Play —— 你会听到声音</li>
+      <li>把 <strong>Spatial Blend</strong> 拉到 1，走动试试：离得越远越小声（前提：场景里有 AudioListener）</li>
+    </ol>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了 Hz（音高）和 dB（音量）的区别</li>
+      <li>在场景里成功放出一个声音</li>
+      <li>知道 AudioSource 和 AudioListener 的分工</li>
+      <li>知道 dB 是对数单位、0dBFS 以上会爆音</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：音频文件与导入 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

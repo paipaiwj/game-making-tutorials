@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：VRChat 音频实践</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 音频入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 声音与组件</a></li>
+      <li><a href="lesson-02.html">2. 文件与导入</a></li>
+      <li><a href="lesson-03.html">3. 3D 声音与混音</a></li>
+      <li><a href="lesson-04.html" class="active">4. VRChat 音频实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：篝火环境音</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：VRChat 音频实践 — 本地播放与全网同步</h1>
+    <p>VRChat 是多人世界：你按按钮，别人也要听到声音才合理。这一篇讲清「本地播放」和「全网同步播放」的区别，以及性能注意点。</p>
+
+    <h2>1. 两种播放方式</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_vrc_audio_flow.png" alt="播放方式">
+      <div class="caption">图：AudioSource.Play() 只有自己听到；SendCustomNetworkEvent 全网同步</div>
+    </div>
+
+    <table>
+      <tr><th></th><th>本地播放</th><th>全网同步播放</th></tr>
+      <tr><td><strong>方式</strong></td><td>AudioSource.Play()</td><td>SendCustomNetworkEvent 广播</td></tr>
+      <tr><td><strong>谁听到</strong></td><td>只有自己</td><td>所有玩家</td></tr>
+      <tr><td><strong>适合</strong></td><td>UI 反馈、个人交互</td><td>音乐开关、公共事件音</td></tr>
+      <tr><td><strong>开销</strong></td><td>0 网络开销</td><td>有网络消息开销</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>判断口诀：</strong>这件事"别人需要知道吗"？需要 → 网络事件；不需要 → 本地播放。</blockquote>
+
+    <h2>2. Udon 控制音频</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_udon_audio.png" alt="Udon 音频">
+      <div class="caption">图：AudioSource 组件 + Udon 脚本 = 程序化播放</div>
+    </div>
+
+    <p>用 UdonSharp 写一个播放器（放在 <code>Assets/_MyWorld/Scripts/Components/</code> 下，命名以 <code>Component</code> 结尾）：</p>
+    <pre><code>public class AudioPlayerComponent : UdonSharpBehaviour
+{
+    public AudioSource audioSource;      // Inspector 拖入
+
+    public void PlayLocal()              // 本地播放（自己听到）
+    {
+        audioSource.Play();
+    }
+
+    public void PlayForEveryone()        // 全网同步播放
+    {
+        SendCustomNetworkEvent("PlayLocal");
+    }
+}</code></pre>
+    <ul>
+      <li><strong>Stop() / Pause()</strong>：停止 / 暂停</li>
+      <li><strong>volume</strong>：动态调音量（如走近调大）</li>
+      <li><strong>pitch</strong>：随机音高做音效变化（脚步、打击声不呆板）</li>
+    </ul>
+
+    <blockquote class="warn"><strong>网络事件注意：</strong>SendCustomNetworkEvent 只对"挂载在同一 GameObject 上的 UdonBehaviour"生效，且新加入的玩家不会收到已发生的事件 —— 需要"新玩家加入时补播"逻辑时，在 OnPlayerJoined 里广播。</blockquote>
+
+    <h2>3. VRChat 音频注意事项</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_03_limits.png" alt="音频限制">
+      <div class="caption">图：格式、体积、性能、2D/3D、Quest 五条注意事项</div>
+    </div>
+
+    <ul>
+      <li><strong>格式</strong>：WAV / MP3 / OGG 都支持，上传自动转码</li>
+      <li><strong>体积</strong>：音频进世界包体，音乐别塞整首，用短循环或压缩</li>
+      <li><strong>性能</strong>：AudioSource 别堆几百个，远处的音源也别一直放着播</li>
+      <li><strong>2D vs 3D</strong>：UI 音 2D，环境音 3D（第 3 篇）</li>
+      <li><strong>Quest</strong>：安卓端内存小，避免大体积音频、同时播放数量少</li>
+    </ul>
+
+    <blockquote class="warn"><strong>常见翻车：</strong>给 200 个拾取物都挂 AudioSource 且 Play On Awake + 3D —— 全场景同时解压播放，掉帧警告。用「距离玩家近才播」的 Udon 逻辑，或只留必要的。</blockquote>
+
+    <h2>动手：做按钮音效</h2>
+    <ol>
+      <li>放一个按钮（VRC_UIShape 或碰撞体），挂 AudioSource（UI 总线）</li>
+      <li>写/用 AudioPlayerComponent，Inspector 把 audioSource 拖进去</li>
+      <li>按钮触发 PlayLocal（自己反馈）+ 需要时 PlayForEveryone</li>
+      <li>Build & Test 里让朋友点按钮，确认双方都能听到</li>
+    </ol>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解本地播放 vs 网络同步播放的区别</li>
+      <li>写了一个 Udon 播放音频的组件</li>
+      <li>知道新玩家加入时网络事件不会重放</li>
+      <li>控制音频性能：不堆 AudioSource、不放大体积音频</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章</a>
+      <a class="next-btn" href="lesson-05.html">下一章：动手做篝火环境音 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 音频入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 声音与组件</a></li>
+      <li><a href="lesson-02.html">2. 文件与导入</a></li>
+      <li><a href="lesson-03.html">3. 3D 声音与混音</a></li>
+      <li><a href="lesson-04.html">4. VRChat 音频实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：篝火环境音</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 & 常见问题</h1>
+    <p>做完前五篇后，遇到问题先来这里翻。</p>
+
+    <h2>1. 术语速查表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查">
+      <div class="caption">图：12 个必懂术语</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>一句话解释</th></tr>
+      <tr><td><strong>Hz 赫兹</strong></td><td>频率单位，20Hz~20kHz 是人耳范围，决定音高</td></tr>
+      <tr><td><strong>dB 分贝</strong></td><td>音量单位（对数），+10dB ≈ 响 2 倍</td></tr>
+      <tr><td><strong>AudioSource</strong></td><td>声源组件，挂在发声物体上</td></tr>
+      <tr><td><strong>AudioListener</strong></td><td>听者组件，全场景唯一，挂玩家</td></tr>
+      <tr><td><strong>AudioClip</strong></td><td>音频文件导入后的数据资源</td></tr>
+      <tr><td><strong>AudioMixer</strong></td><td>混音器，总线分组调音量</td></tr>
+      <tr><td><strong>3D 声音</strong></td><td>带位置感的音效（距离衰减 + 声道）</td></tr>
+      <tr><td><strong>2D 声音</strong></td><td>恒定音量（UI、BGM）</td></tr>
+      <tr><td><strong>Ducking</strong></td><td>侧链闪避：对白时音乐自动压低</td></tr>
+      <tr><td><strong>Streaming</strong></td><td>流式加载：长音频边播边读省内存</td></tr>
+      <tr><td><strong>Loop</strong></td><td>循环播放</td></tr>
+      <tr><td><strong>SendCustomNetworkEvent</strong></td><td>Udon 全网广播事件（同步播放）</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题">
+      <div class="caption">图：现象 → 原因 → 解法</div>
+    </div>
+
+    <table>
+      <tr><th>现象</th><th>原因</th><th>解法</th></tr>
+      <tr><td><strong>没有声音</strong></td><td>听者缺失 / 音量 0 / 没勾 Play On Awake</td><td>检查 AudioListener、音量、Spatial Blend 与距离</td></tr>
+      <tr><td><strong>两个 Listener 报错</strong></td><td>场景里挂了两份听者</td><td>只保留一个</td></tr>
+      <tr><td><strong>声音太远听不见</strong></td><td>3D 衰减 Max Distance 太小</td><td>拉大 Min/Max Distance</td></tr>
+      <tr><td><strong>声音发闷/破音</strong></td><td>音量超 0dB 爆音 / 源文件质量低</td><td>总线压音量，换高质量音频</td></tr>
+      <tr><td><strong>只有自己听到</strong></td><td>用了本地 Play()</td><td>改用 SendCustomNetworkEvent</td></tr>
+      <tr><td><strong>音乐停不下来</strong></td><td>没做停止逻辑</td><td>Udon 里调 Stop()</td></tr>
+    </table>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线">
+      <div class="caption">图：入门 → 熟练 → 进阶 → 精通</div>
+    </div>
+
+    <table>
+      <tr><th>阶段</th><th>目标</th><th>学习内容</th></tr>
+      <tr><td><strong>入门</strong></td><td>会放声音</td><td>本教程：导入、声源、总线</td></tr>
+      <tr><td><strong>熟练</strong></td><td>会混音</td><td>Ducking、压缩、EQ、3D 衰减精细调</td></tr>
+      <tr><td><strong>进阶</strong></td><td>会编程</td><td>Udon 音频控制、动态音量、网络同步</td></tr>
+      <tr><td><strong>精通</strong></td><td>会设计</td><td>动态音乐（分层/片段切换）、音频反馈系统</td></tr>
+    </table>
+
+    <h2>4. 学习资源</h2>
+    <ul>
+      <li><strong>Unity 官方文档</strong>：Audio、Audio Mixer、3D Sound 部分</li>
+      <li><strong>免费音效站</strong>：Freesound、Kenney、opengameart</li>
+      <li><strong>Audacity</strong>：免费音频编辑，剪切、降噪、响度归一化</li>
+      <li><strong>VRChat 里拆解</strong>：戴耳机逛好世界，听声场 —— 声源在哪、多大声、有没有闪避</li>
+    </ul>
+
+    <blockquote class="tip"><strong>最后的话：</strong>音频的验收标准永远是你的耳朵。戴上耳机，在 VRChat 里走一圈 —— 舒服、自然、不吵，就是做好了。</blockquote>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：动手做篝火环境音</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 音频入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 声音与组件</a></li>
+      <li><a href="lesson-02.html">2. 文件与导入</a></li>
+      <li><a href="lesson-03.html">3. 3D 声音与混音</a></li>
+      <li><a href="lesson-04.html">4. VRChat 音频实践</a></li>
+      <li><a href="lesson-05.html" class="active">5. 动手：篝火环境音</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：动手做篝火环境音</h1>
+    <p>把前四篇串起来：找一个音频 → 正确导入 → 摆 3D 声源 → 进总线 → 加一层瀑布、一层鸟鸣，做一个有层次感的环境音系统。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_steps.png" alt="环境音步骤">
+      <div class="caption">图：五步流程 — 备音频 → 导入设置 → 挂声源 → 3D 衰减 → 接总线</div>
+    </div>
+
+    <h2>第一步：准备音频</h2>
+    <ul>
+      <li>找一个<strong>篝火噼啪声</strong>（循环 10~30 秒即可，网上搜 campfire loop）</li>
+      <li>找一个<strong>瀑布/溪流声</strong>（white noise 类）</li>
+      <li>找一个<strong>鸟鸣</strong>（短促、重复）</li>
+      <li>全部放进 <code>Assets/</code>（建议建 <code>Assets/_MyWorld/Audio/</code> 目录）</li>
+    </ul>
+
+    <h2>第二步：导入设置</h2>
+    <ol>
+      <li>篝火/瀑布：<strong>Loop 勾上</strong>、Load Type = <strong>Streaming</strong>、Compression = Vorbis 70</li>
+      <li>鸟鸣：<strong>Decompress On Load</strong>、质量 90+</li>
+      <li>（篝火音源可 Force To Mono，减体积）</li>
+    </ol>
+
+    <h2>第三步：挂声源</h2>
+    <ol>
+      <li>在篝火旁放一个空物体 <code>Audio_Fire</code>，挂 AudioSource，拖入篝火音频</li>
+      <li>瀑布旁放 <code>Audio_Waterfall</code>，鸟鸣区域放 <code>Audio_Birds</code></li>
+    </ol>
+
+    <h2>第四步：3D 衰减</h2>
+    <ol>
+      <li>三个声源 <strong>Spatial Blend = 1</strong></li>
+      <li>篝火：Min 1m / Max 10m；瀑布：Min 5m / Max 30m；鸟鸣：Max 20m</li>
+      <li>Volume Rolloff 都选 Logarithmic</li>
+    </ol>
+
+    <h2>第五步：接总线</h2>
+    <ol>
+      <li>Audio Mixer 里建 <strong>Ambience</strong> 总线（挂到 Master 下）</li>
+      <li>三个 AudioSource 的 Output 都指向 Ambience</li>
+      <li>Ambience 总线音量 -6dB 左右起步</li>
+    </ol>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_layout.png" alt="场景布局">
+      <div class="caption">图：近处篝火（小半径）+ 远处瀑布（大半径）+ 常驻鸟鸣 —— 远近分层</div>
+    </div>
+
+    <blockquote class="tip"><strong>声音分层的套路：</strong>近景（细节、高频）+ 中景（环境主体）+ 远景（低频氛围）。三个声源，一片世界。加音乐时再叠一层 Music 总线。</blockquote>
+
+    <h2>测试</h2>
+    <ol>
+      <li>VRChat → Build & Test 进入世界</li>
+      <li>戴上耳机，从远走近篝火：声音应该渐强、有左右声道变化</li>
+      <li>转身、走远：瀑布声渐弱、鸟鸣保持一定存在感</li>
+      <li>打开 Quick Menu 音量设置，确认音频总线生效</li>
+    </ol>
+
+    <blockquote class="warn"><strong>注意：</strong>环境音不是越响越好。目标：有存在感但不打扰说话 —— Ambience 总线上加一个 Compressor 压到 -10dB 左右是常见做法。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>完成了一个三层环境音系统（篝火 + 瀑布 + 鸟鸣）</li>
+      <li>所有环境音都走了 Ambience 总线</li>
+      <li>在 VRChat 里用耳机测试了距离衰减和声道</li>
+      <li>理解了"近中远分层"的声音设计套路</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一章</a>
+      <a class="next-btn" href="lesson-06.html">下一章：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>
