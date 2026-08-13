@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 篇：UI 与 Canvas — Unity UI 入门</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity UI 入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. UI 与 Canvas</a></li>
+      <li><a href="lesson-02.html">2. 第一个 Text</a></li>
+      <li><a href="lesson-03.html">3. Button 与点击事件</a></li>
+      <li><a href="lesson-04.html">4. Image 与 Panel</a></li>
+      <li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li>
+      <li><a href="lesson-06.html">6. 综合小项目</a></li>
+      <li><a href="lesson-07.html">7. World Space Canvas</a></li>
+      <li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li>
+      <li><a href="lesson-09.html">9. Scroll View</a></li>
+      <li><a href="lesson-10.html">10. Layout Groups</a></li>
+      <li><a href="lesson-11.html">11. 嵌套 Canvas</a></li>
+      <li><a href="lesson-12.html">12. VRC 实战菜单</a></li>
+      <li><a href="lesson-13.html">13. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：UI 与 Canvas</h1>
+    <p>这是专门为零基础写的 Unity UI 教程，面向 <span class="tag tag-vrc">VRChat</span> 世界开发。先建立“UI 到底是什么、Canvas 在中间扮演什么角色”的整体认识。</p>
+
+    <h2>🎯 课程目标</h2>
+    <ul class="checklist">
+      <li>[ ] 知道 UI 在 VRChat 世界里有哪些常见用途</li>
+      <li>[ ] 知道 Unity UI 的基本结构：Canvas → Panel → 控件</li>
+      <li>[ ] 知道 Screen Space 与 World Space 的区别（后续会细讲）</li>
+      <li>[ ] 能在项目里创建一个 Canvas 并看到它的子物体</li>
+    </ul>
+
+    <h2>1. UI 在 VRChat 里有什么用？</h2>
+    <p>VRChat 世界里的 UI 不只是“按钮”。凡是玩家能看到、能点击的界面，都属于 UI：</p>
+
+    <div class="img-box">
+      <img src="教程资源/lesson01-ui-overview.png" alt="VRChat UI 类型概览">
+      <div class="caption">图 1-1：VRChat 中常见 UI — 世界空间面板、交互面板、名牌/HUD、屏幕覆盖 UI</div>
+    </div>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_ui_examples.png" alt="UI 元素示例">
+      <div class="caption">图 1-2：常见 UI 元素示例 — 按钮、进度条、文本框、图标</div>
+    </div>
+
+    <ul>
+      <li><strong>信息展示：</strong>世界规则、排行榜、公告板</li>
+      <li><strong>交互控制：</strong>传送菜单、设置开关、小游戏面板</li>
+      <li><strong>视频控制：</strong>播放/暂停、URL 输入</li>
+      <li><strong>名牌与 HUD：</strong>头顶名牌、状态图标、聊天气泡</li>
+    </ul>
+
+    <h2>2. Unity UI 的核心：Canvas 画布</h2>
+    <p>Unity 的 UI 系统叫 <strong>UGUI</strong>。所有 UI 元素都必须放在 <strong>Canvas</strong> 下面，Canvas 决定了 UI 怎么显示、显示在哪里。</p>
+
+    <div class="img-box">
+      <img src="教程资源/lesson01-architecture.png" alt="UGUI 架构图">
+      <div class="caption">图 1-3：UGUI 核心架构 — Canvas → Panel → Image / Text / Button</div>
+    </div>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_canvas_concept.png" alt="Canvas 容器概念">
+      <div class="caption">图 1-4：Canvas 是所有 UI 元素的“容器”</div>
+    </div>
+
+    <p>当你在 Hierarchy 窗口右键 → <code>UI</code> → 创建任意 UI 控件时，Unity 会：</p>
+    <ul>
+      <li>如果场景里还没有 Canvas，自动创建一个 <strong>Canvas</strong></li>
+      <li>自动创建一个 <strong>EventSystem</strong>（独立于 Canvas，处理鼠标/射线输入）</li>
+      <li>把新 UI 控件放到当前选中的 Canvas / Panel 下面</li>
+    </ul>
+
+    <blockquote class="warn"><strong>注意：</strong>EventSystem 和 Canvas 在 Hierarchy 里是<strong>平级</strong>，不是 Canvas 的子物体。把它删了，UI 点击就会失效。</blockquote>
+
+    <h2>3. UI 控件为什么和 3D 物体不一样？</h2>
+    <p>3D 物体用 <strong>Transform</strong>，UI 元素用 <strong>RectTransform</strong>。RectTransform 多出了 <strong>Width/Height、Anchors（锚点）、Pivot（轴心）</strong>，用来在 Canvas 里做自适应布局。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L01_05_rect_transform.png" alt="Transform vs RectTransform">
+      <div class="caption">图 1-5：普通 Transform 与 RectTransform 的区别</div>
+    </div>
+
+    <p>锚点（Anchors）是 VRChat UI 里非常常用的概念，例如：</p>
+    <ul>
+      <li>把按钮锚定在右下角，屏幕变化时它仍保持在右下角</li>
+      <li>把面板四个角锚定到父面板四个角，它会跟着父面板一起拉伸</li>
+    </ul>
+
+    <blockquote class="tip">这一篇只要先“知道有锚点这个东西”就行，后面做面板和弹窗时会反复用到。</blockquote>
+
+    <h2>4. Render Mode：屏幕 UI 还是世界 UI？</h2>
+    <p>Canvas 的 <code>Render Mode</code> 决定 UI 放在哪里：</p>
+    <table>
+      <tr><th>Render Mode</th><th>位置</th><th>VRChat 世界推荐？</th></tr>
+      <tr><td><strong>Screen Space - Overlay</strong></td><td>永远贴在屏幕上</td><td><span class="tag tag-important">不用</span></td></tr>
+      <tr><td><strong>Screen Space - Camera</strong></td><td>贴在某个相机上</td><td><span class="tag tag-important">一般不用</span></td></tr>
+      <tr><td><strong>World Space</strong></td><td>像 3D 物体一样放在世界里</td><td><span class="tag tag-new">VRChat 必须用</span></td></tr>
+    </table>
+
+    <p>详细设置会在 <a href="lesson-07.html">第 7 篇：World Space Canvas</a> 展开。现在只要记住：<strong>VRChat 世界里的可交互 UI 最终都要用 World Space Canvas。</strong></p>
+
+    <h2>5. 动手：创建一个空 Canvas</h2>
+    <ol>
+      <li>打开 Unity 场景，确认 Hierarchy 里没有 Canvas</li>
+      <li>右键 Hierarchy → <code>UI</code> → <code>Canvas</code></li>
+      <li>观察 Hierarchy：Canvas 出现，旁边自动多了一个 EventSystem</li>
+      <li>选中 Canvas，在 Inspector 里找到 <code>Render Mode</code>，先保持默认的 Screen Space - Overlay</li>
+      <li>右键 Canvas → UI → 随便创建一个 Image 或 Button，观察它成为 Canvas 子物体</li>
+    </ol>
+
+    <h3>自检清单</h3>
+    <ul class="checklist">
+      <li>[ ] 场景里有 Canvas 和 EventSystem</li>
+      <li>[ ] 新创建的 UI 控件自动成为 Canvas 子物体</li>
+      <li>[ ] 知道 EventSystem 和 Canvas 是平级的</li>
+      <li>[ ] 知道 VRChat 世界 UI 最终要用 World Space</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">第 2 篇：第一个 Text →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

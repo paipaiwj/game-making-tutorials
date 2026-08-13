@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：材质与 Shader</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 渲染入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 渲染是什么</a></li>
+      <li><a href="lesson-02.html">2. 光照与 PBR</a></li>
+      <li><a href="lesson-03.html" class="active">3. 材质与 Shader</a></li>
+      <li><a href="lesson-04.html">4. VRChat 渲染实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：发光水晶</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：材质与 Shader — 让物体长对样子</h1>
+    <p>上一篇讲的是「光」，这一篇讲「物体怎么回应光」。核心三件套：<strong>Shader、材质（Material）、贴图（Texture）</strong>。</p>
+
+    <h2>1. 三者是什么关系</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_material_shader.png" alt="Shader 材质 贴图关系">
+      <div class="caption">图：Shader = 菜谱（程序），材质 = 写好的菜谱（参数），贴图 = 食材（图片）</div>
+    </div>
+
+    <table>
+      <tr><th>概念</th><th>是什么</th><th>谁在用</th></tr>
+      <tr><td><strong>Shader</strong></td><td>一段 GPU 程序，决定「怎么画」：光照算法、贴图采样、混合方式</td><td>材质</td></tr>
+      <tr><td><strong>材质 Material</strong></td><td>Shader + 一组具体参数（颜色、贴图、Metallic…）</td><td>物体的 MeshRenderer</td></tr>
+      <tr><td><strong>贴图 Texture</strong></td><td>一张图片数据（固有色、法线、发光…）</td><td>材质</td></tr>
+    </table>
+
+    <blockquote class="tip">在 Unity 里，你 <strong>99% 的时间在调材质</strong>（拖贴图、拉滑块），完全不用写 Shader。写 Shader 是进阶技能，第 6 篇路线图里再说。</blockquote>
+
+    <h2>2. 创建你的第一个材质</h2>
+    <ol>
+      <li>Project 窗口右键 → <code>Create</code> → <code>Material</code>，命名 <code>MAT_Wall</code></li>
+      <li>选中它，Inspector 顶部的 Shader 下拉框选择 <code>Universal Render Pipeline/Lit</code>（VRChat 世界必须用 URP 的 Shader！）</li>
+      <li>把材质拖到场景里一个物体的 MeshRenderer 的 Element 0 上</li>
+      <li>试着调：Base Map 的颜色、Metallic、Smoothness、Emission</li>
+    </ol>
+
+    <blockquote class="warn"><strong>VRChat 死亡陷阱：</strong>从 Asset Store / 旧项目拿来的材质，Shader 可能是老的 <code>Standard</code> 或自定义 Shader —— 在 VRChat 里会显示成<strong>粉色/紫黑色</strong>。解决办法：重设 Shader 为 URP/Lit，再重新拖贴图。</blockquote>
+
+    <h2>3. 贴图的五大通道</h2>
+    <p>一张贴图 = 一个通道 = 只管一件事。让它们各司其职：</p>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_texture_channels.png" alt="贴图通道">
+      <div class="caption">图：Albedo（颜色）、Normal（凹凸）、Metallic（金属）、Smoothness（光滑）、Emission（发光）</div>
+    </div>
+
+    <ul>
+      <li><strong>Base Map</strong>：固有色贴图，决定物体长什么样。最常见。</li>
+      <li><strong>Normal Map</strong>：紫色调贴图，假装有凹凸。石头、砖墙必备，能省大量模型面数。</li>
+      <li><strong>Metallic / Smoothness</strong>：黑白贴图，白 = 金属/光滑，黑 = 非金属/粗糙。</li>
+      <li><strong>Emission</strong>：发光贴图，亮的地方就是发光的地方。水晶、屏幕用。</li>
+    </ul>
+
+    <blockquote class="tip">没有贴图也能做材质：直接调 Base Map 颜色 + Metallic/Smoothness 滑块，很多风格化世界就是这么做的。</blockquote>
+
+    <h2>4. 混合模式：透明物体怎么算颜色</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_03_blend_modes.png" alt="混合模式">
+      <div class="caption">图：不透明、半透明、加色 — 三种混合模式叠加结果</div>
+    </div>
+
+    <table>
+      <tr><th>模式</th><th>原理</th><th>用途</th></tr>
+      <tr><td><strong>Opaque</strong></td><td>完全不透明</td><td>墙体、地面、模型（默认，最快）</td></tr>
+      <tr><td><strong>Transparent</strong></td><td>alpha 混合：后画的物体叠在前面的上面</td><td>玻璃、水面、雾、半透明窗帘</td></tr>
+      <tr><td><strong>Additive</strong></td><td>颜色相加：越叠越亮</td><td>发光、火焰、魔法、粒子</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>性能提醒：</strong>Transparent/Additive 不能合批，还会打乱绘制顺序。能用 Opaque 就不用透明，尤其大面积物体。</blockquote>
+
+    <h2>5. VRChat 世界常用 Shader 一览</h2>
+    <table>
+      <tr><th>Shader</th><th>风格</th><th>适合</th></tr>
+      <tr><td><strong>URP/Lit</strong></td><td>写实 PBR</td><td>默认首选，Unity 自带</td></tr>
+      <tr><td><strong>URP/Simple Lit</strong></td><td>简化光照</td><td>性能紧张的移动端/低配</td></tr>
+      <tr><td><strong>UTS3（UnityChan Toon）</strong></td><td>卡通三渲二</td><td>动漫风格世界</td></tr>
+      <tr><td><strong>Poiyomi Toon</strong></td><td>卡通 + 特效集成</td><td>Avatar 常用，世界也可用</td></tr>
+      <tr><td><strong>自定义 Shader</strong></td><td>任意</td><td>进阶玩法，第 6 篇路线图</td></tr>
+    </table>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>创建了一个 URP/Lit 材质并挂到物体上</li>
+      <li>调过颜色、Metallic、Smoothness，理解它们的作用</li>
+      <li>理解 Shader / 材质 / 贴图三者的关系</li>
+      <li>知道 VRChat 里粉色物体 = Shader 缺失或不对</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一章</a>
+      <a class="next-btn" href="lesson-04.html">下一章：VRChat 渲染实践 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

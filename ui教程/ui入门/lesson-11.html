@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>第 11 篇：嵌套 Canvas</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="layout"><aside><h1>Unity UI 入门</h1><ol>
+<li><a href="lesson-01.html">1. UI 与 Canvas</a></li><li><a href="lesson-02.html">2. 第一个 Text</a></li><li><a href="lesson-03.html">3. Button 与点击事件</a></li><li><a href="lesson-04.html">4. Image 与 Panel</a></li><li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li><li><a href="lesson-06.html">6. 综合小项目</a></li><li><a href="lesson-07.html">7. World Space Canvas</a></li><li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li><li><a href="lesson-09.html">9. Scroll View</a></li><li><a href="lesson-10.html">10. Layout Groups</a></li><li><a href="lesson-11.html" class="active">11. 嵌套 Canvas</a></li><li><a href="lesson-12.html">12. VRC 实战菜单</a></li><li><a href="lesson-13.html">13. 速查表</a></li></ol></aside>
+
+<main>
+<h1>第 11 篇：嵌套 Canvas — 弹窗永远在最前面</h1>
+<p>弹窗被其他 UI 挡住了？<strong>嵌套 Canvas + Sort Order</strong> 解决。</p>
+
+<h2>⚠️ 问题：弹窗被遮挡</h2>
+<div class="img-box"><img src="教程资源/L11_01_popup_problem.png" alt="弹窗问题"><div class="caption">同一个 Canvas 下按 Hierarchy 顺序渲染 — 嵌套 Canvas 打破这个限制</div></div>
+
+<div class="img-box"><img src="教程资源/L11_01_WhyNestedCanvas.png" alt="为什么要嵌套Canvas"><div class="caption">嵌套 Canvas 不只是“盖在最上面”，还能减少 UI 重建范围</div></div>
+
+<h2>📊 Sort Order 层级规则</h2>
+<div class="img-box"><img src="教程资源/L11_02_sort_order.png" alt="SortOrder"><div class="caption">0=主界面 / 1-9=弹出层 / 10-19=弹窗 / 20+=最高优先级</div></div>
+
+<h2>🌳 嵌套 Canvas 结构</h2>
+<div class="img-box"><img src="教程资源/L11_03_nested_structure.png" alt="嵌套结构"><div class="caption">在 PopupPanel 上加 Canvas 组件，设 Sort Order=10</div></div>
+
+<h2>📋 弹窗标准模板</h2>
+<div class="img-box"><img src="教程资源/L11_04_popup_template.png" alt="弹窗模板"><div class="caption">半透明遮罩 + 弹窗本体 + 按钮 — 5 步搭建</div></div>
+
+<div class="img-box"><img src="教程资源/L11_03_PopupStructure.png" alt="弹窗结构"><div class="caption">主 Canvas + Popup Canvas（Sort Order 更高）的结构总览</div></div>
+
+<h2>⚡ 性能警告</h2>
+<div class="img-box"><img src="教程资源/L11_05_drawcall_warning.png" alt="DrawCall警告"><div class="caption">只在容器上加 Canvas，不要给每个按钮都加！每个嵌套 Canvas = 一次额外 Draw Call</div></div>
+
+<ol><li>创建 PopupPanel (Image)，初始 SetActive(false)</li><li>给 PopupPanel 加 Canvas 组件，Sort Order=10</li><li>在 PopupPanel 里做弹窗内容</li><li>按钮 OnClick 控制 SetActive 显示/隐藏</li></ol>
+
+<ul class="checklist"><li>[ ] 弹窗显示时盖住所有其他 UI</li><li>[ ] 弹窗 Canvas Sort Order 高于主 Canvas</li><li>[ ] 可以正常关闭弹窗</li></ul>
+
+<div class="nav-row"><a class="prev-btn" href="lesson-10.html">← 第 10 篇</a><a class="next-btn" href="lesson-12.html">第 12 篇 →</a></div>
+</main></div></body></html>

@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>第 9 篇：Scroll View</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="layout"><aside><h1>Unity UI 入门</h1><ol>
+<li><a href="lesson-01.html">1. UI 与 Canvas</a></li><li><a href="lesson-02.html">2. 第一个 Text</a></li><li><a href="lesson-03.html">3. Button 与点击事件</a></li><li><a href="lesson-04.html">4. Image 与 Panel</a></li><li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li><li><a href="lesson-06.html">6. 综合小项目</a></li><li><a href="lesson-07.html">7. World Space Canvas</a></li><li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li><li><a href="lesson-09.html" class="active">9. Scroll View</a></li><li><a href="lesson-10.html">10. Layout Groups</a></li><li><a href="lesson-11.html">11. 嵌套 Canvas</a></li><li><a href="lesson-12.html">12. VRC 实战菜单</a></li><li><a href="lesson-13.html">13. 速查表</a></li></ol></aside>
+
+<main>
+<h1>第 9 篇：Scroll View — 内容太多放不下时</h1>
+<p>UI 内容超过面板大小？<strong>Scroll View</strong> 让内容可以滚动。</p>
+
+<h2>🔍 结构解剖</h2>
+<div class="img-box"><img src="教程资源/L09_01_scroll_structure.png" alt="ScrollView结构"><div class="caption">Viewport 是"窗户"，Content 是"风景" — 风景比窗户大就能滚动</div></div>
+
+<h2>⚙️ ScrollRect 核心属性</h2>
+<div class="img-box"><img src="教程资源/L09_02_scrollrect.png" alt="ScrollRect属性"><div class="caption">Content（必须拖入）、Horizontal/Vertical、Movement Type（Elastic 带回弹推荐）</div></div>
+
+<h2>✂️ Mask 原理</h2>
+<div class="img-box"><img src="教程资源/L09_03_mask_principle.png" alt="Mask原理"><div class="caption">Mask 裁掉超出 Viewport 的内容 — 没有 Mask 内容会溢出来</div></div>
+
+<div class="img-box"><img src="教程资源/L09_03_Mask.png" alt="Mask对比"><div class="caption">无遮罩 / RectMask2D 矩形裁剪 / Mask 形状裁剪 的对比</div></div>
+
+<h2>📋 练手：20 行可滚动列表</h2>
+<div class="img-box"><img src="教程资源/L09_04_list_demo.png" alt="列表示例"><div class="caption">Content 的 Height 大于 Viewport = 可滚动。鼠标滚轮测试。</div></div>
+
+<h2>🔗 黄金组合</h2>
+<div class="img-box"><img src="教程资源/L09_05_scroll_layout.png" alt="黄金组合"><div class="caption">Scroll View + Vertical Layout Group + Content Size Fitter = 自动适配的滚动列表</div></div>
+
+<h3>练手步骤</h3>
+<ol><li>右键 Canvas → UI → Scroll View</li><li>在 Content 下创建 20 个 Text</li><li>调大 Content 的 Height 超过 Viewport</li><li>运行，鼠标滚轮滚动</li></ol>
+
+<ul class="checklist"><li>[ ] 能看到滚动条</li><li>[ ] 鼠标滚轮可以滚动</li><li>[ ] 超出 Viewport 的内容被裁剪</li></ul>
+
+<div class="nav-row"><a class="prev-btn" href="lesson-08.html">← 第 8 篇</a><a class="next-btn" href="lesson-10.html">第 10 篇 →</a></div>
+</main></div></body></html>

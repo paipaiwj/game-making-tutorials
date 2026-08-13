@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：材质与贴图</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 特效入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 特效是什么</a></li>
+      <li><a href="lesson-02.html">2. 粒子系统核心模块</a></li>
+      <li><a href="lesson-03.html" class="active">3. 材质与贴图</a></li>
+      <li><a href="lesson-04.html">4. VRChat 特效实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：传送门特效</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：材质与贴图 — 让粒子变好看</h1>
+    <p>前面两篇你的粒子还是白色方块。这一篇解决这个问题：<strong>材质（Material）决定粒子的渲染方式，贴图（Texture）决定粒子的形状。</strong></p>
+
+    <h2>1. 材质、Shader、贴图 — 三者的关系</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_material_texture.png" alt="材质贴图">
+      <div class="caption">图：材质选择（左）、Shader 类型（中）、贴图（右），以及 Renderer 模块关键设置</div>
+    </div>
+
+    <table>
+      <tr><th>概念</th><th>是什么</th><th>在哪里设置</th></tr>
+      <tr><td><strong>材质 (Material)</strong></td><td>包含 Shader + 贴图 + 各种参数的一个「配置文件」</td><td>Renderer 模块 → Material</td></tr>
+      <tr><td><strong>Shader</strong></td><td>决定「怎么画」—— 叠加？透明？受光？</td><td>材质球的 Shader 下拉菜单</td></tr>
+      <tr><td><strong>贴图 (Texture)</strong></td><td>决定粒子「长什么样」—— 圆形？星形？</td><td>材质球的贴图槽</td></tr>
+    </table>
+
+    <h2>2. Unity 内置的粒子材质</h2>
+    <p>Unity 自带几个非常好用的粒子材质，不需要自己做：</p>
+
+    <table>
+      <tr><th>材质名</th><th>混合模式</th><th>效果</th><th>适合</th></tr>
+      <tr><td><strong>Default-Particle</strong></td><td>Alpha Blended</td><td>标准透明，白色方形</td><td>通用，入门默认</td></tr>
+      <tr><td><strong>Particles/Additive</strong></td><td>叠加（Additive）</td><td>亮色叠加到背景上，发光感</td><td>火焰、魔法、光效</td></tr>
+      <tr><td><strong>Particles/Alpha Blended</strong></td><td>Alpha 混合</td><td>标准透明混合</td><td>烟雾、尘土</td></tr>
+      <tr><td><strong>Particles/Multiply</strong></td><td>正片叠底</td><td>颜色相乘，变暗</td><td>阴影、黑烟</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>最常用的两个：</strong>Additive（发光特效）和 Alpha Blended（半透明特效）。80% 的情况用这两个就够了。</blockquote>
+
+    <h2>3. Shader 的选择</h2>
+    <p>在材质球的 Inspector 顶部有一个 Shader 下拉菜单。对于粒子特效，最重要的选择是：</p>
+
+    <table>
+      <tr><th>Shader</th><th>特点</th><th>推荐场景</th></tr>
+      <tr><td><strong>Particles/Standard Surface</strong></td><td>受场景光照影响，有立体感和阴影</td><td>需要真实感的特效</td></tr>
+      <tr><td><strong>Particles/Standard Unlit</strong></td><td>不受光照影响，始终保持设定亮度</td><td><span class="tag tag-vrc">VRChat 推荐</span> 大多数特效</td></tr>
+    </table>
+
+    <p>在 VRChat 中，<strong>推荐使用 Unlit Shader</strong>。因为世界空间 UI 和特效不应该受世界光照变化的影响——你不想让传送门的颜色在暗处变得看不见。</p>
+
+    <h2>4. 贴图 — 粒子的形状</h2>
+    <p>默认情况下粒子是白色方块。把贴图换成其他形状，效果立刻就不一样了。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_texture_types.png" alt="贴图类型">
+      <div class="caption">图：五种常用粒子贴图类型 — 圆形光点、环形、放射线、烟雾/云、星形</div>
+    </div>
+
+    <table>
+      <tr><th>贴图类型</th><th>适合特效</th><th>哪里找</th></tr>
+      <tr><td><strong>圆形光点</strong></td><td>魔法球、光点、火花（最通用）</td><td>Unity 自带 Default-Particle 贴图</td></tr>
+      <tr><td><strong>环形</strong></td><td>冲击波、光环、护盾</td><td>Asset Store 或自制</td></tr>
+      <tr><td><strong>放射线</strong></td><td>光束、激光、能量射线</td><td>Asset Store 或自制</td></tr>
+      <tr><td><strong>烟雾/云</strong></td><td>烟雾、尘土、蒸汽</td><td>Asset Store 粒子包</td></tr>
+      <tr><td><strong>星形</strong></td><td>闪光、星星、魔法光点</td><td>自制（白色星形 + 透明背景）</td></tr>
+    </table>
+
+    <h3>如何替换贴图</h3>
+    <ol>
+      <li>在 Project 窗口找到你的材质球（或新建一个）</li>
+      <li>选中材质球，在 Inspector 里找到贴图槽（通常叫 Main Texture 或 Base Map）</li>
+      <li>把贴图文件拖进去</li>
+      <li>在粒子系统的 Renderer 模块中，把 Material 设为你刚改好的材质球</li>
+    </ol>
+
+    <h2>5. Renderer 模块的关键设置</h2>
+    <p>Renderer 模块控制粒子「怎么被画到屏幕上」。以下是几个最重要的参数：</p>
+
+    <table>
+      <tr><th>参数</th><th>作用</th><th>推荐值</th></tr>
+      <tr><td><strong>Render Mode</strong></td><td>粒子面片的朝向</td><td>Billboard（始终面朝摄像机）</td></tr>
+      <tr><td><strong>Stretched Billboard</strong></td><td>按速度方向拉伸粒子</td><td>拖尾、光束效果</td></tr>
+      <tr><td><strong>Horizontal Billboard</strong></td><td>粒子平行于地面</td><td>地面光环、落在地上的特效</td></tr>
+      <tr><td><strong>Material</strong></td><td>指定材质球</td><td>拖入你准备好的材质</td></tr>
+      <tr><td><strong>Sort Mode</strong></td><td>粒子之间的渲染排序</td><td>By Distance（远处先画）</td></tr>
+      <tr><td><strong>Min/Max Particle Size</strong></td><td>限制粒子在屏幕上的最小/最大像素</td><td>默认即可</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>注意：</strong>如果 Render Mode 设为 Mesh，粒子会变成 3D 模型而不是 2D 面片。这会大幅增加性能开销，VRChat 中尽量避免。</blockquote>
+
+    <h2>6. 练手：给火焰加上材质</h2>
+    <ol>
+      <li>用上一篇做的火焰粒子系统</li>
+      <li>在 Project 窗口右键 → Create → Material，命名为「FireMat」</li>
+      <li>Shader 选 <code>Particles/Standard Unlit</code></li>
+      <li>Rendering Mode 选 <strong>Additive</strong></li>
+      <li>把材质拖到粒子系统 Renderer 模块的 Material 槽</li>
+      <li>观察效果 — 火焰现在有了「发光」的感觉！</li>
+    </ol>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了材质、Shader、贴图三者的关系</li>
+      <li>知道 Additive 和 Alpha Blended 的区别</li>
+      <li>知道 VRChat 中推荐使用 Unlit Shader</li>
+      <li>会给粒子系统指定自定义材质</li>
+      <li>知道 Render Mode 选 Billboard 是最常用的</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一篇：粒子系统核心模块</a>
+      <a class="next-btn" href="lesson-04.html">下一篇：VRChat 特效实践 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

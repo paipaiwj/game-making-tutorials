@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：VRChat 渲染实践</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 渲染入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 渲染是什么</a></li>
+      <li><a href="lesson-02.html">2. 光照与 PBR</a></li>
+      <li><a href="lesson-03.html">3. 材质与 Shader</a></li>
+      <li><a href="lesson-04.html" class="active">4. VRChat 渲染实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：发光水晶</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：VRChat 渲染实践 — URP、性能与优化</h1>
+    <p>前几篇是通用知识，这一篇讲 VRChat 世界的特殊规则：<strong>用什么管线、能放多少东西、卡了怎么办</strong>。</p>
+
+    <h2>1. VRChat 的技术栈</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_vrc_stack.png" alt="VRChat 渲染技术栈">
+      <div class="caption">图：VRChat 世界 = Unity 2022.3 + URP 渲染管线 + 兼容 URP 的材质</div>
+    </div>
+
+    <p>VRChat 的 PC 版使用 <strong>URP（Universal Render Pipeline）</strong>，Unity 版本 2022.3。这意味着：</p>
+    <ul>
+      <li>所有材质必须使用 <strong>URP 的 Shader</strong>（Lit、Simple Lit、Unlit 等），老的 Built-in Standard 不行</li>
+      <li>你从商店/教程里下载的资源，要选 URP 版本，或自己转换材质</li>
+      <li><strong>Quest（安卓版）限制更多</strong>：部分 Shader 不支持、贴图更小、没有完整后处理。先做 PC 版，再考虑兼容</li>
+    </ul>
+
+    <blockquote class="warn"><strong>转换材质小技巧：</strong>从旧工程拿到一堆 Built-in 材质时，可以用 Window → Rendering → Rendering Converter，一键把材质转成 URP 版本（个别贴图可能要重新拖）。</blockquote>
+
+    <h2>2. 性能预算：四个数字</h2>
+    <p>VRChat 世界没有官方的强制评级，但下面的经验值被公认为「大家都不卡」的红线：</p>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_budget.png" alt="性能预算">
+      <div class="caption">图：Draw Call、材质数、贴图内存、实时光源 —— 盯住这四个就够了</div>
+    </div>
+
+    <table>
+      <tr><th>指标</th><th>建议值</th><th>为什么</th></tr>
+      <tr><td><strong>Draw Call</strong></td><td>简单场景 &lt; 100</td><td>每次提交 CPU 都要花时间，是帧率瓶颈大头</td></tr>
+      <tr><td><strong>材质数量</strong></td><td>&lt; 50</td><td>材质切换会打断合批，材质越多渲染越碎</td></tr>
+      <tr><td><strong>贴图内存</strong></td><td>总内存尽量小</td><td>4096×4096 一张就约 64MB 显存，几十张直接爆</td></tr>
+      <tr><td><strong>实时光源</strong></td><td>1~2 个</td><td>每个点/聚光灯都要对每物体算一遍光照</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>怎么查看？</strong>Unity 的 Game 窗口右上角 Stats 面板能看到 Draw Call / SetPass Call；VRChat SDK 上传时 Console 也会给出性能报告。</blockquote>
+
+    <h2>3. 优化手段（按性价比排序）</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_03_optimize.png" alt="优化手段">
+      <div class="caption">图：共享材质 → 图集 → 减少实时光 → 压缩贴图 → 关阴影</div>
+    </div>
+
+    <ol>
+      <li><strong>共享材质</strong>：100 个箱子用一个材质，Unity 能自动合批，Draw Call 立即大降。这是性价比最高的优化，先做它。</li>
+      <li><strong>贴图图集（Atlas）</strong>：把多张小贴图拼成一张大图，多个物体共享一个材质。</li>
+      <li><strong>减少实时光</strong>：静态场景全部烘焙，实光只留太阳 + 1 个点光源。</li>
+      <li><strong>压缩贴图</strong>：导入设置里选压缩格式（如 ASTC），视觉几乎无差，内存减半。</li>
+      <li><strong>关阴影</strong>：远处物体、地面小物件的阴影关掉。阴影非常吃 GPU。</li>
+    </ol>
+
+    <blockquote class="warn"><strong>优化的顺序很重要：</strong>先做第 1 条（共享材质），再看 Stats 面板决定下一步。别一开始就压贴图 —— 大多数世界的卡顿根源是 Draw Call，不是贴图。</blockquote>
+
+    <h2>4. 世界渲染设置清单</h2>
+    <p>新世界建议这样设置（Settings → VRC World Settings 附近）：</p>
+    <table>
+      <tr><th>设置项</th><th>建议</th><th>说明</th></tr>
+      <tr><td>天空盒 Skybox</td><td>自定义 HDR 贴图</td><td>决定环境光和氛围，用 HDRI 天空</td></tr>
+      <tr><td>环境光 Ambient</td><td>来自天空盒</td><td>默认即可，别关成黑色</td></tr>
+      <tr><td>阴影</td><td>软阴影 + 距离限制</td><td>Shadow Distance 调小（如 30m）</td></tr>
+      <tr><td>雾 Fog</td><td>按风格开/关</td><td>能统一色调，也能隐藏性能短板</td></tr>
+      <tr><td>后处理 PostFX</td><td>URP Volume 里调</td><td>色彩分级、泛光等，性能有成本，适量用</td></tr>
+    </table>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>确认自己工程里材质都是 URP Shader</li>
+      <li>学会了看 Stats 面板的 Draw Call 数量</li>
+      <li>对场景做了一次「共享材质」优化并看到 Draw Call 下降</li>
+      <li>理解烘焙光照对 VRChat 世界的重要性</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章</a>
+      <a class="next-btn" href="lesson-05.html">下一章：动手做发光水晶 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

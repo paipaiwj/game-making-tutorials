@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：特效是什么</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 特效入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 特效是什么</a></li>
+      <li><a href="lesson-02.html">2. 粒子系统核心模块</a></li>
+      <li><a href="lesson-03.html">3. 材质与贴图</a></li>
+      <li><a href="lesson-04.html">4. VRChat 特效实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：传送门特效</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：特效是什么 — 认识 Particle System</h1>
+    <p>特效（VFX）是游戏里一切「动态的视觉元素」。火焰、烟雾、魔法光球、爆炸——都是特效。Unity 里做特效的核心工具叫 <strong>Particle System（粒子系统）</strong>。</p>
+
+    <h2>1. 游戏特效的四大类型</h2>
+    <p>在 VRChat 世界里，你常见的特效大致分为四类：</p>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_what_is_vfx.png" alt="特效四大类型">
+      <div class="caption">图：游戏特效的四大类型 — 粒子、轨迹、环境、UI</div>
+    </div>
+
+    <table>
+      <tr><th>类型</th><th>举例</th><th>在 VRChat 中的用途</th></tr>
+      <tr><td><strong>粒子特效</strong></td><td>火焰、烟雾、爆炸、魔法</td><td>世界装饰、技能效果、传送特效</td></tr>
+      <tr><td><strong>轨迹特效</strong></td><td>刀光、拖尾、光束</td><td>武器拖尾、激光指示器</td></tr>
+      <tr><td><strong>环境特效</strong></td><td>雨雪、落叶、灰尘</td><td>世界氛围、天气系统</td></tr>
+      <tr><td><strong>UI 特效</strong></td><td>按钮光效、转场</td><td>菜单动画、提示高亮</td></tr>
+    </table>
+
+    <h2>2. 粒子系统是什么</h2>
+    <p>粒子系统不是一个「物体」，而是一个 <strong>生成器</strong>。它按照你设定的规则，不断产生大量微小的图片（粒子），让它们飞行、变色、消失。几千个粒子一起动，就形成了火焰、烟雾等效果。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_particle_system_overview.png" alt="粒子系统组件结构">
+      <div class="caption">图：Particle System 组件结构 — 左侧是模块列表，右侧是核心概念和粒子生命周期</div>
+    </div>
+
+    <blockquote class="tip"><strong>一句话理解：</strong>粒子系统 = 一个「粒子工厂」。你设定规则（每秒生几个、往哪飞、什么颜色），它自动生产粒子。</blockquote>
+
+    <h3>粒子系统的关键概念</h3>
+    <table>
+      <tr><th>概念</th><th>含义</th></tr>
+      <tr><td><strong>粒子</strong></td><td>一个微小的 2D 图片（Quad），大量粒子组成特效</td></tr>
+      <tr><td><strong>Duration</strong></td><td>粒子系统运行的总时长（秒），设为 5 就是播 5 秒</td></tr>
+      <tr><td><strong>Looping</strong></td><td>是否循环播放 — 火焰要勾上，爆炸不勾</td></tr>
+      <tr><td><strong>Start Lifetime</strong></td><td>每个粒子从出生到消失的存活时间</td></tr>
+      <tr><td><strong>Start Speed</strong></td><td>粒子出生时的初始速度</td></tr>
+      <tr><td><strong>Start Size</strong></td><td>粒子出生时的大小</td></tr>
+    </table>
+
+    <h2>3. 创建你的第一个粒子系统</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_03_create_particles.png" alt="创建第一个粒子系统">
+      <div class="caption">图：创建粒子系统的步骤和预期效果</div>
+    </div>
+
+    <ol>
+      <li>在 Hierarchy 窗口<strong>右键</strong> → <code>Effects</code> → <code>Particle System</code></li>
+      <li>场景中出现一个粒子系统，Inspector 里看到一大堆模块</li>
+      <li>点 <strong>Play</strong> 按钮，你会看到白色小方块向上飘</li>
+      <li>展开 <strong>Main</strong> 模块（第一个折叠的），试试改这些值：</li>
+    </ol>
+
+    <table>
+      <tr><th>参数</th><th>改一改试试</th><th>效果</th></tr>
+      <tr><td>Start Speed</td><td>从 5 改成 10</td><td>粒子飞得更快</td></tr>
+      <tr><td>Start Size</td><td>从 1 改成 3</td><td>粒子变大</td></tr>
+      <tr><td>Start Lifetime</td><td>从 5 改成 2</td><td>粒子消失得更快</td></tr>
+      <tr><td>Start Color</td><td>改成红色</td><td>粒子变红</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>注意：</strong>默认的粒子是白色方块，看起来不太像「特效」。下一篇我们会学怎么让它变得好看。</blockquote>
+
+    <h2>4. 粒子系统在 Hierarchy 中的结构</h2>
+    <p>粒子系统就是一个普通的 GameObject，上面挂着 <strong>Particle System 组件</strong>和 <strong>Transform 组件</strong>。你可以像移动普通物体一样移动它、旋转它、缩放它。</p>
+    <ul>
+      <li><strong>位置 (Position)：</strong>粒子从这里发射</li>
+      <li><strong>旋转 (Rotation)：</strong>粒子的发射方向（例如旋转 90° 让粒子水平喷射）</li>
+      <li><strong>缩放 (Scale)：</strong>影响粒子系统的整体大小</li>
+    </ul>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>在 Unity 中成功创建了一个 Particle System</li>
+      <li>按了 Play 看到了白色方块粒子</li>
+      <li>修改了 Start Speed / Start Size / Start Color 并看到了变化</li>
+      <li>理解了「粒子系统 = 粒子工厂」这个概念</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：粒子系统核心模块 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

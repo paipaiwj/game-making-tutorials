@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 7 篇：World Space Canvas</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity UI 入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. UI 与 Canvas</a></li>
+      <li><a href="lesson-02.html">2. 第一个 Text</a></li>
+      <li><a href="lesson-03.html">3. Button 与点击事件</a></li>
+      <li><a href="lesson-04.html">4. Image 与 Panel</a></li>
+      <li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li>
+      <li><a href="lesson-06.html">6. 综合小项目</a></li>
+      <li><a href="lesson-07.html" class="active">7. World Space Canvas</a></li>
+      <li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li>
+      <li><a href="lesson-09.html">9. Scroll View</a></li>
+      <li><a href="lesson-10.html">10. Layout Groups</a></li>
+      <li><a href="lesson-11.html">11. 嵌套 Canvas</a></li>
+      <li><a href="lesson-12.html">12. VRC 实战菜单</a></li>
+      <li><a href="lesson-13.html">13. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 7 篇：World Space Canvas — VRC 世界的 UI</h1>
+    <p>前六篇的 UI 贴在屏幕上。这一篇进入 <span class="tag tag-vrc">VRC 核心</span>：把 UI <strong>放到 3D 世界里</strong>。</p>
+
+    <h2>🎯 三种 Render Mode 对比</h2>
+    <div class="img-box">
+      <img src="教程资源/L07_01_rendermodes.png" alt="三种RenderMode">
+      <div class="caption">Overlay 贴屏幕 / Camera 跟相机 / World Space 在 3D 世界中 — VRC 必须用 World Space</div>
+    </div>
+
+    <h2>⚙️ 设置 World Space Canvas</h2>
+    <div class="img-box">
+      <img src="教程资源/L07_02_worldspace_setup.png" alt="World Space设置">
+      <div class="caption">关键步骤：Render Mode → Event Camera → 尺寸（米）→ DPI 清晰度</div>
+    </div>
+
+    <blockquote class="warn"><strong>VRChat 最重要的三个“隐形”条件：</strong>① Canvas 的层不能是 UI，要改成 Default（或其他层）；② Canvas 要加 <code>VRC Ui Shape</code> 才能被 VRChat 射线命中；③ 场景里要有 EventSystem，Canvas 上要有 Graphic Raycaster。这些会在第 8 篇完整配置。</blockquote>
+
+    <blockquote class="tip"><strong>尺寸建议：</strong>新建的 World Space Canvas 默认 Scale 是 1，代表 1 像素 = 1 米，几乎等于一堵墙。手动配置时把 Canvas 的 Scale 改成 <code>0.01</code>，这样 1 像素 ≈ 1 厘米，面板才像正常 UI。</blockquote>
+
+    <h3>关键变化</h3>
+    <table>
+      <tr><th>变化</th><th>Screen Space</th><th>World Space</th></tr>
+      <tr><td>位置单位</td><td>像素坐标</td><td>世界单位（米）</td></tr>
+      <tr><td>大小含义</td><td>屏幕像素</td><td>世界中的物理大小</td></tr>
+      <tr><td>移动方式</td><td>Rect Tool</td><td>Move/Rotate Tool</td></tr>
+      <tr><td>Event Camera</td><td>自动</td><td>标准 Unity 里通常拖 Main Camera；VRChat 里主要靠 VRC Ui Shape 接管命中</td></tr>
+    </table>
+
+    <blockquote class="warn">World Space Canvas 的 Width=2 意味着面板在 3D 世界里大约 <strong>2 米宽</strong>。Width=10 会像一堵墙那么大。</blockquote>
+
+    <h2>📍 场景中的放置方式</h2>
+    <div class="img-box">
+      <img src="教程资源/L07_03_vrc_placement.png" alt="VRC场景放置">
+      <div class="caption">俯视图：贴墙、浮空、桌面 — 三种经典位置，用 Move/Rotate Tool 调整</div>
+    </div>
+
+    <h2>👁️ 面板朝向</h2>
+    <div class="img-box">
+      <img src="教程资源/L07_04_billboard.png" alt="Billboard效果">
+      <div class="caption">面板始终面向玩家 — 用 Rotate Tool 调整朝向</div>
+    </div>
+
+    <h2>🔍 清晰度控制</h2>
+    <div class="img-box">
+      <img src="教程资源/L07_05_canvas_scaler.png" alt="Canvas Scaler">
+      <div class="caption">Dynamic Pixels Per Unit：1=模糊 / 10=推荐 / 20=极清但费性能</div>
+    </div>
+
+    <h2>⚡ Screen Space vs World Space</h2>
+    <div class="img-box">
+      <img src="教程资源/L07_06_ss_vs_ws.png" alt="对比总结">
+      <div class="caption">一图看懂：VRChat 开发只有 World Space 一条路</div>
+    </div>
+
+    <h2>✅ 练手</h2>
+    <ol>
+      <li>创建 Canvas → Render Mode 改成 <strong>World Space</strong></li>
+      <li>Width=3, Height=1，Dynamic Pixels Per Unit=10</li>
+      <li>Event Camera 拖入 Main Camera</li>
+      <li>在 Canvas 下创建 Text - TextMeshPro</li>
+      <li>运行游戏，旋转视角观察 — UI 像 3D 物体一样固定在世界中</li>
+    </ol>
+
+    <ul class="checklist">
+      <li>[ ] Render Mode 是 World Space</li>
+      <li>[ ] Scene 视图里 Canvas 是可见的矩形平面</li>
+      <li>[ ] 文字从不同角度都能看到</li>
+      <li>[ ] 文字不会跟着屏幕移动</li>
+      <li>[ ] Canvas 的 Layer 不是 UI（至少改成 Default）</li>
+      <li>[ ] Canvas Scale 接近 0.01（1 像素 ≈ 1 厘米），不是 1</li>
+    </ul>
+
+    <blockquote class="warn">目前这个 UI <strong>还不能在 VRChat 里被玩家点击</strong>。下一篇加 VRC Ui Shape 和 UdonSharp。</blockquote>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-06.html">← 第 6 篇：综合小项目</a>
+      <a class="next-btn" href="lesson-08.html">第 8 篇：VRC UI Shape + UdonSharp →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

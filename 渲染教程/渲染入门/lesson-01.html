@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：渲染是什么</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 渲染入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 渲染是什么</a></li>
+      <li><a href="lesson-02.html">2. 光照与 PBR</a></li>
+      <li><a href="lesson-03.html">3. 材质与 Shader</a></li>
+      <li><a href="lesson-04.html">4. VRChat 渲染实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：发光水晶</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：渲染是什么 — 一帧画面怎么画出来</h1>
+    <p>你在 VRChat 里看到的每一个世界，都是显卡在<strong>每秒钟画 60~90 张图</strong>的结果。这一篇，我们先搞清楚「一张图是怎么画出来的」。</p>
+
+    <h2>1. 渲染 = 一条流水线</h2>
+    <p>显卡不是「拍照片」，它是一条流水线：把 3D 场景（模型、灯光、材质）一步步变成屏幕上的 2D 像素。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_render_pipeline.png" alt="渲染管线流程">
+      <div class="caption">图：渲染管线 — 场景输入 → 顶点着色 → 光栅化 → 片元着色 → 屏幕</div>
+    </div>
+
+    <table>
+      <tr><th>阶段</th><th>在做什么</th><th>你关心的点</th></tr>
+      <tr><td><strong>场景输入</strong></td><td>把模型、相机、灯光、材质交给 GPU</td><td>物体数量、三角形数量</td></tr>
+      <tr><td><strong>顶点着色</strong></td><td>计算每个顶点在屏幕上的位置</td><td>模型面数、骨骼动画</td></tr>
+      <tr><td><strong>光栅化</strong></td><td>把三角形拆成一个个像素点</td><td>像素密度（分辨率）</td></tr>
+      <tr><td><strong>片元着色</strong></td><td>算每个像素最终的颜色</td><td>光照、材质、贴图（本教程重点！）</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>一句话理解：</strong>「形状」由顶点决定，「颜色」由材质 + 光照 + Shader 决定。你做世界时动最多的，就是最后一个环节。</blockquote>
+
+    <h2>2. 一帧是怎么画出来的</h2>
+    <p>每一帧，CPU 和 GPU 要接力完成一整轮工作：</p>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_frame_loop.png" alt="一帧的流程">
+      <div class="caption">图：CPU 准备命令 → GPU 执行渲染 → 显示 → 下一帧。帧率 = 每秒画多少帧</div>
+    </div>
+
+    <ul>
+      <li><strong>CPU</strong>：跑 Unity 逻辑（动画、物理、Udon 脚本），然后决定「这一帧要画哪些物体」，把指令打包提交给 GPU —— 每一次提交叫一个 <strong>Draw Call</strong></li>
+      <li><strong>GPU</strong>：拿着指令跑第 1 节的流水线，把画面画进显存里的帧缓冲</li>
+      <li><strong>屏幕</strong>：把帧缓冲显示出来，然后开始下一帧</li>
+    </ul>
+
+    <blockquote class="warn"><strong>重点：</strong>Draw Call 越少，CPU 越轻松；渲染越简单，GPU 越轻松。两者都会直接变成帧率。第 4 篇会专门讲怎么省。</blockquote>
+
+    <h2>3. 为什么画面「好看」？</h2>
+    <p>渲染的世界里，「好看」≈「真实的光照」。决定画面质感的三件事，也是后面三篇的主题：</p>
+    <table>
+      <tr><th>要素</th><th>第几篇讲</th><th>举例</th></tr>
+      <tr><td><strong>光照</strong></td><td>第 2 篇</td><td>太阳、灯泡、天空的颜色</td></tr>
+      <tr><td><strong>材质/Shader</strong></td><td>第 3 篇</td><td>木头糙、金属亮、水晶会发光</td></tr>
+      <tr><td><strong>性能控制</strong></td><td>第 4 篇</td><td>别人来你世界不卡顿</td></tr>
+    </table>
+
+    <blockquote class="tip">先记住一个概念：<strong>光不打，什么材质都白搭</strong>。很多新手把材质调得很漂亮，但场景没打光，看起来还是灰的。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了「渲染 = 顶点 + 光栅化 + 着色」的流水线</li>
+      <li>理解了 Draw Call 是什么、为什么越少越好</li>
+      <li>理解了「形状看顶点、颜色看材质和光」</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：光照与 PBR →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

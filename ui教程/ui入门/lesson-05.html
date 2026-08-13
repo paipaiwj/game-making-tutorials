@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：Slider / InputField / Toggle</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity UI 入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. UI 与 Canvas</a></li>
+      <li><a href="lesson-02.html">2. 第一个 Text</a></li>
+      <li><a href="lesson-03.html">3. Button 与点击事件</a></li>
+      <li><a href="lesson-04.html">4. Image 与 Panel</a></li>
+      <li><a href="lesson-05.html" class="active">5. Slider / InputField / Toggle</a></li>
+      <li><a href="lesson-06.html">6. 综合小项目</a></li>
+      <li><a href="lesson-07.html">7. World Space Canvas</a></li>
+      <li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li>
+      <li><a href="lesson-09.html">9. Scroll View</a></li>
+      <li><a href="lesson-10.html">10. Layout Groups</a></li>
+      <li><a href="lesson-11.html">11. 嵌套 Canvas</a></li>
+      <li><a href="lesson-12.html">12. VRC 实战菜单</a></li>
+      <li><a href="lesson-13.html">13. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：Slider、InputField 和 Toggle</h1>
+    <p>前几篇学了文字、按钮、图片。这一篇学三个<strong>更高级的交互控件</strong>：滑块、输入框、开关。它们是做设置界面和角色面板的基石。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_04_comparison_table.png" alt="三个控件对比">
+      <div class="caption">图：Slider、InputField、Toggle 的用途、值类型、事件对比</div>
+    </div>
+
+    <h2>1. Slider — 滑块</h2>
+    <p>Slider 让玩家在<strong>一个范围内选择数值</strong>。音量调节、亮度、角色属性调整都用它。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_slider_structure.png" alt="Slider结构解析">
+      <div class="caption">图：Slider 的内部结构 — Background（轨道）、Fill（已填充部分）、Handle（可拖拽手柄）</div>
+    </div>
+
+    <h3>Slider 的层级结构</h3>
+    <p>创建 Slider（右键 Canvas → UI → Slider），你会得到：</p>
+    <pre><code>▼ Slider
+  ├─ Background        ← 轨道的灰色背景
+  ▼ Fill Area
+    └─ Fill            ← 已填充的彩色部分
+  ▼ Handle Slide Area
+    └─ Handle          ← 可以拖拽的圆形手柄</code></pre>
+
+    <h3>关键属性</h3>
+    <table>
+      <tr><th>属性</th><th>作用</th><th>举例</th></tr>
+      <tr><td><strong>Min Value</strong></td><td>最小值</td><td>音量设 0</td></tr>
+      <tr><td><strong>Max Value</strong></td><td>最大值</td><td>音量设 100</td></tr>
+      <tr><td><strong>Value</strong></td><td>当前值（运行时动态变化）</td><td>初始设 50</td></tr>
+      <tr><td><strong>Whole Numbers</strong></td><td>勾上只取整数，不勾可以有小数</td><td>音量一般取整数</td></tr>
+      <tr><td><strong>On Value Changed</strong></td><td>值变化时触发的事件</td><td>见下方代码</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>OnValueChanged 传递的是 float 值。</strong>所以接收方法必须有一个 float 参数：<code>public void OnVolumeChanged(float value)</code></blockquote>
+
+    <h2>2. InputField — 文本输入框</h2>
+    <p>InputField 让玩家<strong>输入文字</strong>。登录名、聊天消息、搜索框都用它。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_inputfield_structure.png" alt="InputField结构">
+      <div class="caption">图：InputField 的结构 — Placeholder（占位提示）和 Text（实际输入内容）</div>
+    </div>
+
+    <h3>InputField 的层级结构</h3>
+    <pre><code>▼ InputField (TMP)
+  ├─ Text Area
+  │   ├─ Placeholder    ← 没输入时显示的提示文字（灰色）
+  │   └─ Text           ← 实际输入的文字
+</code></pre>
+
+    <h3>关键属性</h3>
+    <table>
+      <tr><th>属性</th><th>作用</th></tr>
+      <tr><td><strong>Text</strong></td><td>当前输入的文本（代码里通过 .text 读写）</td></tr>
+      <tr><td><strong>Character Limit</strong></td><td>最多输入多少字符（0=不限）</td></tr>
+      <tr><td><strong>Content Type</strong></td><td><strong>Standard</strong>（普通）/ <strong>Password</strong>（显示***）/ <strong>Integer</strong>（只能数字）等</td></tr>
+      <tr><td><strong>Placeholder</strong></td><td>占位文字（子物体 Placeholder 上的 Text 组件）</td></tr>
+      <tr><td><strong>On Value Changed</strong></td><td>每次文字变化都触发（传 string）</td></tr>
+      <tr><td><strong>On End Edit</strong></td><td>输入完成时触发（按回车或点别处，传 string）</td></tr>
+    </table>
+
+    <h2>3. Toggle — 开关</h2>
+    <p>Toggle 是<strong>二选一的开关</strong>。静音、全屏、显示 FPS 都用它。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_03_toggle_states.png" alt="Toggle开关状态">
+      <div class="caption">图：Toggle 的 ON / OFF / DISABLED 三种状态</div>
+    </div>
+
+    <h3>Toggle 的层级结构</h3>
+    <pre><code>▼ Toggle
+  ├─ Background        ← 开关的背景框
+  │   └─ Checkmark     ← 打勾图标（勾上时显示）
+  └─ Label             ← 旁边的说明文字</code></pre>
+
+    <h3>关键属性</h3>
+    <table>
+      <tr><th>属性</th><th>作用</th></tr>
+      <tr><td><strong>Is On</strong></td><td>当前是否打开（代码里 .isOn 读写）</td></tr>
+      <tr><td><strong>On Value Changed</strong></td><td>状态变化时触发，传 bool 值</td></tr>
+    </table>
+
+    <h2>4. 它们都是 Selectable 家族</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_05_selectable_tree.png" alt="Selectable继承树">
+      <div class="caption">图：Button、Slider、InputField、Toggle 都继承自 Selectable，共享 Interactable、Transition、Navigation 等属性</div>
+    </div>
+
+    <p>因为它们都继承自 <strong>Selectable</strong>，所以<strong>共享以下属性</strong>：</p>
+    <ul>
+      <li><strong>Interactable</strong> — 关了就变灰，无法交互</li>
+      <li><strong>Transition</strong> — Color Tint / Sprite Swap / Animation</li>
+      <li><strong>Navigation</strong> — 手柄/键盘导航</li>
+    </ul>
+
+    <h2>5. 练手时间 — 做一个设置面板</h2>
+    <blockquote class="tip"><strong>目标：</strong>做一个设置面板，包含音量滑块、昵称输入框、全屏开关。所有值变化时 Console 输出。</blockquote>
+
+    <h3>创建 UI</h3>
+    <ol>
+      <li>创建 Panel（半透明背景 400x350，居中）</li>
+      <li>在 Panel 下创建标题 Text：「设置」（字号 24，白色粗体）</li>
+      <li>创建 Text：「音量」+ Slider（Min=0, Max=100, Value=50）</li>
+      <li>创建 Text：「昵称」+ InputField (TMP)（Placeholder 写"请输入昵称"）</li>
+      <li>创建 Toggle，Label 写「全屏模式」</li>
+    </ol>
+
+    <h3>写脚本</h3>
+    <pre><code>using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class SettingsPanel : MonoBehaviour
+{
+    public Slider volumeSlider;
+    public TMP_InputField nicknameInput;
+    public Toggle fullscreenToggle;
+
+    // Slider 事件 — 必须有一个 float 参数
+    public void OnVolumeChanged(float value)
+    {
+        Debug.Log("音量: " + value);
+    }
+
+    // InputField 事件 — 必须有一个 string 参数
+    public void OnNicknameChanged(string text)
+    {
+        Debug.Log("昵称: " + text);
+    }
+
+    // Toggle 事件 — 必须有一个 bool 参数
+    public void OnFullscreenToggled(bool isOn)
+    {
+        Debug.Log("全屏: " + (isOn ? "开" : "关"));
+    }
+}</code></pre>
+
+    <h3>绑定事件</h3>
+    <ol>
+      <li>在 Canvas 上创建空物体 <code>SettingsPanel</code>，挂此脚本</li>
+      <li>把 Slider、InputField、Toggle 分别拖到脚本的对应字段</li>
+      <li>Slider 的 <strong>OnValueChanged</strong> → SettingsPanel → OnVolumeChanged</li>
+      <li>InputField 的 <strong>OnValueChanged</strong> → SettingsPanel → OnNicknameChanged</li>
+      <li>Toggle 的 <strong>OnValueChanged</strong> → SettingsPanel → OnFullscreenToggled</li>
+    </ol>
+
+    <blockquote class="warn"><strong>注意区别：</strong>Button 用 <strong>OnClick</strong>，Slider / InputField / Toggle 用 <strong>OnValueChanged</strong>。参数类型也不一样：Button 无参或简单类型，Slider 传 float，InputField 传 string，Toggle 传 bool。</blockquote>
+
+    <h2>6. VRChat 世界里的差异</h2>
+    <p>上面这段是 <strong>普通 Unity 编辑器</strong>里的做法：直接把 OnValueChanged 绑定到脚本方法，方法带 float / string / bool 参数。</p>
+
+    <p>但 <strong>VRChat 世界</strong>里，UI 事件不能随意调用任意 MonoBehaviour 方法。官方允许的方式通常是：把脚本换成 <strong>UdonSharp</strong>，在 Inspector 里用 OnValueChanged / OnClick → <code>UdonBehaviour.SendCustomEvent("方法名")</code>。方法名必须写成 public、且不带参数，值自己在方法里从组件上读。</p>
+
+    <pre><code>// VRC 世界的设置面板脚本（UdonSharp 版）
+using UdonSharp;
+using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
+
+public class SettingsPanelVRC : UdonSharpBehaviour
+{
+    public Slider volumeSlider;
+    public TMP_InputField nicknameInput;
+    public Toggle fullscreenToggle;
+
+    // 这三个方法不接参数，因为 OnValueChanged 在这里只是 SendCustomEvent
+    public void OnVolumeChanged()
+    {
+        Debug.Log("音量: " + volumeSlider.value);
+    }
+
+    public void OnNicknameChanged()
+    {
+        Debug.Log("昵称: " + nicknameInput.text);
+    }
+
+    public void OnFullscreenToggled()
+    {
+        Debug.Log("全屏: " + (fullscreenToggle.isOn ? "开" : "关"));
+    }
+}</code></pre>
+
+    <blockquote class="warn">在 VRChat 项目里，如果 UI 事件面板里找不到你自定义脚本的方法，先确认：① 用的是 UdonBehaviour / UdonSharp；② 方法名是 public；③ 事件绑定选的是 <code>SendCustomEvent</code> 并填了完全一致的方法名。</blockquote>
+
+    <h3>自检清单</h3>
+    <ul class="checklist">
+      <li>[ ] 拖拽 Slider，Console 输出音量值</li>
+      <li>[ ] 在 InputField 里打字，Console 输出文字</li>
+      <li>[ ] 点击 Toggle，Console 输出开关状态</li>
+      <li>[ ] 三个控件都有 Interactable 属性，关掉试试效果</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 第 4 篇：Image 与 Panel</a>
+      <a class="next-btn" href="lesson-06.html">第 6 篇：综合小项目 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

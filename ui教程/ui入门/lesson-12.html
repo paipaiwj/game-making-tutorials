@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>第 12 篇：VRC 实战菜单</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="layout"><aside><h1>Unity UI 入门</h1><ol>
+<li><a href="lesson-01.html">1. UI 与 Canvas</a></li><li><a href="lesson-02.html">2. 第一个 Text</a></li><li><a href="lesson-03.html">3. Button 与点击事件</a></li><li><a href="lesson-04.html">4. Image 与 Panel</a></li><li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li><li><a href="lesson-06.html">6. 综合小项目</a></li><li><a href="lesson-07.html">7. World Space Canvas</a></li><li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li><li><a href="lesson-09.html">9. Scroll View</a></li><li><a href="lesson-10.html">10. Layout Groups</a></li><li><a href="lesson-11.html">11. 嵌套 Canvas</a></li><li><a href="lesson-12.html" class="active">12. VRC 实战菜单</a></li><li><a href="lesson-13.html">13. 速查表</a></li></ol></aside>
+
+<main>
+<h1>第 12 篇：VRC 实战 — 角色菜单面板</h1>
+<p>前 11 篇所有知识的大综合：做一个完整的 VRChat 角色菜单。</p>
+
+<h2>🎯 最终效果</h2>
+<div class="img-box"><img src="教程资源/L12_01_menu_preview.png" alt="菜单预览"><div class="caption">角色名 + 音量 Slider + 麦克风 Toggle + 表情/传送 Button</div></div>
+
+<h2>🌳 Hierarchy 结构</h2>
+<div class="img-box"><img src="教程资源/L12_02_menu_hierarchy.png" alt="菜单结构"><div class="caption">MenuCanvas (World Space) → MenuPanel (Vertical Layout) → 5 个控件</div></div>
+
+<h2>📜 脚本交互</h2>
+    <div class="img-box"><img src="教程资源/L12_03_menu_script.png" alt="脚本交互"><div class="caption">public 字段拖拽赋值 + 每个控件对应一个事件方法</div></div>
+
+    <div class="img-box"><img src="教程资源/12b_vrc_menu_flow.png" alt="VRC菜单交互流程"><div class="caption">玩家点击 → VRC Ui Shape → Button → SendCustomEvent → UdonSharp 逻辑</div></div>
+
+<h2>🔨 搭建 6 步走</h2>
+<div class="img-box"><img src="教程资源/L12_04_menu_steps.png" alt="搭建步骤"><div class="caption">从 Canvas 到事件绑定，6 步完成整个菜单</div></div>
+
+<h2>🔗 事件绑定总图</h2>
+<div class="img-box"><img src="教程资源/L12_05_event_map.png" alt="事件绑定"><div class="caption">Slider/Toggle 用 OnValueChanged，Button 用 OnClick → SendCustomEvent</div></div>
+
+<pre><code>using UdonSharp;
+using UnityEngine;
+using TMPro;
+
+public class VRCCharacterMenu : UdonSharpBehaviour
+{
+    public TMP_Text titleText;
+    public UnityEngine.UI.Slider volumeSlider;
+    public UnityEngine.UI.Toggle micToggle;
+
+    void Start() { titleText.text = "我的角色"; }
+
+    // 下面这些方法由 UI 的 OnValueChanged / OnClick → SendCustomEvent 调用
+    public void OnVolumeChanged() { Debug.Log("音量: " + volumeSlider.value); }
+    public void OnMicToggled() { Debug.Log("麦克风: " + (micToggle.isOn ? "开" : "关")); }
+    public void OnEmoteClicked() { Debug.Log("切换表情"); }
+    public void OnTeleportClicked() { Debug.Log("传送!"); }
+}</code></pre>
+
+<blockquote class="warn">不要把 VRC_Pickup 的 <code>Interact()</code> 当成 UI 点击事件。这里 UI 按钮用的是 Button.OnClick → <code>SendCustomEvent("OnEmoteClicked")</code> 这种模式。方法必须 public 且不带参数。</blockquote>
+
+<ul class="checklist"><li>[ ] Canvas 是 World Space，有 VRC Ui Shape</li><li>[ ] 所有控件正常显示</li><li>[ ] Slider 可拖拽、Toggle 可切换</li><li>[ ] 按钮点击有响应</li></ul>
+
+<div class="nav-row"><a class="prev-btn" href="lesson-11.html">← 第 11 篇</a><a class="next-btn" href="lesson-13.html">第 13 篇 →</a></div>
+</main></div></body></html>

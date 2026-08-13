@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 篇：VRC UI Shape + UdonSharp</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity UI 入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. UI 与 Canvas</a></li>
+      <li><a href="lesson-02.html">2. 第一个 Text</a></li>
+      <li><a href="lesson-03.html">3. Button 与点击事件</a></li>
+      <li><a href="lesson-04.html">4. Image 与 Panel</a></li>
+      <li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li>
+      <li><a href="lesson-06.html">6. 综合小项目</a></li>
+      <li><a href="lesson-07.html">7. World Space Canvas</a></li>
+      <li><a href="lesson-08.html" class="active">8. VRC UI Shape + UdonSharp</a></li>
+      <li><a href="lesson-09.html">9. Scroll View</a></li>
+      <li><a href="lesson-10.html">10. Layout Groups</a></li>
+      <li><a href="lesson-11.html">11. 嵌套 Canvas</a></li>
+      <li><a href="lesson-12.html">12. VRC 实战菜单</a></li>
+      <li><a href="lesson-13.html">13. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 8 篇：VRC UI Shape + UdonSharp</h1>
+    <p>上一篇做了 World Space Canvas，但按钮点了没反应？这一篇按 VRChat 官方手册把“能看”变成“能点”。</p>
+
+    <h2>🛡️ VRC Ui Shape — 让 UI 能被 VRChat 射线命中</h2>
+    <div class="img-box">
+      <img src="教程资源/L08_01_vrc_ui_shape.png" alt="VRC UI Shape">
+      <div class="caption">没有 VRC Ui Shape = VRChat 里 UI 是“装饰画”，只能看不能点</div>
+    </div>
+    <p><strong>VRC Ui Shape</strong> 是 VRChat 提供的组件，让玩家可以用 VRChat 的指针/射线点击你的 Canvas。它只有一个主要参数：<strong>Allow Focus View</strong>（是否允许手机/平板玩家放大这个 UI）。</p>
+
+    <h2>⚙️ 官方推荐：直接用 VRC 预设创建</h2>
+    <p>VRChat 离线手册里最省事的做法是：右键 Hierarchy → <code>UI</code> → <code>TextMeshPro (VRC)</code>。SDK 会自动帮你把 Canvas、VRC Ui Shape、Graphic Raycaster 等必要组件配置好。</p>
+    <p>如果你要手动配置，至少要满足以下条件：</p>
+    <ol>
+      <li>在 Canvas 同一个物体上添加 <strong>VRC Ui Shape</strong></li>
+      <li>把 Canvas 的 Layer 从 <strong>UI</strong> 改成 <strong>Default</strong>（或其他非 UI 层）</li>
+      <li>把 Canvas 的 Scale 调小到约 <strong>0.01</strong>（1 像素 ≈ 1 厘米），否则 1 像素 = 1 米会大得离谱</li>
+      <li>Render Mode 设为 <strong>World Space</strong></li>
+      <li>Canvas 上要有 <strong>Graphic Raycaster</strong>（一般加 Canvas 时自动带上）</li>
+      <li>场景里要有 <strong>EventSystem</strong>（不要删掉）</li>
+      <li>所有 UI 元素的 <strong>Navigation</strong> 设为 <strong>None</strong></li>
+      <li>文字尽量用 TextMeshPro，不要用 Unity 内置 Text</li>
+    </ol>
+
+    <div class="img-box">
+      <img src="教程资源/L08_05_full_chain.png" alt="完整组件链">
+      <div class="caption">一个可交互 VRC UI 所需的组件链：Canvas + GraphicRaycaster + VRC Ui Shape + Button/UdonBehaviour</div>
+    </div>
+
+    <blockquote class="warn"><strong>Collider 注意：</strong>VRChat 上传世界后会自动为 VRC Ui Shape 加 Box Collider。如果你自己加了一个 Collider，一定要保证它的大小正确；同时不要有其他 Collider 挡住 Canvas。VRC Ui Shape 要放在 Canvas 同一个物体上，不是放在某个子物体上。</blockquote>
+
+    <h2>📝 UdonSharp vs MonoBehaviour</h2>
+    <div class="img-box">
+      <img src="教程资源/L08_02_udonsharp_template.png" alt="UdonSharp模板">
+      <div class="caption">VRChat 世界里逻辑脚本要继承 UdonSharpBehaviour，而不是普通 MonoBehaviour</div>
+    </div>
+    <p>普通 Unity 的 UI 事件可以直接调用 MonoBehaviour 的 public 方法。但在 VRChat 世界里，UI 事件只能调用 VRChat 允许的目标方法，最常用的是：</p>
+    <ul>
+      <li><code>UdonBehaviour.SendCustomEvent("方法名")</code> — 最常用</li>
+      <li><code>UdonBehaviour.RunProgram()</code></li>
+      <li><code>UdonBehaviour.Interact()</code></li>
+    </ul>
+    <p>所以到 VRChat 阶段，我们通常把逻辑写进 UdonSharp 脚本，再用 Button 的 OnClick → <code>UdonBehaviour.SendCustomEvent("OnClicked")</code> 触发。</p>
+
+    <h2>🔄 完整交互流程</h2>
+    <div class="img-box">
+      <img src="教程资源/L08_03_interaction_flow.png" alt="交互流程">
+      <div class="caption">玩家射线 → VRC Ui Shape → Graphic Raycaster → Button.OnClick → SendCustomEvent → UdonSharp 方法</div>
+    </div>
+
+    <h2>🔗 变量绑定 + 事件设置</h2>
+    <div class="img-box">
+      <img src="教程资源/L08_04_trigger_setup.png" alt="触发器设置">
+      <div class="caption">public 变量拖拽赋值 + Button OnClick → SendCustomEvent("OnClicked")</div>
+    </div>
+
+    <h2>🖥️ 练手：可交互计数器</h2>
+    <div class="img-box">
+      <img src="教程资源/L08_06_counter_demo.png" alt="计数器示例">
+      <div class="caption">点击按钮 → 数字 +1 → 面板切换显示/隐藏</div>
+    </div>
+
+    <pre><code>using UdonSharp;
+using UnityEngine;
+using TMPro;
+
+public class VRCInteractiveButton : UdonSharpBehaviour
+{
+    public TMP_Text displayText;
+    public GameObject targetPanel;
+    private int clickCount = 0;
+
+    void Start() { displayText.text = "点击次数: 0"; }
+
+    // 这个方法由 Button.OnClick → SendCustomEvent("OnClicked") 调用
+    public void OnClicked()
+    {
+        clickCount++;
+        displayText.text = "点击次数: " + clickCount;
+        if (targetPanel != null)
+            targetPanel.SetActive(!targetPanel.activeSelf);
+    }
+}</code></pre>
+
+    <ol>
+      <li>创建 World Space Canvas，按上面步骤加 VRC Ui Shape、改 Layer、调 Scale</li>
+      <li>Canvas 下创建 Text + Button + 一个 Image（InfoPanel，初始隐藏）</li>
+      <li>Canvas 加 Udon Behaviour，挂上面的脚本</li>
+      <li>拖拽 Text 和 InfoPanel 到脚本字段</li>
+      <li>Button 的 OnClick → 拖 UdonBehaviour → 选 <code>SendCustomEvent</code> → 填 <code>OnClicked</code></li>
+    </ol>
+
+    <ul class="checklist">
+      <li>[ ] Canvas 有 VRC Ui Shape</li>
+      <li>[ ] Canvas 的 Layer 不是 UI</li>
+      <li>[ ] Canvas Scale 约 0.01</li>
+      <li>[ ] Canvas 有 Graphic Raycaster，场景里有 EventSystem</li>
+      <li>[ ] 脚本继承 UdonSharpBehaviour</li>
+      <li>[ ] 点击按钮数字 +1</li>
+      <li>[ ] 点击按钮面板切换显示/隐藏</li>
+    </ul>
+
+    <h2>🔍 常见问题</h2>
+    <table>
+      <tr><th>现象</th><th>原因 / 检查</th></tr>
+      <tr><td>指针不出现</td><td>Canvas 上没有 VRC Ui Shape，或 Layer 还是 UI，或 VRC Ui Shape 加到了子物体上</td></tr>
+      <tr><td>指针出现但 UI 不响应</td><td>EventSystem 被删了；Canvas 没有 Graphic Raycaster；按钮被别的透明 Image/Text 挡住了</td></tr>
+      <tr><td>点击有反应但不是预期行为</td><td>SendCustomEvent 的方法名写错；方法不是 public；方法带了不该带的参数</td></tr>
+      <tr><td>UI 会跟着移动/按键乱跳</td><td>Navigation 没设 None；Scroll Rect 的 Scroll Sensitivity 没设 0</td></tr>
+    </table>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-07.html">← 第 7 篇：World Space Canvas</a>
+      <a class="next-btn" href="lesson-09.html">第 9 篇：Scroll View →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：Button 与点击事件</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity UI 入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. UI 与 Canvas</a></li>
+      <li><a href="lesson-02.html">2. 第一个 Text</a></li>
+      <li><a href="lesson-03.html" class="active">3. Button 与点击事件</a></li>
+      <li><a href="lesson-04.html">4. Image 与 Panel</a></li>
+      <li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li>
+      <li><a href="lesson-06.html">6. 综合小项目</a></li>
+      <li><a href="lesson-07.html">7. World Space Canvas</a></li>
+      <li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li>
+      <li><a href="lesson-09.html">9. Scroll View</a></li>
+      <li><a href="lesson-10.html">10. Layout Groups</a></li>
+      <li><a href="lesson-11.html">11. 嵌套 Canvas</a></li>
+      <li><a href="lesson-12.html">12. VRC 实战菜单</a></li>
+      <li><a href="lesson-13.html">13. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：Button 按钮与点击事件</h1>
+    <p>前两篇学了 Canvas 和 Text。现在来学 UI 最核心的交互元素 — <strong>按钮</strong>。</p>
+
+    <h2>1. Button 不是"一个东西"，是三个组件拼出来的</h2>
+    <p>当你在 Unity 里创建一个 Button，它实际上是一个 <strong>GameObject 上挂着两个组件，再加一个子物体</strong>。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_button_anatomy.png" alt="Button解剖图">
+      <div class="caption">图：Button 的解剖结构 — 一个父物体（Image + Button 组件）+ 一个子物体（Text）</div>
+    </div>
+
+    <table>
+      <tr><th>部位</th><th>在哪里</th><th>干什么的</th></tr>
+      <tr><td><strong>Image 组件</strong></td><td>Button 父物体上</td><td>按钮的外观 — 背景颜色、图片、圆角</td></tr>
+      <tr><td><strong>Button 组件</strong></td><td>Button 父物体上</td><td>按钮的行为 — 能不能点、点了触发什么、颜色变化</td></tr>
+      <tr><td><strong>Text 子物体</strong></td><td>Button 下面挂着</td><td>按钮上显示的文字</td></tr>
+    </table>
+
+    <h2>2. 创建你的第一个按钮</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_05_button_inspector.png" alt="Button Inspector面板">
+      <div class="caption">图：选中 Button 后 Inspector 里看到的完整面板</div>
+    </div>
+
+    <ol>
+      <li>在 Hierarchy 里<strong>选中 Canvas</strong></li>
+      <li>右键 → <code>UI</code> → <code>Button - TextMeshPro</code></li>
+      <li>Canvas 下面出现一个 Button，Button 下面挂着一个 Text</li>
+      <li>把 Text 的文字改成「点我！」</li>
+    </ol>
+
+    <h2>3. Button 组件的关键属性</h2>
+    <table>
+      <tr><th>属性</th><th>作用</th><th>默认值</th></tr>
+      <tr><td><strong>Interactable</strong></td><td>能不能点。关了按钮变灰，点了没反应</td><td>勾上</td></tr>
+      <tr><td><strong>Transition</strong></td><td>状态变化方式：Color Tint（颜色）/ Sprite Swap（换图）/ Animation（动画）</td><td>Color Tint</td></tr>
+      <tr><td><strong>Target Graphic</strong></td><td>哪个 Image 组件受 Transition 影响</td><td>自己的 Image</td></tr>
+      <tr><td><strong>Navigation</strong></td><td>手柄/键盘导航时的焦点移动 — VRChat 手册要求设为 <strong>None</strong>，防止玩家移动时误触 UI</td><td>Automatic</td></tr>
+    </table>
+
+    <h2>4. 按钮的四种颜色状态</h2>
+    <p>当 Transition 选 <strong>Color Tint</strong> 时，按钮有四种视觉状态：</p>
+
+    <div class="img-box">
+      <img src="教程资源/L03_03_button_states.png" alt="按钮四种状态">
+      <div class="caption">图：Normal / Highlighted / Pressed / Disabled 四种状态</div>
+    </div>
+
+    <table>
+      <tr><th>状态</th><th>触发时机</th><th>默认颜色</th></tr>
+      <tr><td><strong>Normal</strong></td><td>鼠标不在按钮上</td><td>白色</td></tr>
+      <tr><td><strong>Highlighted</strong></td><td>鼠标悬停</td><td>浅蓝</td></tr>
+      <tr><td><strong>Pressed</strong></td><td>按下未松开</td><td>深蓝</td></tr>
+      <tr><td><strong>Disabled</strong></td><td>Interactable 关闭时</td><td>灰色</td></tr>
+    </table>
+
+    <!-- ====== VRChat 注意 ====== -->
+    <h2>⚠️ VRChat 中 Color Tint 可能表现不一致</h2>
+    <p>上面说的 Color Tint 在 <strong>普通 Unity 项目</strong> 中完全正常。但在 <strong>VRChat</strong> 里，VRChat 使用自己的射线系统检测 UI 交互，和 Unity 编辑器的鼠标/键盘 Selectable 状态机不完全一致。常见的社区经验是：</p>
+    <ul>
+      <li>悬停（Highlighted）有时不触发</li>
+      <li>按下（Pressed）颜色可能触发但退出时机不自然</li>
+      <li>个别情况下颜色会“卡住”回不去</li>
+    </ul>
+
+    <div class="img-box">
+      <img src="教程资源/L03_06_vrc_button_color.png" alt="VRC按钮颜色方案">
+      <div class="caption">社区常用方案：用 UdonSharp 的 OnPointerEnter/Exit/Down/Up 手动控制颜色，保证状态切换明确</div>
+    </div>
+
+    <p><strong>稳妥做法：</strong>如果你发现按钮颜色状态在 VRChat 里不稳定，可以把 Button 的 Transition 设为 <strong>None</strong>，然后用 UdonSharp 的 Pointer 事件手动控制颜色。下面是一个参考脚本（需要把 <code>targetImage</code> 拖成按钮自己的 Image）：</p>
+
+    <pre><code>// VRCButtonColor.cs — 挂在 Button 物体上
+using UdonSharp;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class VRCButtonColor : UdonSharpBehaviour
+{
+    public Color normalColor = Color.white;
+    public Color hoverColor = Color.red;
+    public Color pressedColor = Color.black;
+    public Image targetImage;
+
+    public override void OnPointerEnter() { if (targetImage) targetImage.color = hoverColor; }
+    public override void OnPointerDown()  { if (targetImage) targetImage.color = pressedColor; }
+    public override void OnPointerUp()    { if (targetImage) targetImage.color = hoverColor; }
+    public override void OnPointerExit()  { if (targetImage) targetImage.color = normalColor; }
+}</code></pre>
+
+    <blockquote class="warn"><strong>记住：</strong>VRChat 世界里 Navigation 一定要设 None。Transition 可以根据实际测试选择，如果 Color Tint 不稳定，再用上面的 UdonSharp 脚本手动控制颜色。</blockquote>
+
+    <h2>5. OnClick — 按钮点了之后干什么</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_04_onclick_panel.png" alt="OnClick事件面板">
+      <div class="caption">图：OnClick 事件面板 — 拖入目标物体，选择要调用的方法</div>
+    </div>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_click_flow.png" alt="点击事件完整流程">
+      <div class="caption">图：从玩家点击到方法被调用的完整流程</div>
+    </div>
+
+    <ol>
+      <li>找到 Button 组件最下面的 <strong>On Click ()</strong></li>
+      <li>点 <strong>+</strong> 号添加一个条目</li>
+      <li>把挂有脚本的 GameObject <strong>拖到</strong>「None (Object)」框里</li>
+      <li>右边的下拉菜单里<strong>选择脚本和具体方法</strong></li>
+    </ol>
+
+    <blockquote class="warn">OnClick 只能看到 <code>public</code> 方法。VRChat 中，如果要用 UdonBehaviour，选 <code>SendCustomEvent</code> 并填方法名。</blockquote>
+
+    <blockquote class="warn"><strong>VRChat 限制：</strong>VRChat 世界里的 UI 事件并不能随意调用任意 MonoBehaviour 方法。官方允许的目标类型包括 Animator、AudioSource、GameObject.SetActive、Button/Slider/Toggle/ScrollRect 等部分属性，以及 UdonBehaviour 的 <code>RunProgram</code> / <code>SendCustomEvent</code> / <code>Interact</code>。所以到 VRChat 阶段，我们通常把逻辑写进 UdonSharp，再用 OnClick → <code>SendCustomEvent("方法名")</code>。</blockquote>
+
+    <h2>6. 练手 — 做一个能计数的按钮</h2>
+
+    <ol>
+      <li>Canvas 下创建 <code>Button - TextMeshPro</code>，文字改成「点击次数: 0」</li>
+      <li>Canvas 下创建空物体 ClickCounter，挂 ClickCounter 脚本</li>
+    </ol>
+
+    <pre><code>using UnityEngine;
+using TMPro;
+
+public class ClickCounter : MonoBehaviour
+{
+    public TMP_Text buttonText;
+    private int count = 0;
+
+    public void OnButtonClicked()
+    {
+        count++;
+        buttonText.text = "点击次数: " + count;
+        Debug.Log("按钮被点了第 " + count + " 次！");
+    }
+}</code></pre>
+
+    <ol start="3">
+      <li>把 Button 下的 Text 拖到 ClickCounter 的 buttonText 字段</li>
+      <li>Button 的 OnClick → 拖 ClickCounter → 选 OnButtonClicked</li>
+      <li>如果是 VRC 项目，Button 的 Navigation 设 None；Transition 若 Color Tint 不稳定，按上文用 UdonSharp 手动控制</li>
+      <li>运行游戏，狂点按钮！</li>
+    </ol>
+
+    <ul class="checklist">
+      <li>[ ] 按钮文字正确显示</li>
+      <li>[ ] 鼠标悬停/按下时按钮颜色变化</li>
+      <li>[ ] 每点一次按钮，数字 +1</li>
+      <li>[ ] Console 里能看到日志输出</li>
+      <li>[ ] VRC 项目：Navigation=None；Transition 若 Color Tint 不稳定，已用 UdonSharp 手动控制</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 第 2 篇：第一个 Text</a>
+      <a class="next-btn" href="lesson-04.html">第 4 篇：Image 与 Panel →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

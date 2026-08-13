@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>第 10 篇：Layout Groups</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="layout"><aside><h1>Unity UI 入门</h1><ol>
+<li><a href="lesson-01.html">1. UI 与 Canvas</a></li><li><a href="lesson-02.html">2. 第一个 Text</a></li><li><a href="lesson-03.html">3. Button 与点击事件</a></li><li><a href="lesson-04.html">4. Image 与 Panel</a></li><li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li><li><a href="lesson-06.html">6. 综合小项目</a></li><li><a href="lesson-07.html">7. World Space Canvas</a></li><li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li><li><a href="lesson-09.html">9. Scroll View</a></li><li><a href="lesson-10.html" class="active">10. Layout Groups</a></li><li><a href="lesson-11.html">11. 嵌套 Canvas</a></li><li><a href="lesson-12.html">12. VRC 实战菜单</a></li><li><a href="lesson-13.html">13. 速查表</a></li></ol></aside>
+
+<main>
+<h1>第 10 篇：Layout Groups — 自动排列</h1>
+<p>手动拖 UI 又累又对不齐？<strong>Layout Groups</strong> 像 CSS Flexbox/Grid，帮你自动排列。</p>
+
+<h2>📐 三种 Layout Group</h2>
+<div class="img-box"><img src="教程资源/L10_01_layout_types.png" alt="三种Layout"><div class="caption">Horizontal（水平）/ Vertical（垂直）/ Grid（网格）— 分别适用工具栏、列表、背包</div></div>
+
+<div class="img-box"><img src="教程资源/10_layout_groups.png" alt="Layout Group 效果"><div class="caption">一张图看懂 Vertical / Horizontal / Grid 三种自动排列的效果</div></div>
+
+<h2>📏 Vertical Layout Group 属性</h2>
+<div class="img-box"><img src="教程资源/L10_02_vertical_layout.png" alt="Vertical属性"><div class="caption">Padding、Spacing、Child Alignment、Force Expand — Spacing 控制间距</div></div>
+
+<h2>📦 Content Size Fitter</h2>
+<div class="img-box"><img src="教程资源/L10_03_content_fitter.png" alt="ContentSizeFitter"><div class="caption">让容器根据内容自动调整大小 — 配合 Layout Group 使用效果最佳</div></div>
+
+<h2>🎒 Grid Layout 背包示例</h2>
+<div class="img-box"><img src="教程资源/L10_04_grid_backpack.png" alt="背包网格"><div class="caption">Cell Size 80×80, 5 列固定，自动排列成网格</div></div>
+
+<h2>🛠️ 练手：5 按钮列表</h2>
+<div class="img-box"><img src="教程资源/L10_05_button_list.png" alt="按钮列表"><div class="caption">空物体加 Vertical Layout Group → 放 5 个 Button → 自动排列</div></div>
+
+<ol><li>创建空物体 Container，Add Component → Vertical Layout Group</li><li>Spacing=10, Padding=10</li><li>在 Container 下创建 5 个 Button</li><li>观察自动排列效果</li></ol>
+
+<ul class="checklist"><li>[ ] 5 个按钮垂直排列</li><li>[ ] 间距均匀</li><li>[ ] 改 Spacing 间距跟着变</li></ul>
+
+<div class="nav-row"><a class="prev-btn" href="lesson-09.html">← 第 9 篇</a><a class="next-btn" href="lesson-11.html">第 11 篇 →</a></div>
+</main></div></body></html>

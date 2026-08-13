@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：Image 与 Panel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity UI 入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. UI 与 Canvas</a></li>
+      <li><a href="lesson-02.html">2. 第一个 Text</a></li>
+      <li><a href="lesson-03.html">3. Button 与点击事件</a></li>
+      <li><a href="lesson-04.html" class="active">4. Image 与 Panel</a></li>
+      <li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li>
+      <li><a href="lesson-06.html">6. 综合小项目</a></li>
+      <li><a href="lesson-07.html">7. World Space Canvas</a></li>
+      <li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li>
+      <li><a href="lesson-09.html">9. Scroll View</a></li>
+      <li><a href="lesson-10.html">10. Layout Groups</a></li>
+      <li><a href="lesson-11.html">11. 嵌套 Canvas</a></li>
+      <li><a href="lesson-12.html">12. VRC 实战菜单</a></li>
+      <li><a href="lesson-13.html">13. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：Image 图片与 Panel 面板</h1>
+    <p>文字和按钮都会了。这一篇学<strong>怎么显示图片</strong>，以及<strong>怎么做背景面板</strong> — 这两个是 UI 里最常用的视觉元素。</p>
+
+    <h2>1. Image 组件 — UI 里的"画框"</h2>
+    <p>Image 组件是 Unity UI 里最基础的可视元素。<strong>不只是显示图片 — Button 的背景、Panel 的面板、进度条的填充，底层都是 Image 组件。</strong></p>
+
+    <p>创建方式：右键 Canvas → <code>UI</code> → <code>Image</code>。你会得到一个白色的矩形 — 这就是一个没有指定图片的 Image（纯色填充）。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L04_03_image_vs_rawimage.png" alt="Image vs Raw Image">
+      <div class="caption">图：Image 组件（左）只能接受 Sprite，Raw Image（右）可以接受任何 Texture</div>
+    </div>
+
+    <h2>2. Image Type — 图片怎么缩放？</h2>
+    <p>这是 Image 组件<strong>最重要的设置</strong>。它决定了当 Image 的尺寸和原图不一样时，图片怎么处理。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_image_types.png" alt="四种Image Type对比">
+      <div class="caption">图：Simple / Sliced / Tiled / Filled 四种类型的效果对比</div>
+    </div>
+
+    <table>
+      <tr><th>类型</th><th>行为</th><th>什么时候用</th></tr>
+      <tr><td><strong>Simple</strong></td><td>直接拉伸到 Image 的尺寸，不保持比例</td><td>纯色块、不需要保形的背景</td></tr>
+      <tr><td><strong>Sliced</strong></td><td>九宫格切片：四角不动、四边单向拉伸、中间双向拉伸</td><td><span class="tag tag-new">最常用</span> 圆角面板、按钮背景、对话框</td></tr>
+      <tr><td><strong>Tiled</strong></td><td>像铺瓷砖一样重复平铺原图</td><td>花纹背景、格子纹理</td></tr>
+      <tr><td><strong>Filled</strong></td><td>只显示图片的一部分，可以控制填充比例</td><td>血条、冷却图标、进度环</td></tr>
+    </table>
+
+    <div class="img-box">
+      <img src="教程资源/L04_04_nineslice.png" alt="九宫格切片原理">
+      <div class="caption">图：九宫格切片（Sliced）原理 — 四个角保持原始形状，中间区域拉伸</div>
+    </div>
+
+    <blockquote class="warn"><strong>Sliced 需要图片本身设置了九宫格边框。</strong>选中图片资源 → Inspector 里点 Sprite Editor → 拖动绿色边框线设置 Border。没有设 Border 的图片，Sliced 效果和 Simple 一样。</blockquote>
+
+    <h2>3. Panel — 没有专门的"Panel 组件"</h2>
+    <p>你可能在别的教程里看到「创建一个 Panel」。但在 Unity 里，<strong>Panel 就是一个普通的 Image</strong>，只是把它配置成面板的样子而已。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_panel_background.png" alt="Panel层级结构">
+      <div class="caption">图：Panel 作为容器，子元素放在它里面。Panel 本身只是一个 Image。</div>
+    </div>
+
+    <h3>做一个半透明背景面板的步骤：</h3>
+    <ol>
+      <li>右键 Canvas → <code>UI</code> → <code>Image</code>，重命名为 <code>Panel</code></li>
+      <li>把 Color 的 Alpha 调低（比如 RGBA: 0, 0, 0, <strong>180</strong>）→ 得到半透明黑色</li>
+      <li>调整 RectTransform 的 Width 和 Height 到你想要的大小</li>
+      <li>之后你就可以把其他 UI 元素（Text、Button 等）放到 Panel 下面作为子级</li>
+    </ol>
+
+    <div class="img-box">
+      <img src="教程资源/L04_05_alpha_demo.png" alt="透明度效果对比">
+      <div class="caption">图：不同 Alpha 值下的面板效果 — Alpha 越低越透明</div>
+    </div>
+
+    <blockquote class="tip">Color 里的 Alpha 值范围是 0~255。0 是完全透明（看不见），255 是完全不透明。180 左右是常见的半透明效果。</blockquote>
+
+    <h2>4. Image 组件的其他重要属性</h2>
+
+    <table>
+      <tr><th>属性</th><th>作用</th><th>建议</th></tr>
+      <tr><td><strong>Source Image</strong></td><td>要显示的图片（拖 Sprite 资源进来）</td><td>不填就是纯色块</td></tr>
+      <tr><td><strong>Color</strong></td><td>叠加在图片上的颜色（白色=原图，其他颜色会染色）</td><td>做半透明面板时主要用这个</td></tr>
+      <tr><td><strong>Raycast Target</strong></td><td>是否能被鼠标/射线"命中"</td><td>纯装饰图<strong>建议关掉</strong>，避免挡住后面的按钮</td></tr>
+      <tr><td><strong>Preserve Aspect</strong></td><td>是否保持原图比例</td><td>显示图标时建议勾上</td></tr>
+    </table>
+
+    <h2>5. 练手时间 — 做一个信息卡片</h2>
+    <blockquote class="tip"><strong>目标：</strong>做一个带半透明背景的卡片，里面有标题、描述文字和一个按钮。</blockquote>
+
+    <h3>创建 UI</h3>
+    <ol>
+      <li>右键 Canvas → UI → Image，改名 <code>Card</code></li>
+      <li>Card 的 Color 设为半透明深色（RGBA: 20, 20, 40, 200），Width=350, Height=200</li>
+      <li>Anchor 设到 middle-center（卡片在屏幕中央）</li>
+      <li>在 Card 下面创建 Text（标题，写"欢迎"，字号 28，白色粗体）</li>
+      <li>在 Card 下面再创建 Text（描述，写"这是一张信息卡片"，字号 16，灰色）</li>
+      <li>在 Card 下面创建 Button（文字"知道了"）</li>
+    </ol>
+
+    <h3>写脚本</h3>
+    <pre><code>using UnityEngine;
+
+public class CardController : MonoBehaviour
+{
+    public GameObject card;
+
+    public void OnCloseClicked()
+    {
+        card.SetActive(false);  // 点按钮后隐藏卡片
+        Debug.Log("卡片已关闭");
+    }
+}</code></pre>
+
+    <ol>
+      <li>在 Canvas 上创建空物体 <code>CardController</code>，挂此脚本</li>
+      <li>把 Card 拖到脚本的 card 字段</li>
+      <li>Button 的 OnClick 绑定 CardController 的 OnCloseClicked</li>
+      <li>运行 → 点按钮 → 卡片消失！</li>
+    </ol>
+
+    <h3>自检清单</h3>
+    <ul class="checklist">
+      <li>[ ] 卡片有半透明背景</li>
+      <li>[ ] 标题、描述、按钮都在卡片里面</li>
+      <li>[ ] 点按钮后卡片消失</li>
+      <li>[ ] Console 有日志输出</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 第 3 篇：Button 与点击事件</a>
+      <a class="next-btn" href="lesson-05.html">第 5 篇：Slider / InputField / Toggle →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

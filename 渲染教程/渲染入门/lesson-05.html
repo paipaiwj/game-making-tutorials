@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：动手做发光水晶</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 渲染入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 渲染是什么</a></li>
+      <li><a href="lesson-02.html">2. 光照与 PBR</a></li>
+      <li><a href="lesson-03.html">3. 材质与 Shader</a></li>
+      <li><a href="lesson-04.html">4. VRChat 渲染实践</a></li>
+      <li><a href="lesson-05.html" class="active">5. 动手：发光水晶</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：动手做一颗发光水晶</h1>
+    <p>把前四篇串起来：模型 → 材质 → PBR → 自发光 → 打光，10 分钟做出一颗会发光的水晶，然后丢进你的 VRChat 世界。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_crystal_steps.png" alt="水晶制作步骤">
+      <div class="caption">图：五步流程 — 建模型 → 建材质 → 调 PBR → 开自发光 → 打光</div>
+    </div>
+
+    <h2>第一步：建模型</h2>
+    <ol>
+      <li>Hierarchy 右键 → <code>3D Object → Cube</code>，改名 <code>Crystal</code></li>
+      <li>缩放：<code>Scale = (0.6, 1.6, 0.6)</code>，拉成一根柱子</li>
+      <li>（进阶）Cube 顶部用 Mesh 编辑拉成尖角，或用 Blender 做一个五面柱体，导入 FBX</li>
+    </ol>
+
+    <h2>第二步：建材质</h2>
+    <ol>
+      <li>Project 右键 → <code>Create → Material</code>，命名 <code>MAT_Crystal</code></li>
+      <li>Shader 下拉选择 <code>Universal Render Pipeline/Lit</code></li>
+      <li>拖到 Crystal 的 MeshRenderer → Materials → Element 0</li>
+    </ol>
+
+    <h2>第三步：调 PBR</h2>
+    <ol>
+      <li><strong>Base Map</strong>：颜色改成淡蓝色 <code>#9fd0ff</code>（或拖一张水晶贴图）</li>
+      <li><strong>Metallic</strong>：<code>0</code>（水晶不是金属）</li>
+      <li><strong>Smoothness</strong>：<code>0.6~0.7</code>（半光滑，反光不强）</li>
+      <li>（可选）加一张 <strong>Normal Map</strong> 做表面纹理</li>
+    </ol>
+
+    <h2>第四步：开自发光</h2>
+    <ol>
+      <li>展开 <strong>Emission</strong> 区域，勾选 <code>Emission</code></li>
+      <li>把 <strong>Emission Color</strong> 调成亮蓝 <code>#4db8ff</code>，强度（HDR 拉杆）调到 <code>1~3</code></li>
+      <li>观察：水晶自己开始发光了，但它还不会照亮周围 —— 需要下一步的光</li>
+    </ol>
+
+    <blockquote class="tip">Emission 强度是 HDR 的，可以超过 1。配合相机后处理（Bloom 泛光）会有漂亮的发光效果。</blockquote>
+
+    <h2>第五步：打光</h2>
+    <ol>
+      <li>确认场景里有 <strong>Directional Light</strong>（太阳），旋转让水晶有明暗面</li>
+      <li>在水晶旁边放一个 <strong>Point Light</strong>：颜色淡蓝、Intensity <code>2~3</code>、Range 覆盖水晶周围</li>
+      <li>（可选）把点光源的 Color 设为和 Emission 同色，水晶周围会有光晕感</li>
+    </ol>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_crystal_result.png" alt="水晶成品对比">
+      <div class="caption">图：左边是没有材质没有光的灰球；右边是「材质 + 光照 + 自发光」组合后的效果</div>
+    </div>
+
+    <h2>放进 VRChat 世界</h2>
+    <ol>
+      <li>把水晶放到你想放的位置，复制几个不同大小、旋转出「矿场」感</li>
+      <li>测试：VRChat SDK → <code>Build & Test</code> 进入本地测试</li>
+      <li>看一眼帧率：如果 5 颗水晶 + 5 个点光源开始掉帧，说明光源太多 —— 改成 1 个点光源，其余水晶靠 Emission 假装发光</li>
+    </ol>
+
+    <blockquote class="warn"><strong>核心收获：</strong>「发光」其实分两层 —— Emission 让物体自己亮，点光源让周围物体被照亮。真实世界的光源很贵，能用 Emission 装光就用 Emission。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>完成了一颗发光水晶（材质 + 自发光 + 光照）</li>
+      <li>理解了 Emission 和点光源的分工</li>
+      <li>在 Build & Test 里确认了不卡顿</li>
+      <li>理解了「实时光源少放」在实践中的意义</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一章</a>
+      <a class="next-btn" href="lesson-06.html">下一章：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

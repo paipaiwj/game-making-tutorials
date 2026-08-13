@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：粒子系统核心模块</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 特效入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 特效是什么</a></li>
+      <li><a href="lesson-02.html" class="active">2. 粒子系统核心模块</a></li>
+      <li><a href="lesson-03.html">3. 材质与贴图</a></li>
+      <li><a href="lesson-04.html">4. VRChat 特效实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：传送门特效</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：粒子系统核心模块</h1>
+    <p>上一篇你创建了第一个粒子系统。现在来看看 Inspector 里那些模块到底是什么意思——这是做出好特效的关键。</p>
+
+    <h2>1. 模块全景图</h2>
+    <p>Unity 的粒子系统（Shuriken）采用 <strong>模块化设计</strong>。每个模块独立控制一个方面，勾选即启用。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_module_overview.png" alt="模块全景">
+      <div class="caption">图：Shuriken 粒子系统的核心模块一览 — 标注了「必用」和「常用」</div>
+    </div>
+
+    <table>
+      <tr><th>模块</th><th>作用</th><th>重要程度</th></tr>
+      <tr><td><strong>Main</strong></td><td>持续时间、循环、起始生命/速度/大小/颜色</td><td><span class="tag tag-important">必用</span></td></tr>
+      <tr><td><strong>Emission</strong></td><td>每秒发射多少粒子、爆发式发射</td><td><span class="tag tag-important">必用</span></td></tr>
+      <tr><td><strong>Shape</strong></td><td>粒子从什么形状发射（球/锥/盒）</td><td><span class="tag tag-important">必用</span></td></tr>
+      <tr><td><strong>Color over Lifetime</strong></td><td>粒子颜色随时间渐变</td><td><span class="tag tag-new">常用</span></td></tr>
+      <tr><td><strong>Size over Lifetime</strong></td><td>粒子大小随时间变化</td><td><span class="tag tag-new">常用</span></td></tr>
+      <tr><td><strong>Velocity over Lifetime</strong></td><td>粒子飞行中的速度变化</td><td><span class="tag tag-new">常用</span></td></tr>
+      <tr><td><strong>Renderer</strong></td><td>用什么材质/贴图渲染、朝向模式</td><td><span class="tag tag-important">必用</span></td></tr>
+    </table>
+
+    <h2>2. Emission — 控制粒子数量</h2>
+    <p>Emission 模块决定「每秒产生多少粒子」。这是控制特效密度的核心参数。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_emission_shape.png" alt="Emission和Shape">
+      <div class="caption">图：Emission 模块（左）与 Shape 模块（右），以及四种经典组合</div>
+    </div>
+
+    <table>
+      <tr><th>参数</th><th>作用</th><th>典型值</th></tr>
+      <tr><td><strong>Rate over Time</strong></td><td>每秒发射 N 个粒子</td><td>火焰 30-50 / 烟雾 10-20 / 魔法 5-15</td></tr>
+      <tr><td><strong>Rate over Distance</strong></td><td>每移动 N 单位发射粒子（拖尾用）</td><td>拖尾效果设 5-10</td></tr>
+      <tr><td><strong>Bursts</strong></td><td>在特定时间点一次性爆发 N 个粒子</td><td>爆炸在 0 秒爆发 50-100 个</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>实用技巧：</strong>Rate 太高会严重影响性能。VRChat 中建议单个系统的 Rate 不超过 100，粒子总数不超过 2000。</blockquote>
+
+    <h2>3. Shape — 粒子从哪里发射</h2>
+    <p>Shape 模块决定粒子从什么形状的区域发射出来。不同的 Shape 适合不同的特效：</p>
+
+    <table>
+      <tr><th>Shape 类型</th><th>适合什么特效</th><th>关键参数</th></tr>
+      <tr><td><strong>Sphere</strong>（球形）</td><td>爆炸、魔法爆发、光球</td><td>Radius（半径）</td></tr>
+      <tr><td><strong>Cone</strong>（锥形）</td><td>火焰喷射、魔法光束、喷泉</td><td>Angle（角度）、Radius</td></tr>
+      <tr><td><strong>Box</strong>（盒形）</td><td>雨雪、方形区域特效</td><td>Box Size 各方向</td></tr>
+      <tr><td><strong>Circle</strong>（圆形）</td><td>地面光环、传送阵</td><td>Radius、Arc（弧度）</td></tr>
+      <tr><td><strong>Mesh</strong>（网格）</td><td>从模型表面发射</td><td>指定 Mesh</td></tr>
+    </table>
+
+    <h2>4. Color over Lifetime — 颜色渐变</h2>
+    <p>这个模块让粒子在生命周期中改变颜色。打开后你会看到一个 <strong>Gradient（渐变）编辑器</strong>。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L02_03_color_size_lifetime.png" alt="颜色和大小">
+      <div class="caption">图：Color over Lifetime（渐变条）和 Size over Lifetime（曲线），以及经典组合公式</div>
+    </div>
+
+    <p>渐变条的操作方式：</p>
+    <ul>
+      <li><strong>点击</strong>渐变色条下方的标记点来选择颜色</li>
+      <li><strong>双击</strong>空白处添加新的颜色标记</li>
+      <li>左侧 = 粒子刚出生时的颜色，右侧 = 粒子消亡时的颜色</li>
+      <li>上方的标记控制透明度（Alpha）</li>
+    </ul>
+
+    <p><strong>火焰的经典渐变：</strong>白色 → 黄色 → 橙色 → 红色 → 透明（从左到右依次设置）</p>
+
+    <h2>5. Size over Lifetime — 大小变化</h2>
+    <p>使用 <strong>Curve（曲线）</strong> 来控制粒子大小随时间的变化。横轴是时间（左=出生，右=消亡），纵轴是大小倍数。</p>
+
+    <table>
+      <tr><th>曲线形状</th><th>效果</th></tr>
+      <tr><td>从左高到右低（↘）</td><td>粒子从大变到小 — 适合火焰、爆炸碎片</td></tr>
+      <tr><td>从左低到右高（↗）</td><td>粒子从小变到大 — 适合烟雾、扩散魔法</td></tr>
+      <tr><td>先高后低再高（∧∨）</td><td>闪烁效果 — 适合星星、光点</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>点击曲线：</strong>在曲线编辑器中，双击曲线可以添加控制点。拖动控制点可以调整曲线形状。右键控制点可以删除。</blockquote>
+
+    <h2>6. 练手：做一个简单的火焰</h2>
+    <p>用上面学的知识，来做一个最基础的火苗：</p>
+    <ol>
+      <li>创建 Particle System，命名为「Fire」</li>
+      <li><strong>Main：</strong>Start Lifetime = 1.5，Start Speed = 2，Start Size = 2</li>
+      <li><strong>Emission：</strong>Rate over Time = 30</li>
+      <li><strong>Shape：</strong>选 Cone，Angle = 10，Radius = 0.1</li>
+      <li><strong>Color over Lifetime：</strong>勾选，设置渐变：白 → 黄 → 橙 → 红 → 透明</li>
+      <li><strong>Size over Lifetime：</strong>勾选，曲线设为从 1 降到 0（粒子越飞越小）</li>
+      <li>点 Play，你应该看到一个向上喷射的火焰雏形</li>
+    </ol>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了 Emission 的 Rate over Time 和 Bursts 的区别</li>
+      <li>知道 Cone / Sphere / Box 三种 Shape 分别适合什么场景</li>
+      <li>会使用 Gradient 编辑器设置颜色渐变</li>
+      <li>会使用 Curve 编辑器设置大小变化</li>
+      <li>成功做出了一个简单的火焰效果</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一篇：特效是什么</a>
+      <a class="next-btn" href="lesson-03.html">下一篇：材质与贴图 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

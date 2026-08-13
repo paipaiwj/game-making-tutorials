@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 特效入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 特效是什么</a></li>
+      <li><a href="lesson-02.html">2. 粒子系统核心模块</a></li>
+      <li><a href="lesson-03.html">3. 材质与贴图</a></li>
+      <li><a href="lesson-04.html">4. VRChat 特效实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：传送门特效</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 & 常见问题</h1>
+    <p>这是最后一篇，帮你快速回顾所有核心知识点，并解答常见问题。以后忘了什么就回来翻这一页。</p>
+
+    <h2>1. 核心模块速查表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="速查表">
+      <div class="caption">图：核心模块参数速查 + 常见问题解答</div>
+    </div>
+
+    <table>
+      <tr><th>模块</th><th>关键参数</th><th>常用值</th><th>说明</th></tr>
+      <tr><td><strong>Main</strong></td><td>Duration / Looping / Start Lifetime</td><td>5 / 勾上 / 2</td><td>粒子系统持续时间和每个粒子存活时间</td></tr>
+      <tr><td><strong>Emission</strong></td><td>Rate over Time / Bursts</td><td>20 / 按需</td><td>每秒粒子数；爆发用于爆炸等一次性效果</td></tr>
+      <tr><td><strong>Shape</strong></td><td>Shape / Radius / Angle</td><td>Cone / 1 / 15°</td><td>粒子发射的形状和范围</td></tr>
+      <tr><td><strong>Color over Lifetime</strong></td><td>Color (Gradient)</td><td>白→橙→红→透明</td><td>粒子颜色随时间渐变</td></tr>
+      <tr><td><strong>Size over Lifetime</strong></td><td>Size (Curve)</td><td>从大到小</td><td>粒子大小随时间变化曲线</td></tr>
+      <tr><td><strong>Velocity over Lifetime</strong></td><td>Linear X/Y/Z</td><td>Y: 2 (上升)</td><td>粒子飞行中的速度变化</td></tr>
+      <tr><td><strong>Renderer</strong></td><td>Render Mode / Material</td><td>Billboard / Default-Particle</td><td>粒子如何渲染，材质决定外观</td></tr>
+      <tr><td><strong>Noise</strong></td><td>Strength / Frequency</td><td>1 / 0.5</td><td>给粒子运动添加随机扰动（风、飘动）</td></tr>
+    </table>
+
+    <h2>2. 材质速查</h2>
+    <table>
+      <tr><th>材质</th><th>效果</th><th>适用场景</th></tr>
+      <tr><td><strong>Default-Particle</strong></td><td>标准 Alpha 混合</td><td>入门默认，白色方形</td></tr>
+      <tr><td><strong>Particles/Additive</strong></td><td>叠加发光</td><td>火焰、魔法、光效、传送门</td></tr>
+      <tr><td><strong>Particles/Alpha Blended</strong></td><td>标准透明</td><td>烟雾、尘土</td></tr>
+      <tr><td><strong>Particles/Standard Unlit</strong></td><td>不受光照</td><td>VRChat 推荐 Shader</td></tr>
+    </table>
+
+    <h2>3. Shape 速查</h2>
+    <table>
+      <tr><th>Shape</th><th>适用特效</th></tr>
+      <tr><td><strong>Sphere</strong></td><td>爆炸、魔法爆发、光球</td></tr>
+      <tr><td><strong>Cone</strong></td><td>火焰喷射、魔法光束、喷泉</td></tr>
+      <tr><td><strong>Box</strong></td><td>雨雪、方形区域</td></tr>
+      <tr><td><strong>Circle</strong></td><td>地面光环、传送阵</td></tr>
+    </table>
+
+    <h2>4. 经典特效配方</h2>
+    <table>
+      <tr><th>特效</th><th>Shape</th><th>Emission</th><th>Color over Lifetime</th><th>Size over Lifetime</th><th>材质</th></tr>
+      <tr><td><strong>火焰</strong></td><td>Cone (Angle 10°)</td><td>Rate 30</td><td>白→黄→橙→红→透明</td><td>大到小</td><td>Additive</td></tr>
+      <tr><td><strong>烟雾</strong></td><td>Sphere (Radius 1)</td><td>Rate 15</td><td>灰→淡灰→透明</td><td>小到大</td><td>Alpha Blended</td></tr>
+      <tr><td><strong>魔法光球</strong></td><td>Sphere (Radius 0.5)</td><td>Rate 10</td><td>亮蓝→紫→透明</td><td>大到小</td><td>Additive</td></tr>
+      <tr><td><strong>爆炸</strong></td><td>Sphere (Radius 0.5)</td><td>Burst 80</td><td>白→橙→红→透明</td><td>大到小</td><td>Additive</td></tr>
+      <tr><td><strong>下雨</strong></td><td>Box (宽扁)</td><td>Rate 200</td><td>浅蓝→透明</td><td>恒定小</td><td>Alpha Blended</td></tr>
+      <tr><td><strong>传送门</strong></td><td>Circle + Sphere</td><td>Rate 20 + 50 + 8</td><td>蓝→淡蓝→透明</td><td>多种</td><td>Additive</td></tr>
+      <tr><td><strong>星光闪烁</strong></td><td>Sphere</td><td>Rate 5</td><td>白→黄→透明</td><td>随机</td><td>Additive</td></tr>
+    </table>
+
+    <h2>5. 常见问题 FAQ</h2>
+
+    <h3>Q: 粒子不显示？</h3>
+    <p>检查：① Duration 大于 0 ② Looping 是否勾上（或者是一次性特效还没触发）③ Play 按钮是否按下 ④ Scene 视图是否对着粒子位置。</p>
+
+    <h3>Q: 粒子是粉色的？</h3>
+    <p>材质丢失。在 Renderer 模块的 Material 槽里拖入一个材质球。Unity 内置的 Default-Particle 就可以。</p>
+
+    <h3>Q: 粒子不动？</h3>
+    <p>Start Speed = 0。在 Main 模块中把 Start Speed 设为大于 0 的值（比如 3）。</p>
+
+    <h3>Q: 粒子太小看不到？</h3>
+    <p>Start Size 默认是 1，在 Game 视图中可能很小。调大到 3-5 试试。也可以调大 Scene 视图的粒子 Gizmo 大小。</p>
+
+    <h3>Q: VRChat 中粒子不跟随？</h3>
+    <p>粒子系统必须放在有 Transform 的 GameObject 上。如果要跟随玩家移动，把粒子系统作为对应物体的子物体。</p>
+
+    <h3>Q: 性能太差？</h3>
+    <p>降低 Max Particles（Main 模块），降低 Rate over Time（Emission 模块），减小贴图尺寸（≤ 256×256），开启 Culling Mode = Automatic。</p>
+
+    <h3>Q: 粒子看起来太「平面」？</h3>
+    <p>粒子本质是 2D 面片。如果 Render Mode 设为 Billboard，它们会始终面朝摄像机，这是正常现象。要立体感可以尝试用 Mesh Render Mode（但不推荐在 VRChat 中使用）。</p>
+
+    <h3>Q: 怎么让粒子旋转？</h3>
+    <p>勾选 <strong>Rotation over Lifetime</strong> 模块，设置 Angular Velocity。正值顺时针，负值逆时针。</p>
+
+    <h3>Q: 怎么让粒子受重力影响？</h3>
+    <p>在 Main 模块中有一个 <strong>Gravity Modifier</strong> 参数。设为 1 就是正常重力，设为 0.5 是半重力。设为负数会让粒子往上飘。</p>
+
+    <h2>6. 学习路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_roadmap.png" alt="学习路线图">
+      <div class="caption">图：特效学习路线 — 从入门到进阶</div>
+    </div>
+
+    <h2>7. 进阶方向</h2>
+    <p>掌握基础之后，你可以继续深入学习：</p>
+    <ul>
+      <li><strong>Sub Emitter（子发射器）：</strong>粒子消亡时自动生成新粒子 — 适合爆炸碎片</li>
+      <li><strong>Noise 模块：</strong>给粒子运动添加随机扰动 — 适合火焰飘动、烟雾翻滚</li>
+      <li><strong>Triggers 模块：</strong>粒子碰到碰撞体时触发事件 — 适合粒子碰撞效果</li>
+      <li><strong>Custom Data：</strong>在 Shader 中读取粒子自定义数据 — 高级效果</li>
+      <li><strong>Trail Renderer：</strong>拖尾渲染器 — 适合刀光、弹道轨迹</li>
+      <li><strong>VFX Graph：</strong>Unity 的下一代视觉效果工具（需要 HDRP/URP）</li>
+    </ul>
+
+    <blockquote class="tip"><strong>恭喜你完成了 Unity 特效入门教程！</strong>你现在已经理解了粒子系统的核心概念，会使用主要模块，能做出传送门级别的特效，还知道 VRChat 中的性能注意事项。接下来就是多练、多看、多尝试。</blockquote>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一篇：动手做传送门特效</a>
+      <a class="next-btn" href="index.html">回到首页</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

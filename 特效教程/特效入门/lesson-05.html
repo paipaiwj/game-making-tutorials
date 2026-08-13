@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：动手做传送门特效</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 特效入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 特效是什么</a></li>
+      <li><a href="lesson-02.html">2. 粒子系统核心模块</a></li>
+      <li><a href="lesson-03.html">3. 材质与贴图</a></li>
+      <li><a href="lesson-04.html">4. VRChat 特效实践</a></li>
+      <li><a href="lesson-05.html" class="active">5. 动手：传送门特效</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：动手做一个传送门特效</h1>
+    <p>这是实战篇。我们把前面学的所有知识组合起来，做一个完整的传送门特效。传送门由 <strong>3 个粒子系统</strong> 叠加而成。</p>
+
+    <h2>1. 传送门由哪三部分组成</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_portal_steps.png" alt="传送门步骤">
+      <div class="caption">图：传送门由光环、上升粒子、中心光球三个系统叠加而成</div>
+    </div>
+
+    <table>
+      <tr><th>系统</th><th>作用</th><th>Shape</th><th>视觉效果</th></tr>
+      <tr><td><strong>1. 光环 (Ring)</strong></td><td>水平旋转的环形粒子，构成传送门的「门框」</td><td>Circle</td><td>蓝色光环在水平面上旋转</td></tr>
+      <tr><td><strong>2. 上升粒子 (Rising)</strong></td><td>从光环位置向上飘散的粒子</td><td>Circle</td><td>白蓝色粒子向上飘动，逐渐消失</td></tr>
+      <tr><td><strong>3. 中心光球 (Core)</strong></td><td>传送门中心的发光核心</td><td>Sphere（小）</td><td>亮白色光球，散发光芒</td></tr>
+    </table>
+
+    <h2>2. 第一步：创建父物体</h2>
+    <ol>
+      <li>在 Hierarchy 中右键 → <strong>Create Empty</strong></li>
+      <li>命名为 <strong>「Portal」</strong></li>
+      <li>Position 设为 (0, 1, 0) — 放在离地 1 米的位置</li>
+    </ol>
+    <p>三个粒子系统都将作为 Portal 的子物体，这样移动 Portal 就能整体移动整个传送门。</p>
+
+    <h2>3. 第二步：制作光环 (Ring)</h2>
+    <ol>
+      <li>在 Portal 下右键 → Effects → Particle System，命名为「Ring」</li>
+      <li><strong>Transform：</strong>Rotation X = -90（让光环水平放置）</li>
+      <li><strong>Main 模块：</strong>
+        <ul>
+          <li>Duration = 5，Looping = ✓</li>
+          <li>Start Lifetime = 2</li>
+          <li>Start Speed = 0（光环不飞走，在原地旋转）</li>
+          <li>Start Size = 0.5</li>
+          <li>Start Color = 蓝色 (#4ea1ff)</li>
+        </ul>
+      </li>
+      <li><strong>Emission：</strong>Rate over Time = 20</li>
+      <li><strong>Shape：</strong>选 Circle，Radius = 1.5，Arc = 360</li>
+      <li><strong>Color over Lifetime：</strong>渐变：蓝色 → 浅蓝 → 透明</li>
+      <li><strong>Size over Lifetime：</strong>曲线从 1 降到 0.2</li>
+      <li><strong>Renderer：</strong>Material 选 Particles/Additive（发光感）</li>
+    </ol>
+
+    <h2>4. 第三步：制作上升粒子 (Rising)</h2>
+    <ol>
+      <li>在 Portal 下右键 → Effects → Particle System，命名为「Rising」</li>
+      <li><strong>Main 模块：</strong>
+        <ul>
+          <li>Duration = 5，Looping = ✓</li>
+          <li>Start Lifetime = 1.5</li>
+          <li>Start Speed = 1.5（向上飘）</li>
+          <li>Start Size = 0.3</li>
+          <li>Start Color = 白色</li>
+        </ul>
+      </li>
+      <li><strong>Emission：</strong>Rate over Time = 50</li>
+      <li><strong>Shape：</strong>选 Circle，Radius = 1.2</li>
+      <li><strong>Velocity over Lifetime：</strong>勾选，Linear Y = 2（加速上升）</li>
+      <li><strong>Color over Lifetime：</strong>渐变：白色 → 浅蓝 → 透明</li>
+      <li><strong>Size over Lifetime：</strong>曲线从 1 升到 1.5 再降到 0（先变大再变小）</li>
+      <li><strong>Renderer：</strong>Material 选 Particles/Additive</li>
+    </ol>
+
+    <h2>5. 第四步：制作中心光球 (Core)</h2>
+    <ol>
+      <li>在 Portal 下右键 → Effects → Particle System，命名为「Core」</li>
+      <li><strong>Main 模块：</strong>
+        <ul>
+          <li>Duration = 5，Looping = ✓</li>
+          <li>Start Lifetime = 0.8</li>
+          <li>Start Speed = 0（不移动）</li>
+          <li>Start Size = 1.5</li>
+          <li>Start Color = 亮白色</li>
+        </ul>
+      </li>
+      <li><strong>Emission：</strong>Rate over Time = 8</li>
+      <li><strong>Shape：</strong>选 Sphere，Radius = 0.3</li>
+      <li><strong>Color over Lifetime：</strong>渐变：亮白 → 淡蓝 → 透明</li>
+      <li><strong>Size over Lifetime：</strong>曲线从 1.5 降到 0.5（慢慢缩小）</li>
+      <li><strong>Renderer：</strong>Material 选 Particles/Additive</li>
+    </ol>
+
+    <h2>6. 最终效果</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_portal_result.png" alt="传送门效果">
+      <div class="caption">图：三个系统叠加后的传送门效果示意</div>
+    </div>
+
+    <p>点 Play 后你应该看到一个蓝色的光环在水平面上，白色粒子从光环位置向上飘散，中心有一个明亮的发光球体。这就是一个完整的传送门特效！</p>
+
+    <h2>7. 调整和个性化</h2>
+    <p>做出来之后，你可以调整这些参数来改变风格：</p>
+    <table>
+      <tr><th>想要的效果</th><th>调什么</th></tr>
+      <tr><td>更大的传送门</td><td>增大 Ring 的 Shape Radius，增大 Core 的 Start Size</td></tr>
+      <tr><td>更快的旋转感</td><td>增大 Ring 的 Start Speed（给一点速度让粒子沿环移动）</td></tr>
+      <tr><td>更多粒子</td><td>增大各系统的 Rate over Time（注意性能）</td></tr>
+      <tr><td>红色/紫色传送门</td><td>修改各系统的 Start Color 和 Color over Lifetime 渐变</td></tr>
+      <tr><td>更华丽</td><td>再添加一个系统，用 Cone Shape 做向外扩散的光线</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>扩展思路：</strong>把这个传送门放在 VRChat 世界中，用 UdonSharp 脚本控制它的 Play/Stop，再加上一个传送触发区域，就是一个完整的可交互传送门！</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>创建了 Portal 父物体和三个子粒子系统</li>
+      <li>光环水平放置，上升粒子向上飘散</li>
+      <li>中心光球有发光核心效果</li>
+      <li>三个系统都使用了 Additive 材质</li>
+      <li>整体效果看起来像一个传送门</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一篇：VRChat 特效实践</a>
+      <a class="next-btn" href="lesson-06.html">下一篇：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

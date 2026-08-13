@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：综合小项目</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity UI 入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. UI 与 Canvas</a></li>
+      <li><a href="lesson-02.html">2. 第一个 Text</a></li>
+      <li><a href="lesson-03.html">3. Button 与点击事件</a></li>
+      <li><a href="lesson-04.html">4. Image 与 Panel</a></li>
+      <li><a href="lesson-05.html">5. Slider / InputField / Toggle</a></li>
+      <li><a href="lesson-06.html" class="active">6. 综合小项目</a></li>
+      <li><a href="lesson-07.html">7. World Space Canvas</a></li>
+      <li><a href="lesson-08.html">8. VRC UI Shape + UdonSharp</a></li>
+      <li><a href="lesson-09.html">9. Scroll View</a></li>
+      <li><a href="lesson-10.html">10. Layout Groups</a></li>
+      <li><a href="lesson-11.html">11. 嵌套 Canvas</a></li>
+      <li><a href="lesson-12.html">12. VRC 实战菜单</a></li>
+      <li><a href="lesson-13.html">13. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：综合小项目 — 登录界面 + 主界面切换</h1>
+    <p>把前五篇学的 Canvas、Text、Button、Image、InputField 全部用上，做一个完整的登录流程。</p>
+
+    <!-- ====== 01 最终效果 ====== -->
+    <h2>🎯 最终效果预览</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_01_final_preview.png" alt="最终效果预览">
+      <div class="caption">两个面板不会同时显示 — 这里并排只为看清结构</div>
+    </div>
+
+    <!-- ====== 02 面板切换 ====== -->
+    <h2>🔄 核心机制：面板切换</h2>
+    <p>同一时间只有 1 个面板的 <code>SetActive</code> 为 <code>true</code>。</p>
+    <div class="img-box">
+      <img src="教程资源/L06_02_panel_switching.png" alt="面板切换机制">
+      <div class="caption">登录成功 → 隐藏 LoginPanel、显示 MainPanel；退出 → 反向操作</div>
+    </div>
+
+    <!-- ====== 03 Hierarchy ====== -->
+    <h2>🌳 Hierarchy 层级结构</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_03_hierarchy_tree.png" alt="Hierarchy层级树">
+      <div class="caption">两个 Panel 并列在 Canvas 下，GameManager 独立管理所有逻辑</div>
+    </div>
+
+    <!-- ====== 04 搭建登录面板 ====== -->
+    <h2>🔨 搭建 LoginPanel</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_04_build_login.png" alt="搭建登录面板">
+      <div class="caption">5 步：创建 Image → 改名 → 设尺寸颜色 → 加子控件 → 密码设 Password</div>
+    </div>
+    <ul class="checklist">
+      <li>右键 Canvas → UI → Image，改名 <strong>LoginPanel</strong></li>
+      <li>Color: RGBA(20, 20, 40, 220)，Width=400，Height=350，Anchor 居中</li>
+      <li>逐个添加子控件（右键 LoginPanel）：Title / UsernameInput / PasswordInput / LoginButton / ErrorText</li>
+      <li>PasswordInput → Content Type 选 <strong>Password</strong></li>
+      <li>ErrorText → 初始<strong>取消勾选</strong>（Inspector 最上面）</li>
+    </ul>
+
+    <!-- ====== 05 搭建主面板 ====== -->
+    <h2>🔨 搭建 MainPanel</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_05_build_main.png" alt="搭建主面板">
+      <div class="caption">关键一步：Inspector 最上方取消勾选 = 初始 SetActive(false)</div>
+    </div>
+    <ul class="checklist">
+      <li>右键 Canvas → UI → Image，改名 <strong>MainPanel</strong></li>
+      <li>设半透明背景，Width=400，Height=300，居中</li>
+      <li><strong>取消勾选</strong> Inspector 顶部的复选框（初始隐藏）</li>
+      <li>添加子控件：WelcomeText / SettingsButton / LogoutButton</li>
+    </ul>
+
+    <!-- ====== 06 脚本 ====== -->
+    <h2>📜 LoginManager.cs 脚本</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_06_script_overview.png" alt="脚本结构全貌">
+      <div class="caption">6 个 public 字段（Inspector 拖拽）+ 2 个 public 方法（Button OnClick）</div>
+    </div>
+
+    <p>在 Canvas 下创建空物体 <code>GameManager</code>，挂上 <code>LoginManager.cs</code>：</p>
+
+    <pre><code>using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class LoginManager : MonoBehaviour
+{
+    // === 6 个 public 字段 — Inspector 拖拽赋值 ===
+    public GameObject loginPanel;
+    public GameObject mainPanel;
+    public TMP_InputField usernameInput;
+    public TMP_InputField passwordInput;
+    public TMP_Text errorText;
+    public TMP_Text welcomeText;
+
+    // === 登录按钮 ===
+    public void OnLoginClicked()
+    {
+        string u = usernameInput.text.Trim();
+        string p = passwordInput.text;
+
+        if (string.IsNullOrEmpty(u))  { ShowError("用户名不能为空！"); return; }
+        if (string.IsNullOrEmpty(p))  { ShowError("密码不能为空！"); return; }
+        if (u != "admin" || p != "123456") { ShowError("用户名或密码错误！"); return; }
+
+        // 登录成功
+        errorText.gameObject.SetActive(false);
+        loginPanel.SetActive(false);
+        mainPanel.SetActive(true);
+        welcomeText.text = "欢迎回来，" + u + "！";
+    }
+
+    // === 退出按钮 ===
+    public void OnLogoutClicked()
+    {
+        mainPanel.SetActive(false);
+        loginPanel.SetActive(true);
+        usernameInput.text = "";
+        passwordInput.text = "";
+        errorText.gameObject.SetActive(false);
+    }
+
+    void ShowError(string msg)
+    {
+        errorText.text = msg;
+        errorText.gameObject.SetActive(true);
+    }
+}</code></pre>
+
+    <!-- ====== 07 事件绑定 ====== -->
+    <h2>🔗 事件绑定</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_07_event_binding.png" alt="事件绑定对照表">
+      <div class="caption">每个 Button 的 OnClick 绑定到 GameManager 的对应方法</div>
+    </div>
+
+    <!-- ====== 08 完整流程 ====== -->
+    <h2>🗺️ 完整运行流程</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_08_login_flow.png" alt="登录流程状态机">
+      <div class="caption">从输入到登录成功的完整状态转换</div>
+    </div>
+
+    <!-- ====== 09 Inspector连线 ====== -->
+    <h2>🔌 Inspector 连线总览</h2>
+    <div class="img-box">
+      <img src="教程资源/L06_09_inspector_wiring.png" alt="Inspector连线">
+      <div class="caption">6 个字段拖拽 + 2 个 OnClick 绑定 — 一步到位</div>
+    </div>
+
+    <!-- ====== VRChat 差异 ====== -->
+    <h2>🌐 如果这是 VRChat 世界项目</h2>
+    <p>上面用的是普通 C# <code>MonoBehaviour</code>，适合在 Unity 编辑器里快速验证逻辑。但 <strong>VRChat 世界</strong>里，UI 事件只能调用 VRChat 允许的目标方法，所以要把脚本改成 <strong>UdonSharp</strong>：</p>
+
+    <ul>
+      <li>脚本继承 <code>UdonSharpBehaviour</code></li>
+      <li>登录/退出按钮的 OnClick → <code>UdonBehaviour.SendCustomEvent("OnLoginClicked")</code> 和 <code>"OnLogoutClicked"</code></li>
+      <li>方法保持 <code>public void</code>，且不带参数</li>
+      <li>字段仍然拖拽到 Inspector</li>
+    </ul>
+
+    <blockquote class="tip">核心逻辑不用变：<code>SetActive</code> 控制面板显隐，public 字段拖拽赋值，事件绑定到 public 方法。唯一区别是“用 SendCustomEvent 转发给 UdonSharp”。</blockquote>
+
+    <!-- ====== 自检 ====== -->
+    <h2>✅ 自检清单</h2>
+    <ul class="checklist">
+      <li>[ ] 两个面板不会同时显示</li>
+      <li>[ ] 空输入时显示对应错误提示</li>
+      <li>[ ] admin / 123456 能成功登录</li>
+      <li>[ ] 登录后看到欢迎文字</li>
+      <li>[ ] 点退出回到登录界面，输入框清空</li>
+    </ul>
+
+    <blockquote class="tip">🎉 恭喜！你用一个 GameManager 脚本 + 两个 Panel 就做出了完整登录流程。核心就一句话：<strong>SetActive 控制面板显隐，public 字段拖拽赋值，OnClick 绑定 public 方法</strong>。</blockquote>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 第 5 篇：Slider / InputField / Toggle</a>
+      <a class="next-btn" href="lesson-07.html">第 7 篇：World Space Canvas →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

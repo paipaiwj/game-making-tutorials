@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：VRChat 特效实践</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 特效入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 特效是什么</a></li>
+      <li><a href="lesson-02.html">2. 粒子系统核心模块</a></li>
+      <li><a href="lesson-03.html">3. 材质与贴图</a></li>
+      <li><a href="lesson-04.html" class="active">4. VRChat 特效实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：传送门特效</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：VRChat 特效实践 — 限制与性能优化</h1>
+    <p>在普通 Unity 项目里做特效和在 VRChat 里做特效是两回事。VRChat 有严格的性能限制，而且特效要在 Quest 和 PC 两种平台上都能跑。这篇专门讲 VRChat 的特效注意事项。</p>
+
+    <h2>1. VRChat 中的特效限制</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_vrc_limits.png" alt="VRChat限制">
+      <div class="caption">图：VRChat 中的五项核心限制</div>
+    </div>
+
+    <table>
+      <tr><th>限制项</th><th>具体数值</th><th>说明</th></tr>
+      <tr><td><strong>最大粒子数</strong></td><td>每个系统 ≤ 10000</td><td>超过会严重掉帧，Quest 建议 ≤ 2000</td></tr>
+      <tr><td><strong>Shader 限制</strong></td><td>只能用 VRChat 白名单 Shader</td><td>Particles/Standard Unlit 安全</td></tr>
+      <tr><td><strong>音频</strong></td><td>不能直接在粒子系统上播音频</td><td>需要单独的 AudioSource</td></tr>
+      <tr><td><strong>碰撞</strong></td><td>粒子碰撞开销极大</td><td>尽量用 World 模式而非 3D 碰撞</td></tr>
+      <tr><td><strong>Quest 平台</strong></td><td>性能更紧张</td><td>粒子总数控制在 2000 以内</td></tr>
+    </table>
+
+    <h2>2. 性能优化的黄金法则</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_performance.png" alt="性能优化">
+      <div class="caption">图：五项关键优化设置和推荐值</div>
+    </div>
+
+    <h3>2.1 限制粒子数量</h3>
+    <p>在 Main 模块中有一个 <strong>Max Particles</strong> 参数，默认是 1000。这是硬上限——粒子系统里的粒子数量永远不会超过这个值。在 VRChat 中建议设为 500 或更低。</p>
+
+    <h3>2.2 减小贴图尺寸</h3>
+    <p>粒子贴图不需要高分辨率。256×256 完全够用，128×128 也可以。在 Project 窗口选中贴图，Inspector 里把 Max Size 调小即可。</p>
+
+    <h3>2.3 开启剔除 (Culling)</h3>
+    <p>粒子系统有一个 <strong>Culling Mode</strong> 设置（在 Main 模块底部附近）：</p>
+    <ul>
+      <li><strong>Automatic：</strong>粒子离开屏幕后自动暂停（推荐）</li>
+      <li><strong>Pause：</strong>粒子离开屏幕后暂停但保留状态</li>
+      <li><strong>Always Simulate：</strong>始终运行（不推荐，浪费性能）</li>
+    </ul>
+
+    <h3>2.4 使用 Simulation Speed</h3>
+    <p>Simulation Speed 控制粒子系统的模拟速度。设为 0.5 就是慢动作，同样的效果可以用更少的粒子实现。这是一个非常有用的性能优化技巧。</p>
+
+    <h3>2.5 Prewarm 要慎用</h3>
+    <p>Prewarm（预热）会让粒子系统在场景加载时预先模拟一段时间，让特效「一开始就是满的」。这很方便，但会增加加载时间。仅在开场特效中使用。</p>
+
+    <blockquote class="warn"><strong>黄金法则：少即是多。</strong>少量精心调校的粒子，效果远好于大量粗糙的粒子。调好颜色渐变、大小曲线和材质，比堆粒子数重要得多。</blockquote>
+
+    <h2>3. VRChat 中特效的摆放</h2>
+    <p>VRChat 的世界空间特效可以放在任何位置。常见做法：</p>
+    <ul>
+      <li><strong>世界装饰：</strong>直接放在场景中作为静态装饰（篝火、瀑布雾气）</li>
+      <li><strong>跟随物体：</strong>把粒子系统作为某个 GameObject 的子物体，它就会跟随移动</li>
+      <li><strong>交互触发：</strong>通过 UdonSharp 脚本控制粒子系统的 Play/Stop</li>
+    </ul>
+
+    <h2>4. 用脚本控制粒子系统</h2>
+    <p>在 VRChat 中，你通常需要通过 UdonSharp 来控制粒子系统。基本用法：</p>
+
+    <pre><code>using UdonSharp;
+using UnityEngine;
+
+public class PortalController : UdonSharpBehaviour
+{
+    public ParticleSystem portalEffect;
+
+    // 播放特效
+    public void PlayPortal()
+    {
+        portalEffect.Play();
+    }
+
+    // 停止特效
+    public void StopPortal()
+    {
+        portalEffect.Stop();
+    }
+
+    // 切换特效开关
+    public void TogglePortal()
+    {
+        if (portalEffect.isPlaying)
+            portalEffect.Stop();
+        else
+            portalEffect.Play();
+    }
+}</code></pre>
+
+    <p>把这个脚本挂在一个 GameObject 上，把粒子系统拖到 <code>portalEffect</code> 字段，就可以通过 Udon 事件来控制特效了。</p>
+
+    <h2>5. 常见的 VRChat 特效性能陷阱</h2>
+    <table>
+      <tr><th>陷阱</th><th>为什么不好</th><th>怎么避免</th></tr>
+      <tr><td>太多粒子系统同时运行</td><td>CPU 计算不过来</td><td>用 Culling Mode = Automatic</td></tr>
+      <tr><td>粒子贴图太大</td><td>显存占用高</td><td>所有粒子贴图 ≤ 256×256</td></tr>
+      <tr><td>Sub Emitter 嵌套太深</td><td>粒子数指数增长</td><td>最多嵌套一层</td></tr>
+      <tr><td>Collision 模块开启</td><td>物理计算极耗 CPU</td><td>除非必要，不开启 Collision</td></tr>
+      <tr><td>多个系统使用不同材质</td><td>增加 Draw Call</td><td>尽量共享同一个材质球</td></tr>
+    </table>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>知道 VRChat 中粒子总数建议控制在 2000 以内</li>
+      <li>知道 Culling Mode 应该设为 Automatic</li>
+      <li>知道粒子贴图不需要超过 256×256</li>
+      <li>知道如何用 UdonSharp 脚本控制粒子系统的 Play/Stop</li>
+      <li>知道 Collision 模块在 VRChat 中应该避免使用</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一篇：材质与贴图</a>
+      <a class="next-btn" href="lesson-05.html">下一篇：动手做传送门特效 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

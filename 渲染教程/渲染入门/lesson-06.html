@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 渲染入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 渲染是什么</a></li>
+      <li><a href="lesson-02.html">2. 光照与 PBR</a></li>
+      <li><a href="lesson-03.html">3. 材质与 Shader</a></li>
+      <li><a href="lesson-04.html">4. VRChat 渲染实践</a></li>
+      <li><a href="lesson-05.html">5. 动手：发光水晶</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 & 常见问题</h1>
+    <p>这篇是用来「随时翻」的。做完前五篇后，遇到问题先来这里查。</p>
+
+    <h2>1. 术语速查表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查表">
+      <div class="caption">图：12 个必懂术语，一分钟扫一遍</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>一句话解释</th></tr>
+      <tr><td><strong>渲染管线</strong></td><td>3D 场景变成屏幕像素的流程：顶点 → 光栅化 → 着色</td></tr>
+      <tr><td><strong>Shader</strong></td><td>决定「怎么画」的 GPU 程序（菜谱）</td></tr>
+      <tr><td><strong>材质 Material</strong></td><td>Shader + 参数 = 配方表，挂在物体上</td></tr>
+      <tr><td><strong>贴图 Texture</strong></td><td>图片数据（食材），喂给材质使用</td></tr>
+      <tr><td><strong>UV</strong></td><td>贴图贴在模型表面的坐标展开方式</td></tr>
+      <tr><td><strong>法线 Normal</strong></td><td>表面朝哪边，决定光照明暗</td></tr>
+      <tr><td><strong>PBR</strong></td><td>基于物理的渲染，核心参数是金属度 + 光滑度</td></tr>
+      <tr><td><strong>烘焙 Baked</strong></td><td>预先算好光照存进贴图，运行时零成本</td></tr>
+      <tr><td><strong>Draw Call</strong></td><td>CPU 一次提交渲染命令，越少越快</td></tr>
+      <tr><td><strong>批处理 Batching</strong></td><td>多个物体合成一次 Draw Call</td></tr>
+      <tr><td><strong>后处理 PostFX</strong></td><td>渲染完成后整屏滤镜（色彩/泛光/模糊）</td></tr>
+      <tr><td><strong>Emission</strong></td><td>自发光通道，亮度可超 1.0，配合泛光发光</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题">
+      <div class="caption">图：现象 → 原因 → 解法 对照表</div>
+    </div>
+
+    <table>
+      <tr><th>现象</th><th>原因</th><th>解法</th></tr>
+      <tr><td><strong>粉色/紫黑物体</strong></td><td>Shader 不兼容 URP 或缺失（VRChat 最常见！）</td><td>重设 Shader 为 URP/Lit，重新拖贴图</td></tr>
+      <tr><td><strong>物体全黑</strong></td><td>没有光照 / 法线反了 / 光被遮住</td><td>加 Directional Light；检查模型法线</td></tr>
+      <tr><td><strong>画面过曝发白</strong></td><td>灯光太强 / Emission 太高</td><td>Intensity 降到 1~2，Emission 降到 1~3</td></tr>
+      <tr><td><strong>边缘锯齿/闪烁</strong></td><td>贴图太小 / 抗锯齿关 / 两面重叠 Z-fighting</td><td>贴图 1024+，开抗锯齿，分开重叠的面</td></tr>
+      <tr><td><strong>渲染慢/掉帧</strong></td><td>Draw Call 多 / 贴图大 / 实时光源多</td><td>共享材质 → 压贴图 → 烘焙光照</td></tr>
+    </table>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线图">
+      <div class="caption">图：入门 → 熟练 → 进阶 → 精通的路线和时间参考</div>
+    </div>
+
+    <table>
+      <tr><th>阶段</th><th>目标</th><th>学习内容</th></tr>
+      <tr><td><strong>入门</strong></td><td>会调材质</td><td>本教程 + 把场景所有物体换成 URP/Lit</td></tr>
+      <tr><td><strong>熟练</strong></td><td>调出质感</td><td>烘焙光照、贴图通道（Normal/Metallic）、图集</td></tr>
+      <tr><td><strong>进阶</strong></td><td>写 Shader</td><td>URP 自定义 Shader、HLSL 基础、Shader Graph</td></tr>
+      <tr><td><strong>精通</strong></td><td>风格化画面</td><td>后处理调色、VFX Graph、灯光氛围设计</td></tr>
+    </table>
+
+    <h2>4. 学习资源</h2>
+    <ul>
+      <li><strong>Unity 官方文档</strong>：URP 手册（Universal Render Pipeline）</li>
+      <li><strong>Shader Graph</strong>：可视化写 Shader，比手写 HLSL 友好得多</li>
+      <li><strong>VRChat Creator Docs</strong>：Udon、世界设置、性能限制的权威来源</li>
+      <li><strong>好世界的拆解</strong>：去 VRChat 里逛优秀世界，想「它这个玻璃/光效是怎么做的」，回来在 Unity 里复刻</li>
+    </ul>
+
+    <blockquote class="tip"><strong>最后的话：</strong>渲染是「参数 + 实验」的学问。调一个参数 → 看一眼 → 再调。看完这篇你已经超过大多数只会拖模型的新手了。去把你的世界变好看吧！</blockquote>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>
