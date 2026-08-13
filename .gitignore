@@ -3,3 +3,6 @@ ai帮助写教程工具/
 awesome-gamedev-agent-skills/
 vrc离线手册/
 色彩教程/
+
+__pycache__/
+*.pyc
