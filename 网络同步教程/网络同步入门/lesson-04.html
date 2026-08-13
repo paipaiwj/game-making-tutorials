@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：权限与所有权</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 网络同步入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要同步</a></li>
+      <li><a href="lesson-02.html">2. 同步变量</a></li>
+      <li><a href="lesson-03.html">3. 同步事件</a></li>
+      <li><a href="lesson-04.html" class="active">4. 权限与所有权</a></li>
+      <li><a href="lesson-05.html">5. 实战：同步计分板</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：权限与所有权 — owner、LocalPlayer、RequestOwnership</h1>
+    <p>同步变量的写权限挂在 owner 身上。这一篇讲清楚：owner 到底是什么、怎么判断、怎么转移，以及一个重要的设计原则 —— 不要各端各算。</p>
+
+    <h2>1. owner 是什么</h2>
+    <p>每个带 UdonBehaviour 的物体，<strong>同一时刻只有一个 owner</strong>。谁是这个物体的 owner，谁就能改它的同步变量、也控制着它能不能被拿起等。新玩家进世界时，物体默认归<strong>最早进来的玩家</strong>（或世界创建者）。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_owner.png" alt="owner 概念图">
+      <div class="caption">图：同一个物体，owner 在每个人眼里都是同一人 —— 只有他有写权限</div>
+    </div>
+
+    <h2>2. 用 LocalPlayer 判断自己是不是 owner</h2>
+    <pre><code>if (Networking.LocalPlayer.IsOwner(gameObject))
+{
+    // 我是 owner：可以放心修改同步变量
+}
+else
+{
+    // 我不是 owner：只能读，或申请所有权
+}</code></pre>
+    <p><code>Networking.LocalPlayer</code> 表示<strong>本端玩家</strong>。在每个人的客户端上，它代表各自的那个玩家。用 <code>IsOwner(gameObject)</code> 就能判断「我是不是这个物体的 owner」。</p>
+
+    <h2>3. RequestOwnership()：请求所有权</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_request_ownership.png" alt="请求所有权流程">
+      <div class="caption">图：发起请求 → 服务器裁决 → 回调确认 → 获得写权限</div>
+    </div>
+
+    <pre><code>using VRC.SDKBase;
+
+public void GrabControl()
+{
+    // 我不是 owner 时，先请求所有权
+    if (!Networking.LocalPlayer.IsOwner(gameObject))
+    {
+        Networking.SetOwner(Networking.LocalPlayer, gameObject);
+    }
+}
+
+public override void OnOwnershipTransferred(VRCPlayerApi player)
+{
+    // 所有权转移后触发：现在可以放心改同步变量了
+    if (player == Networking.LocalPlayer)
+    {
+        score += 1;
+    }
+}</code></pre>
+
+    <blockquote class="warn"><strong>别抢着写：</strong>所有权转移不是瞬间生效的。两个玩家同时抢时由服务器裁决，只有<strong>一个</strong>会成为 owner。在 <code>OnOwnershipTransferred()</code> 回调里确认后再写数据，才是最稳的。</blockquote>
+
+    <h2>4. VRC_ObjectSync：物体位置也同步</h2>
+    <p>给物体挂上 <code>VRC_ObjectSync</code> 组件，物体的位置和旋转也会被同步。它的另一个重要作用：<strong>玩家拿起物体时，所有权自动转移给拿的人</strong> —— 这样拿东西才能跟手、不打架。</p>
+    <ul>
+      <li>需要同步位置/旋转 → 挂 VRC_ObjectSync</li>
+      <li>想实现「捡起来归我」→ 依赖 VRC_ObjectSync 的自动转移</li>
+    </ul>
+
+    <h2>5. 同步数据一致性：不要各端各算</h2>
+    <p>最常见的同步 bug：每个客户端都在自己算分数，然后互相覆盖。正确做法是<strong>一个地方算，其他端只读</strong>：</p>
+    <pre><code>// 错误示范：谁点谁算，最后谁也说不准
+score += 1;   // 每个人算自己的，数据冲突
+
+// 正确做法：只有 owner 算
+public void AddScore()
+{
+    if (!Networking.LocalPlayer.IsOwner(gameObject)) return;
+    score += 1;  // 数据只在这一处变化
+}</code></pre>
+
+    <blockquote class="tip"><strong>一致性原则：</strong>「状态只有一个权威来源」。判定、计分、抽奖……所有逻辑都让 owner 做，其他人用同步变量和事件接收结果。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解 owner 是唯一有写权限的玩家</li>
+      <li>会用 Networking.LocalPlayer.IsOwner() 判断身份</li>
+      <li>会写 RequestOwnership 并在回调里继续逻辑</li>
+      <li>知道 VRC_ObjectSync 的作用</li>
+      <li>明白「不要各端各算」的一致性原则</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章：同步事件</a>
+      <a class="next-btn" href="lesson-05.html">下一章：实战：同步计分板 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

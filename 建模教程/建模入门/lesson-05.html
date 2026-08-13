@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：导出到 Unity</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Blender 建模入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 建模是什么</a></li>
+      <li><a href="lesson-02.html">2. Blender 基础操作</a></li>
+      <li><a href="lesson-03.html">3. 基础建模操作</a></li>
+      <li><a href="lesson-04.html">4. UV 与材质</a></li>
+      <li><a href="lesson-05.html" class="active">5. 导出到 Unity</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：导出到 Unity — FBX 与导入检查</h1>
+    <p>模型做完了，最后一步是把 Blender 的作品送进 Unity，让它出现在 VRChat 世界里。本篇讲透 FBX 导出设置、著名的「缩放 0.01」误区、法线检查，以及 Collider 是什么。</p>
+
+    <h2>1. 导出流程总览</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_export_flow.png" alt="导出流程">
+      <div class="caption">图：Blender 建模 → 导出 FBX → Unity 导入，三步走</div>
+    </div>
+
+    <h2>2. FBX 导出设置（Blender 侧）</h2>
+    <ol>
+      <li>选中要导出的物体 → <code>File → Export → FBX (.fbx)</code></li>
+      <li>勾选 <strong>Apply Transforms</strong>（应用变换，把位置/旋转/缩放固化到网格上，防止进 Unity 后乱跑）</li>
+      <li>确保 <strong>Mesh</strong> 已勾选；有材质的勾选 <strong>Embed Textures</strong>（嵌入贴图）或之后单独带贴图</li>
+      <li>动画相关全不勾（本教程不做动画），勾选会增大文件</li>
+      <li>导出前检查：修改器全部 <code>Apply</code> 过、法线正确（见第 4 步）、路径不要用中文</li>
+    </ol>
+
+    <h2>3. 关于缩放：0.01 是大误区</h2>
+    <blockquote class="warn"><strong>别乘 0.01！</strong>网上很多老教程说「Blender 导出要缩小 0.01 倍」，这是早年单位混乱时代的产物。正确事实：<strong>Blender 默认单位是米，Unity 的单位也是米</strong>（Unity 1 单位 = 1 米）。两者 1:1 导入即可，不需要任何缩放。</blockquote>
+
+    <p>什么时候才需要检查缩放？只有这些情况：</p>
+    <ul>
+      <li>模型导入后<strong>巨大</strong>或<strong>微小</strong> → 检查 Blender 场景单位（场景属性 → 单位 → 确认是米），以及导出时是否勾了 Apply Transforms</li>
+      <li>自己把单位改过（改成厘米/英尺）→ 改回米再导出</li>
+      <li>Unity 里检查 Scale Factor（导入设置）是否被改过，正常保持 1</li>
+    </ul>
+    <p>标准做法就一句：<strong>Blender 单位是米 + 导出勾 Apply Transforms + Unity Scale Factor = 1</strong>。</p>
+
+    <h2>4. 导入 Unity 与检查要点</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_import_unity.png" alt="Unity 导入要点">
+      <div class="caption">图：导入后检查 Scale、法线、材质、Collider 四件事</div>
+    </div>
+
+    <ol>
+      <li>把 .fbx 文件直接<strong>拖进</strong> Unity 的 Assets 文件夹</li>
+      <li>选中它，在 Inspector 确认 Scale Factor = 1，改过设置记得点右下角 <code>Apply</code></li>
+      <li>拖进场景（Hierarchy），检查：尺寸是否正常、材质颜色是否对</li>
+      <li>模型是<strong>黑的 / 半透明</strong>？法线方向反了 —— 回 Blender：编辑模式全选 → <code>Shift+N</code> 重算法线（朝向统一朝外）→ 重新导出</li>
+      <li>也可以在 Blender 里手动 <code>Flip Normals</code>（翻转法线）单面修正，法线显示：编辑模式 → 右上角 Overlays → 勾 Face Orientation，蓝=正面朝外，红=反面</li>
+    </ol>
+
+    <blockquote class="tip"><strong>法线朝外判断：</strong>面朝哪个方向，光线就照亮哪边。法线朝里 = 黑面，这是导入后 80%「模型发黑」的原因，不是没贴图。第 6 篇对照表第一条就是它。</blockquote>
+
+    <h2>5. Collider：为什么物体「穿」不过去</h2>
+    <ul>
+      <li>Unity 里没有 Collider（碰撞体）的物体，玩家可以<strong>直接穿过</strong>它，也无法被拾取</li>
+      <li><strong>不会自动生成：</strong>导入的模型默认没有 Collider，需要你手动加（虽然 VRChat 的 Collider 层设置会自动配置，但碰撞体本身要手动添加）</li>
+      <li>简单形状（地板、墙、大箱子）：用 <strong>Box Collider</strong>（盒碰撞体）最省性能</li>
+      <li>复杂形状（椅子、花瓶）：用 <strong>Mesh Collider</strong>（网格碰撞体），注意性能开销</li>
+      <li>VRChat 里要做可拾取道具（Pickup）：物体需要 Collider + Rigidbody（勾 Is Kinematic）</li>
+    </ul>
+
+    <blockquote class="warn"><strong>性能建议：</strong>Mesh Collider 是按三角面逐个碰撞的，很吃物理性能。场景大件用几个 Box Collider 拼出大致形状，效果一样还快 —— 这也是 VRChat 世界普遍的做法。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>会按正确设置导出 FBX（Apply Transforms、单位米）</li>
+      <li>明白「0.01 缩放」是误区，能说出正确做法</li>
+      <li>导入 Unity 后知道检查 Scale、法线、材质</li>
+      <li>黑面时知道用 Shift+N 重算法线 / Flip Normals</li>
+      <li>知道 Collider 要手动加，Box Collider 比 Mesh Collider 省</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一章：UV 与材质</a>
+      <a class="next-btn" href="lesson-06.html">下一章：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

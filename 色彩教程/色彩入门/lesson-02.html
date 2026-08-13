@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：配色方案</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 色彩入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 色彩基础</a></li>
+      <li><a href="lesson-02.html" class="active">2. 配色方案</a></li>
+      <li><a href="lesson-03.html">3. 色彩情绪</a></li>
+      <li><a href="lesson-04.html">4. Unity 色彩实践</a></li>
+      <li><a href="lesson-05.html">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：配色方案 — 五大经典配色</h1>
+    <p>单个颜色选好了，还要让<strong>一堆颜色和谐相处</strong>。配色方案就是在色轮上按几何关系取色的套路 —— 先选方案，再填颜色，新手也能配出不出错的组合。</p>
+
+    <h2>1. 五大配色方案</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_schemes.png" alt="五大配色方案">
+      <div class="caption">图：单色 / 互补 / 近似 / 三角 / 分裂互补 —— 色块均为真实颜色</div>
+    </div>
+
+    <table>
+      <tr><th>方案</th><th>规则</th><th>感觉</th></tr>
+      <tr><td><strong>单色</strong></td><td>同一色相，只变饱和度和明度</td><td>干净、专业、易统一</td></tr>
+      <tr><td><strong>互补</strong></td><td>色轮上相对的两色（180°）</td><td>对比最强、最醒目</td></tr>
+      <tr><td><strong>近似</strong></td><td>色轮上相邻的几个色</td><td>和谐、自然、舒服</td></tr>
+      <tr><td><strong>三角</strong></td><td>色轮上 120° 间隔的三色</td><td>活泼、均衡、丰富</td></tr>
+      <tr><td><strong>分裂互补</strong></td><td>主色 + 互补色两侧两色</td><td>有对比但柔和耐看</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>重点理解「互补」：</strong>互补色是色轮上正对的两个颜色（如红配青、黄配紫）。它们放一起时互相把对方衬得最鲜艳 —— 所以按钮、血条、阵营标识这类「必须一眼分清」的地方最好用。</blockquote>
+
+    <h2>2. 不同用途怎么选方案</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_usage.png" alt="配色用途对比">
+      <div class="caption">图：同一个游戏里，UI、反馈、场景可以各用各的方案</div>
+    </div>
+
+    <ul>
+      <li><strong>UI 面板 / 数据界面</strong> → 单色：信息优先，颜色不抢戏</li>
+      <li><strong>按钮 / 血条 / 阵营</strong> → 互补：一眼分出敌我</li>
+      <li><strong>场景远景 / 植被</strong> → 近似：自然不刺眼</li>
+      <li><strong>角色 / 物品区分</strong> → 三角：颜色多但仍均衡</li>
+      <li><strong>氛围场景主色</strong> → 分裂互补：能久看，不疲劳</li>
+    </ul>
+
+    <h2>3. Unity 里的取色工具</h2>
+    <p>配色不是凭空想出来的 —— 从参考图里「偷」色板是最快的学习方式：</p>
+    <ul>
+      <li>找到喜欢的游戏截图 → 用 <strong>取色器</strong>（颜色面板左下角吸管）在图上取色</li>
+      <li>记下每个颜色的 <strong>Hex 码</strong>，写进自己的色板备忘</li>
+      <li>右键任意颜色字段 → <code>Copy Color</code>，在别的颜色框 <code>Ctrl+V</code> 粘贴，保证完全一致</li>
+    </ul>
+
+    <blockquote class="warn"><strong>新手最常犯的错：</strong>一个场景里塞了七八种毫不相干的颜色。记住「颜色越少越统一」—— 先用 3-5 个颜色起步，方案定了再加变体（变饱和度、变明度），而不是加新色相。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能说出五大配色方案各自的取色规则</li>
+      <li>知道「互补色」适合什么场景、为什么</li>
+      <li>会用自己的场景截图取色并记下 Hex 码</li>
+      <li>用其中一种方案给自己场景选了 3-5 个颜色</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章：色彩基础</a>
+      <a class="next-btn" href="lesson-03.html">下一章：色彩情绪 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

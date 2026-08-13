@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：为什么要网络同步</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 网络同步入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 为什么要同步</a></li>
+      <li><a href="lesson-02.html">2. 同步变量</a></li>
+      <li><a href="lesson-03.html">3. 同步事件</a></li>
+      <li><a href="lesson-04.html">4. 权限与所有权</a></li>
+      <li><a href="lesson-05.html">5. 实战：同步计分板</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：为什么要网络同步 — 本地 vs 同步、变量与事件</h1>
+    <p>单机游戏里，代码在<strong>一台机器</strong>上跑，变量改了就改了。但 VRChat 世界里，每个玩家的客户端都在<strong>各跑一份</strong>代码 —— 你改的变量只在你自己的机器上变，别人根本不知道。网络同步就是解决「如何让大家看到同一份数据」。</p>
+
+    <h2>1. 本地播放 vs 网络同步</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_local_vs_sync.png" alt="本地 vs 网络同步">
+      <div class="caption">图：本地播放各算各的；网络同步大家看到同一份数据</div>
+    </div>
+
+    <p>举个例子：你写了一句 <code>score = 10;</code>。在本地模式下，只有你自己看到分数变成 10，其他玩家的计分板还是 0。这不是 bug，而是<strong>数据没有同步</strong>。</p>
+    <p>给变量加上 <code>[UdonSynced]</code> 属性后，修改会自动广播：你的 10 会通过网络发出去，所有客户端收到后把本地的分数覆盖成 10。</p>
+
+    <blockquote class="tip"><strong>[UdonSynced] 一句话概念：</strong>被它标记的变量 = 「会被网络同步的变量」。你改，全网跟着改；它负责数据的一致性。</blockquote>
+
+    <h2>2. owner（所有者）：谁有资格改</h2>
+    <p>如果所有人都能改同一个同步变量，就会互相覆盖、乱套。所以 VRChat 规定：<strong>每个同步变量只有一个 owner（所有者）</strong>，只有 owner 能修改它。其他玩家只能读，想改得先「请求所有权」（第 4 篇讲）。</p>
+
+    <h2>3. 同步的两样东西：变量和事件</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_sync_concept.png" alt="同步变量与事件总览">
+      <div class="caption">图：变量传「数据」，事件传「通知」，两者分工不同</div>
+    </div>
+
+    <table>
+      <tr><th>同步方式</th><th>传什么</th><th>典型用途</th></tr>
+      <tr><td><strong>同步变量</strong> [UdonSynced]</td><td>数据（分数、开关、状态）</td><td>计分板、游戏状态</td></tr>
+      <tr><td><strong>同步事件</strong> SendCustomNetworkEvent</td><td>一个方法名（通知）</td><td>音效、特效、动画</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>口诀：</strong>数据用变量同步，动作用事件广播。本教程第 2 篇讲变量，第 3 篇讲事件。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了「本地 vs 网络同步」的区别</li>
+      <li>能说出 [UdonSynced] 的一句话概念</li>
+      <li>知道 owner 是「唯一能改同步变量的玩家」</li>
+      <li>能区分「同步变量」和「同步事件」的用途</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：同步变量 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：Blender 基础操作</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Blender 建模入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 建模是什么</a></li>
+      <li><a href="lesson-02.html" class="active">2. Blender 基础操作</a></li>
+      <li><a href="lesson-03.html">3. 基础建模操作</a></li>
+      <li><a href="lesson-04.html">4. UV 与材质</a></li>
+      <li><a href="lesson-05.html">5. 导出到 Unity</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：Blender 基础操作 — 界面、选择、移动</h1>
+    <p>打开 Blender 会看到一个「什么都要快捷键」的软件。别慌 —— 本篇只教你建模必须的几件事：认识界面、会选物体、会移动/旋转/缩放、会切视图。</p>
+
+    <h2>1. 界面布局</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_blender_ui.png" alt="Blender 界面布局">
+      <div class="caption">图：Blender 默认界面 —— 重点是中间的 3D 视图</div>
+    </div>
+
+    <p>四个区域就够了：</p>
+    <table>
+      <tr><th>区域</th><th>用途</th><th>建模期用吗</th></tr>
+      <tr><td><strong>3D 视图</strong></td><td>建模主战场，操作物体的地方</td><td>天天用</td></tr>
+      <tr><td><strong>大纲 Outliner</strong></td><td>场景里的对象列表</td><td>经常看</td></tr>
+      <tr><td><strong>属性面板</strong></td><td>调整选中对象的参数（含修改器）</td><td>经常用</td></tr>
+      <tr><td><strong>时间线</strong></td><td>做动画用的</td><td>本教程不用</td></tr>
+    </table>
+
+    <h2>2. 选择模式与选择操作</h2>
+    <p>Blender 有两种模式：<strong>对象模式</strong>（操作整个物体）和<strong>编辑模式</strong>（操作顶点/边/面，按 <code>Tab</code> 切换）。先掌握对象模式：</p>
+    <ol>
+      <li><strong>单击选中</strong>：左键点击物体，被选中物体带橙色描边</li>
+      <li><strong>加选</strong>：按住 <code>Shift</code> + 左键点击，可同时选中多个</li>
+      <li><strong>全选</strong>：按 <code>A</code> 全选，再按 <code>Alt+A</code> 取消</li>
+      <li><strong>框选</strong>：按 <code>B</code> 后拖出矩形框选</li>
+    </ol>
+
+    <h2>3. 移动 / 旋转 / 缩放（最重要的三个键）</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_shortcuts.png" alt="快捷键卡片">
+      <div class="caption">图：G 移动、R 旋转、S 缩放，加 X/Y/Z 锁定轴向</div>
+    </div>
+
+    <ol>
+      <li>选中物体，按 <code>G</code>（Grab 移动），移动鼠标，左键确认</li>
+      <li>按 <code>R</code>（Rotate 旋转），转动鼠标，左键确认</li>
+      <li>按 <code>S</code>（Scale 缩放），拖动物体大小，左键确认</li>
+      <li>想沿某个轴：按 <code>G</code> 后按 <code>X</code>，就只沿 X 轴移动；R/S 同理</li>
+      <li>想精确输入：按 <code>S</code> 后直接打数字如 <code>0.5</code>，回车确认</li>
+    </ol>
+
+    <blockquote class="tip"><strong>万能取消键：</strong>任何操作按错方向，按<strong>右键</strong>或 <code>Esc</code> 取消，不会损坏模型。大胆试，不会弄坏东西。做错了就 <code>Ctrl+Z</code> 撤销。</blockquote>
+
+    <h2>4. 视图控制：正交 vs 透视</h2>
+    <p>建模时常用<strong>正交视图</strong>（平行投影，不近大远小，方便对齐）和<strong>透视视图</strong>（正常视角）：</p>
+    <ul>
+      <li>数字小键盘 <code>1</code> = 前视图，<code>3</code> = 右视图，<code>7</code> = 顶视图</li>
+      <li><code>5</code> = 切换 正交/透视</li>
+      <li><code>Ctrl+1/3/7</code> 是对应反方向视图（后/左/底）</li>
+      <li>笔记本没有小键盘？菜单栏 View → Viewpoint 里有，或开启「模拟数字小键盘」设置</li>
+    </ul>
+
+    <blockquote class="warn"><strong>滚轮习惯：</strong>鼠标中键按住 = 旋转视图，滚轮 = 缩放。这两个操作几乎每 10 秒用一次，先在默认场景里滚几分钟适应它，比记十个快捷键都值。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能说出 3D 视图、大纲、属性面板分别在哪</li>
+      <li>会用左键选物体、Shift+左键加选</li>
+      <li>能熟练用 G / R / S 移动、旋转、缩放物体</li>
+      <li>会用数字键 1/3/7 切换正交视图，5 切换透视</li>
+      <li>遇到操作错误知道用右键取消、Ctrl+Z 撤销</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章：建模是什么</a>
+      <a class="next-btn" href="lesson-03.html">下一章：基础建模操作 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

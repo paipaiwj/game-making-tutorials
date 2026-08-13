@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：场景设计</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 场景搭建入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 场景设计</a></li>
+      <li><a href="lesson-02.html">2. 地面与碰撞</a></li>
+      <li><a href="lesson-03.html">3. 光照与氛围</a></li>
+      <li><a href="lesson-04.html">4. 性能与规模</a></li>
+      <li><a href="lesson-05.html">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：场景设计 — 白盒、动线、叙事</h1>
+    <p>搭场景的第一步不是放漂亮的模型，而是<strong>想清楚布局</strong>。本篇讲三件事：怎么用白盒快速定骨架、玩家进来怎么走（动线）、场景想讲什么故事（叙事）。</p>
+
+    <h2>1. 白盒 Blockout：用 Cube 搭骨架</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_blockout.png" alt="白盒 vs 成品对比">
+      <div class="caption">图：先用灰盒子定位置，满意后再换成美术资源</div>
+    </div>
+
+    <p>白盒阶段的操作很简单：用 <code>GameObject → 3D Object → Cube</code> 把地面、墙、台阶、房间边界全用灰色盒子搭出来。然后<strong>按 Play 在里面走一遍</strong>：走不通的地方、太挤的走廊、跳不上去的台阶，全部在白盒阶段改掉。</p>
+
+    <blockquote class="tip"><strong>为什么必须先白盒？</strong>挪一个灰盒子只要 1 分钟，换好模型再挪可能要 1 小时。布局问题趁早发现，能省掉大量返工。VRChat 里尤其重要 —— 玩家视角高度、碰撞手感都要在真实尺寸里验证。</blockquote>
+
+    <h2>2. 动线设计：玩家从哪里来、看到什么、去哪</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_player_flow.png" alt="玩家动线示意">
+      <div class="caption">图：入口 → 主体 → 出口，一条清晰的路线</div>
+    </div>
+
+    <p>动线（Player Flow）是玩家在场景里的移动路线。设计时问自己三个问题：</p>
+    <ul>
+      <li><strong>从哪里来：</strong>Spawn 点在哪？玩家一进来第一眼看到什么？</li>
+      <li><strong>看到什么：</strong>最重要的东西（篝火、舞台、玩法点）必须在视线第一目标位置</li>
+      <li><strong>去哪：</strong>玩完怎么离开？出口或返回点要留得住期待感</li>
+    </ul>
+
+    <blockquote class="warn"><strong>常见错误：</strong>把世界做成「迷宫」，玩家进来不知道往哪走，转一圈就退出了。VRChat 世界的留存率，很大程度取决于玩家 30 秒内能不能找到「这里在玩什么」。</blockquote>
+
+    <h2>3. 场景叙事：氛围三段论</h2>
+    <p>把场景当故事讲，节奏是：<strong>入口（引入）→ 主体（展开）→ 出口（回味）</strong>。</p>
+    <table>
+      <tr><th>段落</th><th>氛围目标</th><th>手法举例</th></tr>
+      <tr><td><strong>入口</strong></td><td>第一印象：这是什么地方</td><td>窄门 / 拱门，把视线压向主体区域</td></tr>
+      <tr><td><strong>主体</strong></td><td>核心体验：聚集、游玩、交谈</td><td>开阔区域 + 中心焦点（篝火/舞台）</td></tr>
+      <tr><td><strong>出口</strong></td><td>余韵：还想再来的理由</td><td>高处眺望点 / 隐藏彩蛋 / 渐变的灯光</td></tr>
+    </table>
+
+    <h2>4. VRChat 社交空间：聚集点设计</h2>
+    <p>VRChat 是社交世界，场景要<strong>把人聚到一起</strong>，而不是把人拆散：</p>
+    <ul>
+      <li>每个区域都有一个<strong>聚集点</strong>：篝火旁、吧台前、舞台下 —— 有焦点，人才会聚</li>
+      <li>聚集点之间<strong>视线通透</strong>：站在 A 点能看到 B 点有人，人才会走过去</li>
+      <li>留出<strong>宽松的站立空间</strong>：VRChat 玩家会互相靠近聊天，过窄的区域会让人难受</li>
+    </ul>
+
+    <blockquote class="tip"><strong>记住：</strong>世界是给人逛和聚的。布局服务于「人在里面怎么走、怎么站、怎么聊」，而不是服务于截图好不好看。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了白盒流程：先 Cube 骨架，再美术资源</li>
+      <li>能用「入口 → 主体 → 出口」画出自己场景的动线</li>
+      <li>能给每个区域找到明确的聚集点</li>
+      <li>在白盒阶段按 Play 实际走了一遍</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：地面与碰撞 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：动画是什么</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 动画入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 动画是什么</a></li>
+      <li><a href="lesson-02.html">2. Animator 状态机</a></li>
+      <li><a href="lesson-03.html">3. 动画剪辑</a></li>
+      <li><a href="lesson-04.html">4. 物体动画与交互</a></li>
+      <li><a href="lesson-05.html">5. 动手：开关门</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：动画是什么 — 剪辑、状态机、参数</h1>
+    <p>VRChat 世界里的开门、按钮、传送带、NPC —— 都是动画。Unity 的动画系统分三层，这一篇先把三层结构看明白。</p>
+
+    <h2>1. 动画的三层结构</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_animation_layers.png" alt="动画三层结构">
+      <div class="caption">图：Animation Clip（怎么动）→ Animator Controller（什么时候动）→ 参数（谁决定）</div>
+    </div>
+
+    <table>
+      <tr><th>层</th><th>是什么</th><th>举例</th></tr>
+      <tr><td><strong>Animation Clip</strong></td><td>一段记录「物体怎么动」的片段（关键帧）</td><td>门从 0° 转到 90°</td></tr>
+      <tr><td><strong>Animator Controller</strong></td><td>状态机：管理多个 Clip 谁在播、何时切换</td><td>门「关闭」态 ↔「打开」态</td></tr>
+      <tr><td><strong>参数 Parameter</strong></td><td>外部（Udon）设置的开关/数值</td><td>isOpen = true → 播放打开动画</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>一句话：</strong>Clip 是「动作」，Controller 是「剧本」，参数是「导演的命令」。你写 Udon 就是在当导演。</blockquote>
+
+    <h2>2. Animator 组件</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_animator_component.png" alt="Animator 组件">
+      <div class="caption">图：Animator 组件挂在物体上，指定 Controller</div>
+    </div>
+
+    <ul>
+      <li><strong>Controller</strong>：要用的状态机（.controller 资源）</li>
+      <li><strong>Avatar</strong>：人形动画才需要，物体动画留空</li>
+      <li><strong>Update Mode</strong>：默认 Normal（按帧更新）即可</li>
+    </ul>
+
+    <blockquote class="warn"><strong>VRChat 世界注意：</strong>我们做的是「物体动画」，不是角色动画 —— Animator 的 Avatar 留空，一切按 Transform 动画来做，简单又可靠。</blockquote>
+
+    <h2>3. 动画 vs 特效 vs 脚本移动</h2>
+    <table>
+      <tr><th>方式</th><th>适合</th><th>不适合</th></tr>
+      <tr><td><strong>动画（Animator）</strong></td><td>有状态、需要切换的动作</td><td>纯逻辑驱动（如计分）</td></tr>
+      <tr><td><strong>脚本移动</strong></td><td>简单往复、数值变化</td><td>多段复杂动作</td></tr>
+      <tr><td><strong>粒子特效</strong></td><td>烟雾、光效</td><td>固体物体的位移</td></tr>
+    </table>
+
+    <blockquote class="tip">判断口诀：<strong>「几个状态 + 切换」就用 Animator</strong>；「一个数变了」用脚本。门有两个状态，所以用 Animator。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了动画三层结构（Clip/Controller/参数）</li>
+      <li>知道 Animator 组件挂在哪、填什么</li>
+      <li>能判断一个动作用动画还是脚本</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：Animator 状态机 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

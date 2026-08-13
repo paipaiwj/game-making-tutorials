@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 游戏机制入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 机制是什么</a></li>
+      <li><a href="lesson-02.html">2. 状态与变量</a></li>
+      <li><a href="lesson-03.html">3. 计分与计时</a></li>
+      <li><a href="lesson-04.html">4. 胜负与重置</a></li>
+      <li><a href="lesson-05.html">5. 动手：抢答小游戏</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 & 常见问题</h1>
+    <p>做完前五篇后，遇到问题先来这里翻。</p>
+
+    <h2>1. 术语速查表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查">
+      <div class="caption">图：12 个必懂术语</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>一句话解释</th></tr>
+      <tr><td><strong>机制 Mechanic</strong></td><td>游戏的规则：玩家能做什么、世界怎么回应</td></tr>
+      <tr><td><strong>核心循环 Core Loop</strong></td><td>玩家反复做的最小动作圈</td></tr>
+      <tr><td><strong>游戏状态</strong></td><td>准备 / 进行 / 结束 等阶段</td></tr>
+      <tr><td><strong>状态机</strong></td><td>状态 + 条件 + 转移的逻辑骨架</td></tr>
+      <tr><td><strong>目标 Goal</strong></td><td>玩家要达成的目的</td></tr>
+      <tr><td><strong>规则 Rule</strong></td><td>能做什么、不能做什么</td></tr>
+      <tr><td><strong>反馈 Feedback</strong></td><td>世界对行为的回应（分数/音效）</td></tr>
+      <tr><td><strong>挑战 Difficulty</strong></td><td>难度曲线，让游戏有成长</td></tr>
+      <tr><td><strong>计分系统</strong></td><td>事件 → 判定 → 加分 → 显示</td></tr>
+      <tr><td><strong>倒计时</strong></td><td>限时机制，制造紧张感</td></tr>
+      <tr><td><strong>胜负判定</strong></td><td>分数/时间/生命的结束条件</td></tr>
+      <tr><td><strong>重置 Reset</strong></td><td>清空状态让游戏可重玩</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题">
+      <div class="caption">图：现象 → 原因 → 解法</div>
+    </div>
+
+    <table>
+      <tr><th>现象</th><th>原因</th><th>解法</th></tr>
+      <tr><td><strong>还没开始就能得分</strong></td><td>没有状态判定</td><td>加分前检查 IsPlaying()</td></tr>
+      <tr><td><strong>上一局分数带到下一局</strong></td><td>没有重置逻辑</td><td>写 ResetAll() 统一清零</td></tr>
+      <tr><td><strong>按钮狂点刷分</strong></td><td>没做防重复</td><td>每人限一次 / 冷却时间</td></tr>
+      <tr><td><strong>游戏卡在某状态</strong></td><td>转移条件没写全</td><td>把状态机画成图检查</td></tr>
+      <tr><td><strong>两个人分数不一样</strong></td><td>变量没同步</td><td>用 [UdonSynced] 同步</td></tr>
+      <tr><td><strong>时间不走了</strong></td><td>计时写在非 Playing 状态</td><td>只在进行中累加时间</td></tr>
+    </table>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线">
+      <div class="caption">图：入门 → 熟练 → 进阶 → 精通</div>
+    </div>
+
+    <table>
+      <tr><th>阶段</th><th>目标</th><th>学习内容</th></tr>
+      <tr><td><strong>入门</strong></td><td>会做小游戏</td><td>本教程：状态机 + 计分 + 胜负</td></tr>
+      <tr><td><strong>熟练</strong></td><td>会做多玩法</td><td>网络同步、多玩家、权限管理</td></tr>
+      <tr><td><strong>进阶</strong></td><td>会做系统</td><td>经济系统、背包、数据存档</td></tr>
+      <tr><td><strong>精通</strong></td><td>会做设计</td><td>数值平衡、关卡设计、让机制有趣</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>最后的话：</strong>游戏机制是"规则 + 实验"的学问：写一句话规则 → 做出来 → 玩 → 改规则 → 再玩。机制通了你再谈画面和音效。</blockquote>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

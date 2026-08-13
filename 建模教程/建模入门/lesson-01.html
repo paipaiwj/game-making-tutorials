@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：建模是什么</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Blender 建模入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 建模是什么</a></li>
+      <li><a href="lesson-02.html">2. Blender 基础操作</a></li>
+      <li><a href="lesson-03.html">3. 基础建模操作</a></li>
+      <li><a href="lesson-04.html">4. UV 与材质</a></li>
+      <li><a href="lesson-05.html">5. 导出到 Unity</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：建模是什么 — 顶点、边、面</h1>
+    <p>做 VRChat 世界的第一个问题：世界里的家具、建筑、道具是怎么来的？答案是<strong>建模</strong>——在 3D 软件里做出模型的形状，再导入 Unity。Blender 就是其中最常用的免费软件。</p>
+
+    <h2>1. 3D 模型的三要素</h2>
+    <p>任何 3D 模型，无论多复杂，都是由三样东西组成的：</p>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_vertex_edge_face.png" alt="顶点边面示意">
+      <div class="caption">图：顶点、边、面 —— 3D 模型的最小组成单位</div>
+    </div>
+
+    <table>
+      <tr><th>要素</th><th>是什么</th><th>例子</th></tr>
+      <tr><td><strong>顶点 Vertex</strong></td><td>网格中的点，决定形状轮廓</td><td>方块 8 个角点</td></tr>
+      <tr><td><strong>边 Edge</strong></td><td>连接两个顶点的线段</td><td>方块 12 条棱</td></tr>
+      <tr><td><strong>面 Face</strong></td><td>顶点围成的表面，渲染时看到的就是它</td><td>方块 6 个面</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>核心概念：</strong>顶点 + 边 + 面的集合就叫<strong>网格 Mesh</strong>。建模的本质 = 移动顶点、加边、改面，把网格捏成想要的形状。游戏里所有物体都是网格。</blockquote>
+
+    <h2>2. 面数 vs 质量</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_polycount.png" alt="面数对比">
+      <div class="caption">图：面数越多越精细，但也越吃性能 —— VRChat 里要克制</div>
+    </div>
+
+    <p>面数（Polycount）是模型的「细节数量」：面越多，形状越圆滑精细，但渲染时 GPU 的工作量越大。VRChat 是多人实时世界，性能直接决定别人愿不愿意进你的世界：</p>
+    <ul>
+      <li><strong>低模 Low Poly</strong>：几百 ~ 几千面，适合 VRChat 场景道具</li>
+      <li><strong>高模 High Poly</strong>：几万 ~ 百万面，只用于雕刻细节或烘焙法线贴图，不直接进 VRChat</li>
+      <li>VRChat 世界预算：单个道具几千面以内，整世界尽量控制在百万面以内</li>
+    </ul>
+
+    <h2>3. 常用文件格式</h2>
+    <table>
+      <tr><th>格式</th><th>用途</th><th>说明</th></tr>
+      <tr><td><strong>.blend</strong></td><td>Blender 源文件</td><td>保留全部编辑信息，Blender 内部用</td></tr>
+      <tr><td><strong>.fbx</strong></td><td>导入 Unity</td><td>VRChat 世界资产的标准交接格式，推荐</td></tr>
+      <tr><td><strong>.obj</strong></td><td>通用交换</td><td>更简单但丢失较多信息（修改器、材质设置），不推荐当主力</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>VRChat 性能红线：</strong>一个 10 万面的凳子也许能跑，但 20 个人同时看它就会卡。建模时养成习惯：能少一分的面，绝不白白多加。第 6 篇有面数问题的自查表。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能说出顶点、边、面分别是什么</li>
+      <li>理解网格 Mesh 的概念</li>
+      <li>知道为什么 VRChat 里要控制面数</li>
+      <li>知道 .fbx 是 Blender → Unity 的推荐格式</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：Blender 基础操作 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

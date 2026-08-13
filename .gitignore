@@ -1,8 +1,7 @@
-# 未包含在仓库中的目录
+﻿# 未包含在仓库中的目录
 ai帮助写教程工具/
 awesome-gamedev-agent-skills/
 vrc离线手册/
-色彩教程/
 
 __pycache__/
 *.pyc

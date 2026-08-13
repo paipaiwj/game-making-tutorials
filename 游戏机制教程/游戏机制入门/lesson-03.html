@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：计分与计时</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 游戏机制入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 机制是什么</a></li>
+      <li><a href="lesson-02.html">2. 状态与变量</a></li>
+      <li><a href="lesson-03.html" class="active">3. 计分与计时</a></li>
+      <li><a href="lesson-04.html">4. 胜负与重置</a></li>
+      <li><a href="lesson-05.html">5. 动手：抢答小游戏</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：计分与计时 — 让努力被看见</h1>
+    <p>分数是玩家努力的最直接反馈，时间是制造紧张感的利器。这一篇把这两样做扎实。</p>
+
+    <h2>1. 计分流程</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_score_flow.png" alt="计分流程">
+      <div class="caption">图：事件发生 → 状态判定 → 修改分数 → 反馈与显示</div>
+    </div>
+
+    <pre><code>public void OnHit()  // 碰撞或按钮触发
+{
+    if (!manager.IsPlaying()) return;   // ① 状态判定：没在玩，不算分！
+    if (alreadyScored) return;          // ② 防重复：一个人只能得一次
+
+    score += 10;                        // ③ 修改分数
+    OnScoreChanged();                   // ④ 反馈 + 更新 UI（+ 网络同步）
+}</code></pre>
+
+    <blockquote class="warn"><strong>最重要的不是加分，是第 ①② 步的"拦截"。</strong>"游戏没开始、已经结束、重复命中"都要在这里挡住 —— 这就是防作弊和防 bug 的关键。</blockquote>
+
+    <h2>2. 计时器</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_timer.png" alt="计时器">
+      <div class="caption">图：倒计时 / 正计时 / 节奏感，三种常见用法</div>
+    </div>
+
+    <pre><code>public float timeLeft = 60f;   // 倒计时 60 秒
+
+private void Update()
+{
+    if (manager.IsPlaying())            // 只在"进行中"计时！
+    {
+        timeLeft -= Time.deltaTime;
+        if (timeLeft &lt;= 0f)
+        {
+            manager.EndGame();          // 时间到 → 结束
+        }
+    }
+}</code></pre>
+
+    <ul>
+      <li><strong>倒计时</strong>：限时挑战，时间到 = 结束，制造紧张感</li>
+      <li><strong>正计时</strong>：统计用时，越快越好</li>
+      <li><strong>节奏感</strong>：秒针音效、整点光效，让时间"有存在感"</li>
+    </ul>
+
+    <blockquote class="tip">Udon 里没有 Update 时的 <code>Time.deltaTime</code> 需要放在循环里；也可以用 <code>SendCustomEventDelayedSeconds</code> 做每秒触发。重点是：<strong>时间只在 Playing 状态才走</strong>。</blockquote>
+
+    <h2>3. 把分数显示出来</h2>
+    <ol>
+      <li>Canvas 里加一个 <code>Text</code>（TextMeshPro），命名 <code>ScoreText</code></li>
+      <li>写一个 <code>ScoreboardComponent</code>，在 OnScoreChanged 时更新文本</li>
+      <li>计分组件通过信号把新分数发给计分板（你的项目架构：Component → Signal → Component）</li>
+    </ol>
+
+    <blockquote class="tip">UI 刷新要和计分分离：ScoreComponent 只管"分数是多少"，ScoreboardComponent 只管"显示出来"。分开写，各自好测。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>写了带状态判定和防重复的计分逻辑</li>
+      <li>写了一个只在 Playing 时运行的计时器</li>
+      <li>把分数显示到了 UI 上</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一章</a>
+      <a class="next-btn" href="lesson-04.html">下一章：胜负与重置 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

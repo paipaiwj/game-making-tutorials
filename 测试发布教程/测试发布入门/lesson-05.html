@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：实战发布一个世界</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 测试与发布入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要测试</a></li>
+      <li><a href="lesson-02.html">2. 本地测试</a></li>
+      <li><a href="lesson-03.html">3. 性能检查</a></li>
+      <li><a href="lesson-04.html">4. 上传发布</a></li>
+      <li><a href="lesson-05.html" class="active">5. 实战：发布一个世界</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：实战 — 完整发布一个世界</h1>
+    <p>把前四篇串成一条流水线。下面六步按顺序走，每一步做完再进下一步 —— <strong>顺序不能乱</strong>：不备份就上传，翻车了连回滚都没得回。</p>
+
+    <h2>实战六步</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_steps.png" alt="实战六步">
+      <div class="caption">图：备份 → 性能检查 → 单人测试 → 多人测试 → 上传发布 → 进世界验证</div>
+    </div>
+
+    <h3>步骤 1：备份工程</h3>
+    <p>复制整个工程文件夹，或 <code>git add . && git commit</code> 打一个「发布前」的提交点。这是你唯一的回滚手段（第 4 篇讲过：VRChat 更新是覆盖式的）。</p>
+
+    <h3>步骤 2：性能检查</h3>
+    <p>打开 Stats 面板看 Draw Call 与 Tris，跑一遍 Build &amp; Test 看性能报告。全绿或可接受才继续 —— 有红项先按《渲染入门》第 4 篇修，不要带着问题发布。</p>
+
+    <h3>步骤 3：Build &amp; Test 单人测试</h3>
+    <p>用 VRChat SDK 面板构建本地测试，以真实客户端身份把<strong>每一个功能点</strong>过一遍：按钮、传送、UI、音效、胜负判定。看 Console 有没有 Error 和关键 Warning。</p>
+
+    <h3>步骤 4：双开 / 朋友多人测试</h3>
+    <p>用带 <code>-multi</code> 参数的快捷方式双开，重点测：状态同步、权限、抢按钮、拔线、新玩家中途加入（第 1 篇的三个边界场景）。</p>
+
+    <h3>步骤 5：上传发布</h3>
+    <p>确认当前场景正确 → 填名称/描述/预览图 → 点 Publish → 等待进度完成。上传失败就修到成功，别放过。</p>
+
+    <h3>步骤 6：进世界验证</h3>
+    <p>在 VRChat 里搜索世界名称进入，确认：能搜到、缩略图正确、玩法与本地一致。发现不对立刻修、立刻重传。</p>
+
+    <blockquote class="tip">第一次完整走流程会手忙脚乱，正常。走完一次，下次就是肌肉记忆 —— 以后每次改版都循环「步骤 3 → 5 → 6」即可。</blockquote>
+
+    <h2>发布前检查清单</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_checklist.png" alt="发布前检查清单">
+      <div class="caption">图：十项全打勾再点 Publish</div>
+    </div>
+
+    <ul class="checklist">
+      <li>工程已备份（文件夹复制或 git 提交）</li>
+      <li>Console 无红色 Error</li>
+      <li>Stats 面板 Draw Call 正常（60 以下）</li>
+      <li>性能报告全绿或可接受</li>
+      <li>Build &amp; Test 单人玩过全部功能</li>
+      <li>双开 / 朋友多人测过同步与权限</li>
+      <li>边界情况测过：狂点按钮、中途加入、拔线</li>
+      <li>世界名称、描述、预览图已填写</li>
+      <li>首屏体验 OK：进世界第一眼不迷路</li>
+      <li>确认发布的就是当前场景</li>
+    </ul>
+
+    <blockquote class="warn"><strong>最容易被坑的一条：</strong>「确认发布的是当前场景」。场景开错了，你上传一整天，玩家玩到的还是旧世界 —— 发布前最后扫一眼场景名。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>按六步顺序完整发布过一个世界</li>
+      <li>十项检查清单全部走完才点 Publish</li>
+      <li>发布后重新进世界验证过新内容</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一章：上传发布</a>
+      <a class="next-btn" href="lesson-06.html">下一章：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

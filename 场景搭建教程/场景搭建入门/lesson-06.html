@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 场景搭建入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 场景设计</a></li>
+      <li><a href="lesson-02.html">2. 地面与碰撞</a></li>
+      <li><a href="lesson-03.html">3. 光照与氛围</a></li>
+      <li><a href="lesson-04.html">4. 性能与规模</a></li>
+      <li><a href="lesson-05.html">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 & 常见问题</h1>
+    <p>做世界时随身带这一篇。术语记不住翻上面，出问题查中间，想进阶看下面。</p>
+
+    <h2>1. 术语速查（12 个）</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查表">
+      <div class="caption">图：12 个核心术语一句话解释</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>一句话</th><th>出处</th></tr>
+      <tr><td><strong>白盒 Blockout</strong></td><td>用 Cube 搭骨架，先验证布局</td><td>第 1 篇</td></tr>
+      <tr><td><strong>动线 Player Flow</strong></td><td>玩家从哪来、看到什么、去哪</td><td>第 1 篇</td></tr>
+      <tr><td><strong>Collider</strong></td><td>物体物理边界的形状</td><td>第 2 篇</td></tr>
+      <tr><td><strong>Trigger</strong></td><td>不阻挡移动、只发事件的感应区</td><td>第 2 篇</td></tr>
+      <tr><td><strong>Layer</strong></td><td>碰撞矩阵控制谁和谁相撞</td><td>第 2 篇</td></tr>
+      <tr><td><strong>天空盒</strong></td><td>无限远背景 + 环境光来源</td><td>第 3 篇</td></tr>
+      <tr><td><strong>Fog 雾</strong></td><td>远处与天空融合，营造氛围</td><td>第 3 篇</td></tr>
+      <tr><td><strong>后处理</strong></td><td>色彩分级 / 泛光 / 景深等全屏效果</td><td>第 3 篇</td></tr>
+      <tr><td><strong>烘焙</strong></td><td>预计算光影存进光照贴图</td><td>第 3 篇</td></tr>
+      <tr><td><strong>LOD</strong></td><td>远处自动换低模省性能</td><td>第 4 篇</td></tr>
+      <tr><td><strong>合批 Batching</strong></td><td>共享材质合并绘制，省 Draw Call</td><td>第 4 篇</td></tr>
+      <tr><td><strong>遮挡剔除</strong></td><td>相机看不到的物体不绘制</td><td>第 4 篇</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题对照表">
+      <div class="caption">图：问题现象 → 常见原因 → 解决办法</div>
+    </div>
+
+    <table>
+      <tr><th>问题现象</th><th>常见原因</th><th>解决办法</th></tr>
+      <tr><td><strong>掉帧卡顿</strong></td><td>材质太多、实时灯太多、循环粒子泛滥</td><td>共享材质 + 烘焙灯光 + 关闭闲置粒子，评级到 Good</td></tr>
+      <tr><td><strong>碰撞穿透</strong></td><td>Collider 比模型小，薄墙用了 Mesh Collider</td><td>调大 Collider，薄墙用 Box，检查 Layer 矩阵</td></tr>
+      <tr><td><strong>场景太暗</strong></td><td>环境光太弱，天空盒太暗</td><td>补齐打光三件套，调高环境光强度</td></tr>
+      <tr><td><strong>画面过曝</strong></td><td>主光太强，泛光阈值太低</td><td>降低主光强度，后处理里调 Bloom 阈值</td></tr>
+      <tr><td><strong>烘焙太慢</strong></td><td>烘焙范围太大、分辨率太高</td><td>缩小范围、降分辨率，分区域烘焙</td></tr>
+      <tr><td><strong>地面塌陷</strong></td><td>地面没有 Collider，地形未生成碰撞</td><td>确认地面有 Collider，用简化碰撞网格</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>调试心法：</strong>先看性能评级和 Scene 视图线框，再动手改 —— 八成问题一眼就能定位。剩下的看《渲染教程》和《游戏机制教程》找答案。</blockquote>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线图">
+      <div class="caption">图：从会搭场景到会做世界设计</div>
+    </div>
+
+    <ul>
+      <li><strong>入门：</strong>会搭能逛的场景（白盒 → 美术化，动线清晰）</li>
+      <li><strong>熟练：</strong>会做氛围与性能（灯光/烘焙/合批，评级 Good+）</li>
+      <li><strong>进阶：</strong>会做完整世界（社交空间、玩法区域、Udon 交互）</li>
+      <li><strong>精通：</strong>系统级设计（关卡结构、性能压到 Excellent、团队协作规范）</li>
+    </ul>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能说出 12 个术语的含义</li>
+      <li>遇到「暗/穿透/掉帧」能对号入座找到解法</li>
+      <li>知道下一步该学什么（渲染 / 机制 / 网络）</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章：实战搭场景</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

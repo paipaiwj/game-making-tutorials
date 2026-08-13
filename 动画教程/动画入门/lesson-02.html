@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：Animator 状态机</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 动画入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 动画是什么</a></li>
+      <li><a href="lesson-02.html" class="active">2. Animator 状态机</a></li>
+      <li><a href="lesson-03.html">3. 动画剪辑</a></li>
+      <li><a href="lesson-04.html">4. 物体动画与交互</a></li>
+      <li><a href="lesson-05.html">5. 动手：开关门</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：Animator 状态机 — 状态、转换、参数</h1>
+    <p>状态机是动画的"大脑"：它决定当前播放哪段动画，以及何时切换到哪段。和《游戏机制》里的状态机是同一套思想。</p>
+
+    <h2>1. 状态机长什么样</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_state_machine.png" alt="状态机">
+      <div class="caption">图：门的两个状态（Closed/Open）+ 转换箭头 + 参数条件</div>
+    </div>
+
+    <ul>
+      <li><strong>状态 State</strong>：方块，每个状态挂一段 Animation Clip</li>
+      <li><strong>转换 Transition</strong>：箭头，从 A 到 B 的「切换规则」</li>
+      <li><strong>参数条件</strong>：转换上的条件（如 isOpen == true 才切换）</li>
+      <li><strong>默认状态</strong>：绿色方块，进场先播它（门默认关闭）</li>
+    </ul>
+
+    <h2>2. 三种参数</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_parameters.png" alt="参数类型">
+      <div class="caption">图：Bool 开关 / Float 数值 / Trigger 触发</div>
+    </div>
+
+    <table>
+      <tr><th>类型</th><th>用途</th><th>例</th></tr>
+      <tr><td><strong>Bool</strong></td><td>两种状态切换</td><td>isOpen（门开/关）</td></tr>
+      <tr><td><strong>Float</strong></td><td>连续数值</td><td>speed（传送带速度）</td></tr>
+      <tr><td><strong>Trigger</strong></td><td>一次性触发</td><td>playEffect（播放一次特效）</td></tr>
+    </table>
+
+    <blockquote class="tip">做世界动画 90% 用 <strong>Bool</strong>：门、灯、开关都是「开/关」两种状态。Trigger 适合"播一次"的动作，但它不会自己复位，需要小心。</blockquote>
+
+    <h2>3. Any State 与 Exit</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_03_any_state.png" alt="Any State">
+      <div class="caption">图：Any State 可以从任何状态跳转，适合「紧急打断」（如报警动画）</div>
+    </div>
+
+    <ul>
+      <li><strong>Any State</strong>：从任何状态都能出发的转换入口，适合紧急打断</li>
+      <li><strong>Exit</strong>：状态间的默认出口（要勾选 Exit Time 或设条件）</li>
+    </ul>
+
+    <h2>4. Udon 控制参数</h2>
+    <pre><code>public Animator doorAnimator;   // Inspector 拖入
+
+public void OpenDoor()
+{
+    doorAnimator.SetBool("isOpen", true);
+}
+
+public void CloseDoor()
+{
+    doorAnimator.SetBool("isOpen", false);
+}</code></pre>
+
+    <blockquote class="warn"><strong>常见坑：</strong>参数名拼错不会报错（动画系统不检查），但动画永远不切换。写了 SetBool 没反应 → 先检查 Animator 里有没有这个参数、名字一不一样。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>建了一个 Animator Controller，加了两个状态</li>
+      <li>加了转换和参数条件</li>
+      <li>会用 Udon 的 SetBool 控制切换</li>
+      <li>知道 Any State 和参数名检查这两个坑</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章</a>
+      <a class="next-btn" href="lesson-03.html">下一章：动画剪辑 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

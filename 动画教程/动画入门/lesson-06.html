@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 动画入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 动画是什么</a></li>
+      <li><a href="lesson-02.html">2. Animator 状态机</a></li>
+      <li><a href="lesson-03.html">3. 动画剪辑</a></li>
+      <li><a href="lesson-04.html">4. 物体动画与交互</a></li>
+      <li><a href="lesson-05.html">5. 动手：开关门</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 & 常见问题</h1>
+    <p>做完前五篇后，遇到问题先来这里翻。</p>
+
+    <h2>1. 术语速查表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查">
+      <div class="caption">图：12 个必懂术语</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>一句话解释</th></tr>
+      <tr><td><strong>Animation Clip</strong></td><td>一段记录物体怎么动的片段（关键帧）</td></tr>
+      <tr><td><strong>Animator Controller</strong></td><td>状态机：管理多个 Clip 谁在播、何时切换</td></tr>
+      <tr><td><strong>状态 State</strong></td><td>状态机里的方块，挂一段 Clip</td></tr>
+      <tr><td><strong>转换 Transition</strong></td><td>状态间的箭头，带切换条件</td></tr>
+      <tr><td><strong>Bool / Float / Trigger</strong></td><td>三种参数：开关 / 数值 / 一次性触发</td></tr>
+      <tr><td><strong>关键帧</strong></td><td>时间轴上记录属性值的点</td></tr>
+      <tr><td><strong>时间轴</strong></td><td>动画窗口的横轴，关键帧排在上面</td></tr>
+      <tr><td><strong>曲线</strong></td><td>控制加减速的曲线（缓入缓出）</td></tr>
+      <tr><td><strong>Any State</strong></td><td>从任何状态都能出发的转换入口</td></tr>
+      <tr><td><strong>SetBool</strong></td><td>Udon 给 Animator 写 Bool 参数</td></tr>
+      <tr><td><strong>VRC_Interactable</strong></td><td>VRChat 交互组件，玩家可碰</td></tr>
+      <tr><td><strong>默认状态</strong></td><td>绿色方块，进场先播放的状态</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题">
+      <div class="caption">图：现象 → 原因 → 解法</div>
+    </div>
+
+    <table>
+      <tr><th>现象</th><th>原因</th><th>解法</th></tr>
+      <tr><td><strong>动画不动</strong></td><td>Animator 没挂 Controller / 默认状态错误</td><td>检查组件和默认状态</td></tr>
+      <tr><td><strong>SetBool 没反应</strong></td><td>参数名拼错（不报错！）</td><td>核对 Animator 参数名</td></tr>
+      <tr><td><strong>门开一半卡住</strong></td><td>动画被脚本覆盖 / 转换没连完</td><td>一个属性一个主人，检查转换</td></tr>
+      <tr><td><strong>关回时瞬移</strong></td><td>关门 Clip 没从当前位置开始</td><td>关门 Clip 首帧记录当前状态</td></tr>
+      <tr><td><strong>多人看到不同状态</strong></td><td>动画参数没同步</td><td>同步 isOpen 变量，各端 SetBool</td></tr>
+      <tr><td><strong>Trigger 反复触发</strong></td><td>Trigger 参数没复位</td><td>用 Bool 代替，或手动复位</td></tr>
+    </table>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线">
+      <div class="caption">图：入门 → 熟练 → 进阶 → 精通</div>
+    </div>
+
+    <table>
+      <tr><th>阶段</th><th>目标</th><th>学习内容</th></tr>
+      <tr><td><strong>入门</strong></td><td>会做物体动画</td><td>本教程：录制 + 状态机 + 交互</td></tr>
+      <tr><td><strong>熟练</strong></td><td>会做复杂动画</td><td>多状态切换、Any State、曲线调手感</td></tr>
+      <tr><td><strong>进阶</strong></td><td>会做角色动画</td><td>人形 Avatar、IK、动画层 Layer</td></tr>
+      <tr><td><strong>精通</strong></td><td>会做表现</td><td>动画 + 特效 + 音频联动、程序化动画</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>最后的话：</strong>动画是"状态 + 时间"的学问：先把状态画出来，再录动画、连转换。状态清楚，动画就不会乱。</blockquote>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

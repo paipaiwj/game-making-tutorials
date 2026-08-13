@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 色彩入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 色彩基础</a></li>
+      <li><a href="lesson-02.html">2. 配色方案</a></li>
+      <li><a href="lesson-03.html">3. 色彩情绪</a></li>
+      <li><a href="lesson-04.html">4. Unity 色彩实践</a></li>
+      <li><a href="lesson-05.html">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 & 常见问题</h1>
+    <p>学完了？这一篇是「冰箱贴」：遇到问题翻这里，看不懂再回去翻对应章节。</p>
+
+    <h2>1. 术语速查（12 个）</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查表">
+      <div class="caption">图：12 个高频术语一句话解释</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>一句话</th><th>章节</th></tr>
+      <tr><td><strong>色相 Hue</strong></td><td>颜色本身：红/橙/黄/绿…</td><td>1</td></tr>
+      <tr><td><strong>饱和度 Saturation</strong></td><td>鲜艳程度：0% 灰 → 100% 纯</td><td>1</td></tr>
+      <tr><td><strong>明度 Value</strong></td><td>亮暗程度：0% 黑 → 100% 最亮</td><td>1</td></tr>
+      <tr><td><strong>色环 Color Wheel</strong></td><td>12 色排成环，配色方案的地图</td><td>1</td></tr>
+      <tr><td><strong>冷暖色</strong></td><td>暖=热情危险，冷=平静神秘</td><td>3</td></tr>
+      <tr><td><strong>互补色</strong></td><td>色轮相对（180°），对比最强</td><td>2</td></tr>
+      <tr><td><strong>近似色</strong></td><td>色轮相邻，和谐自然</td><td>2</td></tr>
+      <tr><td><strong>三角配色</strong></td><td>120° 间隔三色，活泼均衡</td><td>2</td></tr>
+      <tr><td><strong>色温 K 值</strong></td><td>灯光冷暖：低=暖橙，高=冷蓝</td><td>4</td></tr>
+      <tr><td><strong>白平衡</strong></td><td>把「白色」调回真正的白</td><td>4</td></tr>
+      <tr><td><strong>色调映射 Tonemap</strong></td><td>HDR 高光压回可见范围（用 ACES）</td><td>4</td></tr>
+      <tr><td><strong>色板 Palette</strong></td><td>固定一组颜色，全局只用它</td><td>5</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题对照表">
+      <div class="caption">图：问题 → 原因 → 解决办法，三列对照</div>
+    </div>
+
+    <table>
+      <tr><th>问题现象</th><th>常见原因</th><th>解决办法</th></tr>
+      <tr><td>颜色发灰、脏</td><td>饱和度低 + 明度太接近</td><td>提高 S，拉开明度差</td></tr>
+      <tr><td>画面过曝发白</td><td>灯光太强 / 曝光过高</td><td>主光降到 0.5~1，曝光 -0.5 起调</td></tr>
+      <tr><td>颜色又脏又土</td><td>色相太多太杂</td><td>限 2~3 个色相，用色板统一取色</td></tr>
+      <tr><td>灯光总是偏色</td><td>色温 K 值没调对</td><td>白天 5500~6500K，黄昏 3000~3500K</td></tr>
+      <tr><td>整体统一感差</td><td>材质颜色各自为战</td><td>共用色板 + 最后统一调色节点</td></tr>
+      <tr><td>色盲玩家看不清</td><td>只用颜色做区分</td><td>加形状/亮度/图标辅助信息</td></tr>
+    </table>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线图">
+      <div class="caption">图：会用色 → 会配色 → 会调光 → 有自己的风格</div>
+    </div>
+
+    <p>接下来怎么练：</p>
+    <ul>
+      <li>每做一个场景，先写一句情绪定位，再动手</li>
+      <li>收集喜欢游戏的截图，用取色器拆它的色板，模仿配色</li>
+      <li>同一个场景做两个情绪版本（温馨 vs 恐怖），只调色不换模型</li>
+      <li>调色前后截图并排对比，进步最快</li>
+    </ul>
+
+    <blockquote class="tip">最后送你一句话：<strong>颜色是场景的氛围开关，色板是统一感的保险丝。</strong>先情绪、后方案、再动手 —— 你的世界会立刻不一样。</blockquote>
+
+    <h2>课程完成清单</h2>
+    <ul class="checklist">
+      <li>能说出 HSV、色环、冷暖、色温这些术语</li>
+      <li>遇到「颜色脏/过曝/偏色」能对应到原因和办法</li>
+      <li>完成第 5 篇露营场景，并截图对比过调色前后</li>
+      <li>确定了下一个小目标（拆一个游戏的色板？做双版本情绪对比？）</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章：实战：露营场景</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

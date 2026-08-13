@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：同步事件</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 网络同步入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要同步</a></li>
+      <li><a href="lesson-02.html">2. 同步变量</a></li>
+      <li><a href="lesson-03.html" class="active">3. 同步事件</a></li>
+      <li><a href="lesson-04.html">4. 权限与所有权</a></li>
+      <li><a href="lesson-05.html">5. 实战：同步计分板</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：同步事件 — SendCustomNetworkEvent 广播</h1>
+    <p>同步变量传「数据」，同步事件传「通知」。当你想让所有玩家同时做一件事（播放音效、开特效、播放动画），就用网络事件广播。</p>
+
+    <h2>1. SendCustomNetworkEvent</h2>
+    <p>调用方法，全网所有客户端会同时调用你指定的那个方法：</p>
+    <pre><code>SendCustomNetworkEvent(NetworkEventTarget.All, "PlayScoreSound");</code></pre>
+    <p>第一个参数是广播范围（All 所有人 / Others 除自己外），第二个参数是<strong>要调用的方法名</strong>。任何玩家都能发起广播，不需要 owner 权限。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_network_event.png" alt="网络事件流程">
+      <div class="caption">图：触发者发起 → 全网所有客户端同时调用同一个方法</div>
+    </div>
+
+    <h2>2. 只能调用 UdonBehaviour 自己的方法</h2>
+    <p>能被网络事件调用的方法，必须满足：</p>
+    <ul>
+      <li>写在<strong>同一个 UdonBehaviour 脚本</strong>里的方法（不能直接调用别的组件的方法）</li>
+      <li>是 <code>public</code> 且无参（网络事件不能带参数）</li>
+    </ul>
+    <p>想给别的东西发通知？常用的做法是「事件先到本组件 → 本组件再用普通方式驱动其他物体」，或者让目标物体自己挂着接收脚本。</p>
+
+    <blockquote class="tip"><strong>无参怎么办？</strong>事件不带参数，要传数据就用同步变量：先改变量（数据同步），再发事件（通知大家去读/去播）。这是标准组合拳。</blockquote>
+
+    <h2>3. 示例：给所有玩家播放音效</h2>
+    <pre><code>using UdonSharp;
+using UnityEngine;
+using VRC.SDKBase;
+
+public class ScoreComponent : UdonSharpBehaviour
+{
+    [SerializeField] private AudioSource sound;
+
+    public void AddScore()
+    {
+        if (!Networking.LocalPlayer.IsOwner(gameObject)) return;
+        score += 1;                    // 变量：同步数据
+        SendCustomNetworkEvent(NetworkEventTarget.All, "PlayScoreSound"); // 事件：广播动作
+    }
+
+    public void PlayScoreSound()       // 全网都会被调用
+    {
+        sound.Play();                  // 每个客户端自己播一次音效
+    }
+}</code></pre>
+    <p>注意 <code>PlayScoreSound()</code> 在每个客户端上都会执行，所以音效是在<strong>每个人自己的耳机</strong>里播放 —— 效果就是所有人都听到加分声。</p>
+
+    <h2>4. 新玩家加入不会重放</h2>
+    <p>网络事件是<strong>一次性的广播</strong>：播完就没了，后进来的玩家不会重播已经播过的音效。所以：</p>
+    <ul>
+      <li>「动作」用事件：音效、特效 —— 错过就错过，无所谓</li>
+      <li>「现状」用变量：分数、开关 —— 新玩家进来时同步变量会补给他</li>
+    </ul>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_event_vs_var.png" alt="事件与变量对比">
+      <div class="caption">图：事件与变量的完整对比 —— 按场景选对工具</div>
+    </div>
+
+    <blockquote class="warn"><strong>选择口诀：</strong>要「新玩家也能拿到现状」→ 用变量；只想「动作播一次」→ 用事件。拿不准时，先用变量，准没错。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>会写 SendCustomNetworkEvent 调用</li>
+      <li>知道网络事件只能调用同脚本内的无参 public 方法</li>
+      <li>能用事件给所有玩家播音效</li>
+      <li>理解「新玩家加入不会重放事件」的含义</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一章：同步变量</a>
+      <a class="next-btn" href="lesson-04.html">下一章：权限与所有权 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

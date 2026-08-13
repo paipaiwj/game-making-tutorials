@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：本地测试</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 测试与发布入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要测试</a></li>
+      <li><a href="lesson-02.html" class="active">2. 本地测试</a></li>
+      <li><a href="lesson-03.html">3. 性能检查</a></li>
+      <li><a href="lesson-04.html">4. 上传发布</a></li>
+      <li><a href="lesson-05.html">5. 实战：发布一个世界</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：本地测试 — Play Mode、Build &amp; Test、双开、Console</h1>
+    <p>本地测试是每次开发都要用的基本功：快、免费、随时能跑。这一篇教你在<strong>不发布</strong>的情况下，把世界测到足够好。</p>
+
+    <h2>1. Play Mode：最快的逻辑测试</h2>
+    <p>在 Unity 编辑器里直接点顶部工具栏的 <strong>▶ Play</strong>，场景立即运行。适合快速验证：按钮逻辑、Udon 脚本、UI 更新。</p>
+    <ul>
+      <li>优点：秒开、能直接改代码再继续跑（改完重新编译即可）</li>
+      <li>缺点：不是真正的 VRChat 环境 —— 没有 VRChat 的玩家控制、没有网络、没有真实渲染压力</li>
+    </ul>
+
+    <blockquote class="tip">Play Mode 测不了「VR 里好不好用」，但测「逻辑对不对」完全够。写代码过程中每完成一小步就点一次 Play —— 这是 Udon 开发最常用的节奏。</blockquote>
+
+    <h2>2. Build &amp; Test：最接近真实的本地测试</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_build_test.png" alt="Build and Test 流程">
+      <div class="caption">图：VRChat SDK 菜单 → Build &amp; Test —— 一键构建并启动真实 VRChat 客户端</div>
+    </div>
+
+    <ol>
+      <li>打开菜单：<strong>VRChat SDK → Show Control Panel</strong></li>
+      <li>在 <strong>Content Manager</strong> 里确认要构建的世界与场景</li>
+      <li>点击 <strong>Build &amp; Test</strong> —— Unity 自动构建世界并启动 VRChat</li>
+      <li>VRChat 启动后自动进入你的世界（只有你一个人能看到）</li>
+    </ol>
+
+    <blockquote class="warn"><strong>这是最重要的按钮：</strong>Build &amp; Test 启动的是完整 VRChat 客户端，能看到真实光照、真实玩家控制器、真实交互。发布前永远先 Build &amp; Test，别把没测过的构建直接 Publish。</blockquote>
+
+    <h2>3. 双开客户端：自己测多人</h2>
+    <p>多人测试不一定等朋友 —— 你可以在一台电脑上同时开两个 VRChat：</p>
+    <ol>
+      <li>右键你的 VRChat 快捷方式 → 复制一份</li>
+      <li>右键副本 → 属性 → 在「目标」路径末尾加一个空格和 <code>-multi</code> 参数</li>
+      <li>先启动普通版 VRChat，再启动带 <code>-multi</code> 的副本（第二个实例必须带参数才能双开）</li>
+      <li>两个客户端登录同一账号（或朋友来一个），分别进入同一个世界</li>
+    </ol>
+
+    <pre><code>示例目标路径：
+"D:\Steam\steamapps\common\VRChat\VRChat.exe" -multi</code></pre>
+
+    <blockquote class="warn"><strong>注意：</strong>双开默认要求两个实例都在同一个世界才能互测同步 —— 先进世界的那个人开着不动，第二个实例再搜索同一个世界进入。测试「拔线」：直接把其中一个客户端的窗口关掉，观察另一个客户端的世界状态。</blockquote>
+
+    <h2>4. Console 窗口：看错误的第一现场</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_console.png" alt="Console 窗口解读">
+      <div class="caption">图：Console 把日志分成 Info / Warning / Error 三级 —— 报错先看这里</div>
+    </div>
+
+    <ul>
+      <li><strong>打开方式：</strong>菜单 Window → General → Console（快捷键 Ctrl+Shift+C）</li>
+      <li><strong>Info（蓝）：</strong>正常运行信息，可忽略或当调试输出</li>
+      <li><strong>Warning（黄）：</strong>可能有隐患 —— 材质丢失、组件没赋值、Udon 没链接</li>
+      <li><strong>Error（红）：</strong>代码出错了。点开看堆栈，点击行号直接跳到出错代码</li>
+    </ul>
+
+    <h2>5. Udon 调试输出：Debug.Log 在 VRChat 里不显示</h2>
+    <p>在编辑器 Play Mode 里 <code>Debug.Log()</code> 会打到 Console，但<strong>在 VRChat 客户端（Build &amp; Test / 线上）里不会显示</strong>。想在客户端里看调试信息，用这两种方式：</p>
+    <ul>
+      <li><strong>VRCConsole：</strong>在 Udon 代码里调用 <code>VRCConsole.Log()</code>，Build &amp; Test 的客户端里按 <strong>~（波浪号）</strong>键打开控制台查看</li>
+      <li><strong>世界内调试板：</strong>把调试文本写到世界里的 UdonBehaviour 文本组件上（做一个 DebugPanel），双开/联机时直接看面板</li>
+    </ul>
+
+    <blockquote class="tip"><strong>调试小技巧：</strong>多人不同步的 bug 特别适合用「世界内调试板」：每个客户端把本地变量值显示出来，一眼就能看出谁的状态不对。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>会用 Play Mode 快速验证 Udon 逻辑</li>
+      <li>会打开 VRChat SDK Control Panel 并执行 Build &amp; Test</li>
+      <li>会创建带 -multi 参数的快捷方式做双开测试</li>
+      <li>会读 Console 的 Info / Warning / Error 并定位错误</li>
+      <li>知道 Debug.Log 在 VRChat 客户端不显示，改用 VRCConsole</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章：为什么要测试</a>
+      <a class="next-btn" href="lesson-03.html">下一章：性能检查 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

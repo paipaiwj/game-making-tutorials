@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：地面与碰撞</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 场景搭建入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 场景设计</a></li>
+      <li><a href="lesson-02.html" class="active">2. 地面与碰撞</a></li>
+      <li><a href="lesson-03.html">3. 光照与氛围</a></li>
+      <li><a href="lesson-04.html">4. 性能与规模</a></li>
+      <li><a href="lesson-05.html">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：地面与碰撞 — 让世界「站得住」</h1>
+    <p>场景里所有物体都要有 Collider（碰撞体），玩家才能站上去、撞上去、碰不到该碰不到的东西。本篇讲碰撞体选型、Layer 碰撞层和 Trigger 触发区。</p>
+
+    <h2>1. Collider 类型：选对形状</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_collider_types.png" alt="碰撞体类型">
+      <div class="caption">图：Box / Sphere / Capsule / Mesh，按形状选型</div>
+    </div>
+
+    <table>
+      <tr><th>类型</th><th>适合</th><th>说明</th></tr>
+      <tr><td><strong>Box</strong></td><td>地面、墙、箱子</td><td>最常用，性能最好</td></tr>
+      <tr><td><strong>Sphere</strong></td><td>球、果实、小圆件</td><td>圆的用球，省性能</td></tr>
+      <tr><td><strong>Capsule</strong></td><td>柱子、树干</td><td>两头圆的柱体，玩家角色也用它</td></tr>
+      <tr><td><strong>Mesh</strong></td><td>复杂地形、雕塑</td><td>最精确也最贵，<strong>慎用</strong></td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>别用 Mesh Collider 碰每一块石头。</strong>地形起伏用多个 Box 拼出来，视觉用模型，碰撞用简化形状 —— 玩家根本分不出区别，但性能差很多。Mesh Collider 若要用，记得勾 <code>Convex</code>。</blockquote>
+
+    <h2>2. Layer 与碰撞矩阵</h2>
+    <p>Unity 用 Layer（层）管理「谁和谁相撞」。选中物体 → Inspector 顶部 <code>Layer</code> 下拉框设置层，然后 <code>Edit → Project Settings → Physics → Layer Collision Matrix</code> 勾选哪些层互相碰撞。</p>
+    <ul>
+      <li>勾掉的层之间<strong>互不碰撞</strong>：玩家能穿过某些装饰、粒子不触发碰撞</li>
+      <li>矩阵是全局设置，改一次全场景生效 —— 别为单个物体去改全局</li>
+    </ul>
+
+    <h2>3. Trigger 触发区：配合 Udon 使用</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_trigger_zone.png" alt="触发区工作原理">
+      <div class="caption">图：玩家进入区域 → 收到事件 → 发信号 → 执行逻辑</div>
+    </div>
+
+    <p>给 Collider 勾上 <code>Is Trigger</code>，它就不再阻挡移动，只在物体进出时发事件。UdonSharp 里这样接收：</p>
+    <pre><code>public class DoorTriggerComponent : UdonSharpBehaviour
+{
+    void OnTriggerEnter(Collider other)
+    {
+        // 谁进来了、进来做什么 —— 走信号架构路由给功能组件
+        Debug.Log("有玩家进入了触发区");
+    }
+}</code></pre>
+
+    <blockquote class="tip"><strong>结合你项目的信号架构：</strong>Trigger（触发层）只负责在 <code>OnTriggerEnter</code> 里调 <code>SignalSender.Execute()</code>，业务逻辑全部放在 Component 层 —— 见《游戏机制教程》的架构篇。</blockquote>
+
+    <h2>4. 地面高度与玩家站立判断</h2>
+    <ul>
+      <li><strong>地面必须平、连续：</strong>两块地面接缝处的高度差会变成「隐形台阶」或空气墙</li>
+      <li><strong>站立判定靠 Collider：</strong>玩家能站住 = 脚下有 Collider；掉出世界 = 地面没有 Collider（最常见的翻车点）</li>
+      <li><strong>安全网：</strong>世界边界外放一个隐形大 Box（或让 Udon 检测掉落后传送回 Spawn），防止玩家坠入虚空</li>
+    </ul>
+
+    <h2>5. VRChat 层的特别说明</h2>
+    <p>VRChat SDK 要求某些碰撞设置在特定层上：</p>
+    <table>
+      <tr><th>层</th><th>用途</th><th>注意</th></tr>
+      <tr><td><strong>Default</strong></td><td>普通场景物体</td><td>大部分世界物体用它</td></tr>
+      <tr><td><strong>PlayerLocal / PlayerNetwork</strong></td><td>玩家角色</td><td>SDK 自动设置，别手动改</td></tr>
+      <tr><td><strong>MirrorReflection / PostProcessing</strong></td><td>特殊渲染</td><td>别把场景物体放进去</td></tr>
+    </table>
+    <blockquote class="warn"><strong>VRChat 玩家移动是本地计算：</strong>碰撞同步是「每端各自判断」。所以碰撞体尺寸、位置必须在所有客户端一致 —— 引用/实例化的物体尤其注意，别在代码里按玩家改碰撞体。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能给不同物体选对 Collider 类型</li>
+      <li>理解 Layer + 碰撞矩阵怎么控制碰撞</li>
+      <li>能做出一个配合 Udon 的 Trigger 触发区</li>
+      <li>确认地面有 Collider、世界外有防掉落措施</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章：场景设计</a>
+      <a class="next-btn" href="lesson-03.html">下一章：光照与氛围 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

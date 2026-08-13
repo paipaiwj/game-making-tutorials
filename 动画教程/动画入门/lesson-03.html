@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：动画剪辑</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 动画入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 动画是什么</a></li>
+      <li><a href="lesson-02.html">2. Animator 状态机</a></li>
+      <li><a href="lesson-03.html" class="active">3. 动画剪辑</a></li>
+      <li><a href="lesson-04.html">4. 物体动画与交互</a></li>
+      <li><a href="lesson-05.html">5. 动手：开关门</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：动画剪辑 — 录制、关键帧、时间轴</h1>
+    <p>Animation Clip 是动画的"原料"。做世界动画，最常用的方式是<strong>在 Unity 里直接录制</strong>，不用任何外部软件。</p>
+
+    <h2>1. 创建并录制动画</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_record_animation.png" alt="录制动画">
+      <div class="caption">图：选中物体 → Window → Animation → 点录制 → 改属性 → 自动记关键帧</div>
+    </div>
+
+    <ol>
+      <li>选中要动画的物体（如门）</li>
+      <li>菜单 <code>Window → Animation</code> 打开动画窗口</li>
+      <li>点 <code>Create</code>，命名并保存（如 <code>Door_Open</code>）</li>
+      <li>点红色<strong>录制按钮</strong>（●），开始记录</li>
+      <li>把时间指针拨到 0.5s，旋转门 90° —— Unity 自动在 0s 和 0.5s 各记一个关键帧</li>
+      <li>停止录制，播放预览</li>
+    </ol>
+
+    <blockquote class="tip">录制时改物体的任何属性（位置/旋转/缩放/颜色）都会被记成关键帧。先拨时间、再改属性 —— 顺序记牢。</blockquote>
+
+    <h2>2. 关键帧与时间轴</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_keyframe_timeline.png" alt="关键帧时间轴">
+      <div class="caption">图：时间轴上菱形 = 关键帧，间隔决定速度，曲线控制加减速</div>
+    </div>
+
+    <ul>
+      <li><strong>关键帧</strong>：时间轴上的菱形，记录那一刻的属性值</li>
+      <li><strong>关键帧之间</strong>：Unity 自动插值（平滑过渡）</li>
+      <li><strong>曲线面板</strong>：控制加减速（默认线性/平滑，够用）</li>
+      <li><strong>时长</strong>：拖动最后一个关键帧位置决定动画多长</li>
+    </ul>
+
+    <blockquote class="tip">两个关键帧：0s（关着）+ 0.5s（开着）= 一个 0.5 秒的开门动画。想要"先快后慢"的柔和感，就在曲线面板把曲线拉成缓出。</blockquote>
+
+    <h2>3. 一个状态一套动画</h2>
+    <p>门需要两个 Clip：</p>
+    <ul>
+      <li><code>Door_Closed</code>：0 度（静止，1 帧即可）</li>
+      <li><code>Door_Open</code>：0s 关 → 0.5s 开到 90°</li>
+      <li>（想有"关门动画"就再录一个 Door_Close）</li>
+    </ul>
+
+    <blockquote class="warn"><strong>注意：</strong>动画会「记住」最后一帧。如果 Clip 只有开的过程，关回默认状态时要确保播放的是关门的 Clip，否则门会卡在开着的姿势。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>用 Animation 窗口录了一段物体动画</li>
+      <li>理解了关键帧和时间轴的关系</li>
+      <li>为门准备了两套 Clip（开/关）</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一章</a>
+      <a class="next-btn" href="lesson-04.html">下一章：物体动画与交互 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

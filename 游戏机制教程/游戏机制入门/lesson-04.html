@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：胜负与重置</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 游戏机制入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 机制是什么</a></li>
+      <li><a href="lesson-02.html">2. 状态与变量</a></li>
+      <li><a href="lesson-03.html">3. 计分与计时</a></li>
+      <li><a href="lesson-04.html" class="active">4. 胜负与重置</a></li>
+      <li><a href="lesson-05.html">5. 动手：抢答小游戏</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：胜负与重置 — 结束，然后重来</h1>
+    <p>没有结束的游戏不是游戏，没有重置的游戏只能玩一次。这一篇讲清楚"什么时候结束、怎么重新开始"。</p>
+
+    <h2>1. 胜负判定：结束条件</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_win_lose.png" alt="胜负判定">
+      <div class="caption">图：分数 / 时间 / 生命 / 目标，四种常见结束条件</div>
+    </div>
+
+    <table>
+      <tr><th>条件</th><th>代码</th><th>适用</th></tr>
+      <tr><td><strong>分数达标</strong></td><td>score &gt;= 100</td><td>抢答、收集</td></tr>
+      <tr><td><strong>时间耗尽</strong></td><td>timeLeft &lt;= 0</td><td>限时挑战</td></tr>
+      <tr><td><strong>生命归零</strong></td><td>lives == 0</td><td>躲避、生存</td></tr>
+      <tr><td><strong>目标完成</strong></td><td>所有任务达成</td><td>解密、闯关</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>判定时机：</strong>每次计分/计时改变后立刻检查，命中即切换状态。写成一个小函数 <code>CheckEndCondition()</code>，在加分、减血、时间到三处调用。</blockquote>
+
+    <h2>2. 多人游戏的胜负：谁是权威？</h2>
+    <pre><code>// 不要在每个人的客户端各判各的！
+// 正确做法：状态和分数在网络上是同步的（[UdonSynced]），
+// 谁改动同步变量，其他端自动更新，胜负判定对所有人一致。
+
+[UdonSynced] public int score;</code></pre>
+    <ul>
+      <li>分数、状态这些关键数据要<strong>网络同步</strong>（详见《网络同步》教程）</li>
+      <li>不要"每个客户端自己算一遍"，那会分叉</li>
+      <li>结束时的结算（名次、特效）用网络事件广播，人人看到一样的结果</li>
+    </ul>
+
+    <h2>3. 重置：让游戏能再玩一次</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_reset.png" alt="重置流程">
+      <div class="caption">图：结算 → 清零 → 广播 → 回到 Ready</div>
+    </div>
+
+    <pre><code>public void ResetAll()
+{
+    // ① 所有变量复位
+    score = 0;
+    timeLeft = 60f;
+    state = GameState.Ready;
+
+    // ② 物体回原位（可拾取物、门、目标）
+    // ③ 粒子、音效状态复位
+    // ④ 广播通知所有玩家（网络事件）
+    SendCustomNetworkEvent("ResetAll");
+}</code></pre>
+
+    <blockquote class="warn"><strong>最容易忘的：</strong>物体位置、旋转、粒子系统、音效、UI 文本 —— 都要重置。建议所有复位代码收进一个 <code>ResetAll()</code>，别散落各处。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>写了自己的结束条件函数 CheckEndCondition()</li>
+      <li>理解了多人游戏"要同步、不要各算各的"</li>
+      <li>写了一个 ResetAll() 并覆盖了变量和物体</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章</a>
+      <a class="next-btn" href="lesson-05.html">下一章：动手做抢答小游戏 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：Unity 色彩实践</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 色彩入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 色彩基础</a></li>
+      <li><a href="lesson-02.html">2. 配色方案</a></li>
+      <li><a href="lesson-03.html">3. 色彩情绪</a></li>
+      <li><a href="lesson-04.html" class="active">4. Unity 色彩实践</a></li>
+      <li><a href="lesson-05.html">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：Unity 色彩实践 — 材质·灯光·后期</h1>
+    <p>理论讲完，进 Unity 动手。场景颜色由<strong>五个环节</strong>共同决定：材质、灯光、天空盒、环境光、后处理。每个环节都能改色，掌握顺序才能不打架。</p>
+
+    <h2>1. 材质颜色与贴图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_unity_color.png" alt="Unity 颜色面板">
+      <div class="caption">图：材质 Base Map 上的颜色 + 面板右侧大色块，是调材质颜色的入口</div>
+    </div>
+
+    <ul>
+      <li>Standard/PBR 材质的 <strong>Base Map</strong>：贴图决定材质的真实颜色，没有贴图时 <strong>Base Color</strong>（底下的颜色方块）就是颜色</li>
+      <li>想让材质统一到色板：把 Base Color 直接填色板 Hex 码，或用取色器从色板图里吸</li>
+      <li>贴图本身偏色太常见了 —— 想给整个材质「罩一层色」，调 Base Color 的饱和度/明度，比换贴图快</li>
+    </ul>
+
+    <blockquote class="tip"><strong>调色顺序：</strong>先贴图，再 Base Color。贴图定了纹理细节，Base Color 定整体色感 —— 想要暖木地板？贴图 + 橙色 Base Color 一乘就是。</blockquote>
+
+    <h2>2. 灯光色温</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_light_temperature.png" alt="灯光色温对比">
+      <div class="caption">图：同一场景，3200K 是黄昏篝火，6500K 是阴天月光 —— 色温是场景情绪的最大开关</div>
+    </div>
+
+    <p>Unity 里平行光（Directional Light）默认是纯白 5500K 左右，想让场景有情绪必须调色温：</p>
+    <ul>
+      <li>选中 Directional Light → 勾选 <strong>Use Color Temperature</strong></li>
+      <li>拖动 <strong>Temperature</strong>：数值越低越暖（橙），越高越冷（蓝）</li>
+      <li>参考值：烛光 2000K / 黄昏 3200K / 正午 5500K / 阴天 6500K / 阴影 10000K</li>
+    </ul>
+
+    <blockquote class="warn"><strong>最常犯的错：</strong>主光用纯白。白天大太阳的世界也请至少 5500-6500K；黄昏氛围直接 3000-3500K。纯白灯光是「没调过色」的明显标志。</blockquote>
+
+    <h2>3. 天空盒颜色</h2>
+    <p>天空盒决定环境光的底色和远景颜色：</p>
+    <ul>
+      <li>Window → Rendering → <strong>Lighting</strong> → Environment，Skybox Material 换成自己的天空材质</li>
+      <li>天空材质（如 Skybox/Panoramic）里的 <strong>Tint</strong> 可以整体染色：黄昏加橙、午夜加深蓝</li>
+      <li>不想用贴图？选 Skybox/Procedural，直接调 Sun Color / Atmosphere Thickness</li>
+    </ul>
+
+    <h2>4. 环境光 Ambient</h2>
+    <p>环境光是没有直接光照时的「兜底光」，决定阴影是不是死黑、物体暗面是什么颜色：</p>
+    <ul>
+      <li>Lighting 面板 → Environment Lighting → <strong>Ambient Mode</strong> 选 Gradient 或 Color</li>
+      <li>夜场景：把环境光设成深蓝灰，阴影不发黑而是发蓝 —— 和「主光暖、阴影冷」正好配合</li>
+      <li>环境光颜色直接来自天空色 → 这也是「先调天空再调材质」的原因之一</li>
+    </ul>
+
+    <h2>5. 后处理调色</h2>
+    <p>后期（Post Processing）是全局调色的最后一层，材质和灯光都定了再动它：</p>
+    <table>
+      <tr><th>组件</th><th>作用</th><th>用法</th></tr>
+      <tr><td><strong>Color Adjustments</strong></td><td>整体曝光 / 对比度 / 饱和度</td><td>饱和拉低=灰暗压抑，拉高=鲜亮</td></tr>
+      <tr><td><strong>White Balance</strong></td><td>白平衡（Temperature / Tint）</td><td>画面偏蓝→加暖；偏黄→加冷</td></tr>
+      <tr><td><strong>Tonemapping</strong></td><td>色调映射，把 HDR 高光压回可见范围</td><td>选 ACES：电影感，画面不发灰</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>顺序铁律：</strong>材质 → 灯光 → 天空/环境光 → 后处理。后处理放在最后做 —— 材质没统一前调后处理是白费功夫，调完还要回头改。</blockquote>
+
+    <h2>6. 雾色 Fog</h2>
+    <p>雾不只是大气效果，它同时是「远处颜色」的控制器：</p>
+    <ul>
+      <li>Lighting → Fog，勾选 Enable Fog，调 Color 和 Density</li>
+      <li>清晨森林用灰白雾，黄昏用橙雾，恐怖场景用蓝灰低密度雾</li>
+      <li>雾色要接近天空盒色 —— 远山融入雾里才不会「接缝」</li>
+    </ul>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能给材质设 Base Color 并用 Hex 码统一</li>
+      <li>会给 Directional Light 开色温并调到目标 K 值</li>
+      <li>能找到 Lighting 面板改天空盒和环境光</li>
+      <li>知道后处理三个组件各管什么、按什么顺序调</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章：色彩情绪</a>
+      <a class="next-btn" href="lesson-05.html">下一章：实战：给露营场景定色调 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

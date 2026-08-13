@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：性能与规模</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 场景搭建入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 场景设计</a></li>
+      <li><a href="lesson-02.html">2. 地面与碰撞</a></li>
+      <li><a href="lesson-03.html">3. 光照与氛围</a></li>
+      <li><a href="lesson-04.html" class="active">4. 性能与规模</a></li>
+      <li><a href="lesson-05.html">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：性能与规模 — 场景「跑得动」</h1>
+    <p>VRChat 世界再好看，卡成 PPT 也没人玩。本篇讲四件最有效的性能武器：合批、共享材质、LOD、遮挡剔除，最后看 VRChat 的性能预算表。</p>
+
+    <h2>1. Draw Call 与合批 Batching</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_batching.png" alt="合批原理">
+      <div class="caption">图：三个不同材质 = 3 次绘制；共享材质 = 1 次绘制</div>
+    </div>
+
+    <p>Draw Call 是 CPU 通知 GPU「画一次」的命令。命令越多，CPU 越忙，帧率越不稳。合批（Batching）就是把能一起画的物体<strong>合并成一次绘制</strong>。合批的前提是：<strong>材质完全相同</strong> —— 同一个着色器 + 同一张贴图 + 同一组参数，连颜色都不能差。</p>
+
+    <blockquote class="tip"><strong>最实用的合批技巧：</strong>同类物体（树、石头、木箱）全部用同一个材质；需要不同颜色的地方，用「贴图里画不同颜色的区域 + UV 选区域」而不是新建材质。材质种类少一个，合批机会多一片。</blockquote>
+
+    <h2>2. 共享材质：合批的基石</h2>
+    <p>一个材质可以被 N 个物体引用。在 Project 面板选中材质，看右下角<strong>引用它的物体数量</strong> —— 数量越多说明共享做得越好。反面教材：复制材质给每个树换个色，合批立刻失效，Draw Call 翻倍。</p>
+
+    <h2>3. LOD：远处自动换低模</h2>
+    <p>LOD（Level of Detail）让物体<strong>根据距离切换精细度</strong>：近处用高模，远处用低模，极远直接不显示。选中模型 → <code>Add Component → LOD Group</code>，按距离填三个档位（建议 100%/50%/0% 网格比例）。</p>
+
+    <blockquote class="warn"><strong>LOD 只对重复多、体积大的物体有意义：</strong>满山的树、成排的路灯值得做；一个独苗雕像做了反而白费功夫（还是要烘焙静态物体）。</blockquote>
+
+    <h2>4. 遮挡剔除 Occlusion Culling</h2>
+    <p>人站在屋里，就看不到屋外的场景。遮挡剔除让 Unity<strong>只绘制相机看得到的物体</strong>：<code>Window → Rendering → Occlusion Culling</code>，点 <code>Bake</code> 后即可。适合室内场景；室外大平原效果有限，别指望它解决一切。</p>
+
+    <h2>5. 远景贴图与粒子控制</h2>
+    <ul>
+      <li><strong>远景：</strong>能用一个面片 + 贴图解决的（远山、背景城市），不要真放模型；远处物体直接砍掉或关掉渲染</li>
+      <li><strong>粒子：</strong>循环粒子（下雪、火光）是长期性能消耗，数量克制；<code>Particle System → Emission</code> 控制速率，用完记得停</li>
+      <li><strong>纹理：</strong>远景贴图 512px 就够，别给远景用 2048</li>
+    </ul>
+
+    <h2>6. VRChat 世界性能预算</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_perf_budget.png" alt="性能预算表">
+      <div class="caption">图：VRChat 世界性能预算参考值（以 SDK 检查器为准）</div>
+    </div>
+
+    <table>
+      <tr><th>项目</th><th>参考预算</th><th>手段</th></tr>
+      <tr><td>共享材质数</td><td>≤ 30</td><td>同类物体用同一材质</td></tr>
+      <tr><td>实时光源</td><td>≤ 1 盏</td><td>其余走烘焙</td></tr>
+      <tr><td>同时播放的粒子</td><td>≤ 2 套</td><td>用完即停</td></tr>
+      <tr><td>单张纹理</td><td>≤ 1024</td><td>远景 512</td></tr>
+      <tr><td>多边形总数</td><td>≤ 10 万</td><td>LOD + 遮挡剔除</td></tr>
+      <tr><td>Udon 行为数</td><td>≤ 16 个</td><td>逻辑集中到管理器</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>更完整的优化方法见《渲染教程》第 4 篇</strong> —— 本篇讲「怎么数、怎么减」，那篇讲「怎么把每一项压到极限」。Build 世界时 VRChat SDK 会自动评级（Poor → Excellent），红了就说明超了，先回到这张表逐项查。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解 Draw Call 和合批的前提（材质相同）</li>
+      <li>会给重复物体做共享材质、加 LOD Group</li>
+      <li>会烘焙遮挡剔除</li>
+      <li>能对照预算表检查自己的世界</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章：光照与氛围</a>
+      <a class="next-btn" href="lesson-05.html">下一章：实战搭场景 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

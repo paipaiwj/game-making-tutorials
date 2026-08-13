@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：动手做开关门</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 动画入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 动画是什么</a></li>
+      <li><a href="lesson-02.html">2. Animator 状态机</a></li>
+      <li><a href="lesson-03.html">3. 动画剪辑</a></li>
+      <li><a href="lesson-04.html">4. 物体动画与交互</a></li>
+      <li><a href="lesson-05.html" class="active">5. 动手：开关门</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：动手做一个开关门</h1>
+    <p>把前四篇串起来：录两段动画 → 搭状态机 → 写 Udon → 场景连线，做一个玩家可交互的开关门。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_steps.png" alt="制作步骤">
+      <div class="caption">图：五步流程 — 建门 → 录动画 → 状态机 → Udon → 连线测试</div>
+    </div>
+
+    <h2>第一步：建门</h2>
+    <ol>
+      <li>创建 Cube（0.1 × 2.2 × 1.2），放在门框位置，改名 <code>Door</code></li>
+      <li>确保门的旋转轴在门边（把门放到门框一侧，用空父物体做轴心）</li>
+    </ol>
+
+    <h2>第二步：录动画</h2>
+    <ol>
+      <li>选中 Door → <code>Window → Animation</code></li>
+      <li>创建 <code>Door_Closed</code>：不动，1 帧即可</li>
+      <li>创建 <code>Door_Open</code>：0s 记当前旋转，0.5s 旋转 -90°（朝里开）</li>
+      <li>再创建 <code>Door_Close</code>：反向录一遍（从开到关）</li>
+    </ol>
+
+    <h2>第三步：搭状态机</h2>
+    <ol>
+      <li>Project 右键 → <code>Create → Animator Controller</code>，命名 <code>DoorController</code></li>
+      <li>双击打开 Animator 窗口，建三个状态：<strong>Closed / Open / Closing</strong></li>
+      <li>给每个状态挂上对应 Clip</li>
+      <li>Closed 设为默认状态（绿色）</li>
+      <li>加参数 <code>isOpen</code>（Bool）</li>
+      <li>转换：Open → Closed（isOpen == false）、Closed → Open（isOpen == true）、Closing 播完 → Closed</li>
+    </ol>
+
+    <h2>第四步：写 Udon 组件</h2>
+    <pre><code>public class DoorComponent : UdonSharpBehaviour
+{
+    public Animator doorAnimator;   // Inspector 拖入
+
+    public override void Interact()  // VRChat 玩家交互入口
+    {
+        bool isOpen = doorAnimator.GetBool("isOpen");
+        doorAnimator.SetBool("isOpen", !isOpen);   // 开关切换
+    }
+}</code></pre>
+
+    <h2>第五步：连线与测试</h2>
+    <ol>
+      <li>Door 上挂 Animator（填 DoorController）+ VRC_Interactable + DoorComponent</li>
+      <li>把 DoorComponent 的 doorAnimator 拖入 Animator 组件</li>
+      <li>Build &amp; Test：走近门 → 交互键 → 门开；再按 → 门关</li>
+      <li>检查：开门时有没有卡顿、门有没有"瞬移"</li>
+    </ol>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_result.png" alt="开关门结构">
+      <div class="caption">图：门完整结构 — 门物体 + Animator + VRC_Interactable + Udon 组件</div>
+    </div>
+
+    <blockquote class="tip">进阶玩法：把开关信号走你的架构（Trigger → SignalSender → DoorComponent），同一扇门就能被按钮、摇杆、拾取物同时触发了。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>完成了一个可交互的开关门</li>
+      <li>录了三段动画并搭好状态机</li>
+      <li>用 Udon 的 Interact 控制开关</li>
+      <li>测试了开/关循环没有 bug</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一章</a>
+      <a class="next-btn" href="lesson-06.html">下一章：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

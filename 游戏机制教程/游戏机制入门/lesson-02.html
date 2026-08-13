@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：状态与变量</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 游戏机制入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 机制是什么</a></li>
+      <li><a href="lesson-02.html" class="active">2. 状态与变量</a></li>
+      <li><a href="lesson-03.html">3. 计分与计时</a></li>
+      <li><a href="lesson-04.html">4. 胜负与重置</a></li>
+      <li><a href="lesson-05.html">5. 动手：抢答小游戏</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：状态与变量 — 游戏的大脑</h1>
+    <p>游戏和"动画片"的区别是：游戏<strong>有状态</strong>。这一篇解决"游戏现在进行到哪一步了"，这是所有机制的地基。</p>
+
+    <h2>1. 游戏状态：三个阶段</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_game_state.png" alt="游戏状态">
+      <div class="caption">图：准备 → 进行 → 结束，任何游戏都逃不过这三个阶段</div>
+    </div>
+
+    <table>
+      <tr><th>状态</th><th>做什么</th><th>玩家的感觉</th></tr>
+      <tr><td><strong>Ready 准备</strong></td><td>等玩家入场、倒计时 3、2、1</td><td>"要开始了"</td></tr>
+      <tr><td><strong>Playing 进行</strong></td><td>核心循环运行，接受输入和计分</td><td>"在玩"</td></tr>
+      <tr><td><strong>Over 结束</strong></td><td>结算胜负、停止输入、准备重置</td><td>"结束了"</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>为什么必须分状态？</strong>因为"游戏还没开始时按按钮"不该算分。所有行为都要先问：<strong>现在是什么状态？</strong>这就是防作弊和防 bug 的第一道闸门。</blockquote>
+
+    <h2>2. 状态机 State Machine</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_state_machine.png" alt="状态机">
+      <div class="caption">图：状态 + 触发条件 + 转移，用箭头画出游戏的流程</div>
+    </div>
+
+    <p>状态机 = 状态 + 条件 + 转移。规则是：<strong>每个状态只干一件事</strong>。</p>
+    <pre><code>public enum GameState { Ready, Playing, Over }
+public GameState state = GameState.Ready;
+
+// 倒计时结束 → 进入 Playing
+public void StartGame() { state = GameState.Playing; }
+
+// 达成胜负条件 → 进入 Over
+public void EndGame() { state = GameState.Over; }
+
+// 任何地方都能查状态：
+public bool IsPlaying() { return state == GameState.Playing; }</code></pre>
+
+    <h2>3. 变量：游戏里到处是"数"</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_03_counter.png" alt="计数变量">
+      <div class="caption">图：分数、生命、时间、次数、开关 —— 游戏逻辑就是操作这些数</div>
+    </div>
+
+    <ul>
+      <li><strong>分数</strong>：`score += 10`，命中加分</li>
+      <li><strong>生命</strong>：`lives -= 1`，归零失败</li>
+      <li><strong>时间</strong>：`timeLeft -= Time.deltaTime`，每秒减少</li>
+      <li><strong>开关</strong>：`isPlaying = true/false`，两种状态的布尔值</li>
+    </ul>
+
+    <blockquote class="tip"><strong>铁律：</strong>所有变量在游戏开始（Ready）时归零复位。否则上一局的数据会带进下一局 —— 这是新手最常见的 bug。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解三个游戏状态：准备 / 进行 / 结束</li>
+      <li>能用 enum 写一个状态机</li>
+      <li>理解"每个状态只干一件事"</li>
+      <li>知道变量要在一局开始时复位</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章</a>
+      <a class="next-btn" href="lesson-03.html">下一章：计分与计时 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

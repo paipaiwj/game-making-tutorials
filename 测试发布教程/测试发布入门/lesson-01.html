@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：为什么要测试</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 测试与发布入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 为什么要测试</a></li>
+      <li><a href="lesson-02.html">2. 本地测试</a></li>
+      <li><a href="lesson-03.html">3. 性能检查</a></li>
+      <li><a href="lesson-04.html">4. 上传发布</a></li>
+      <li><a href="lesson-05.html">5. 实战：发布一个世界</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：为什么要测试 — 测试类型、测试流程、VRChat 世界的特殊性</h1>
+    <p>「能玩」和「能给别人玩」是两回事。测试的意义不是找自己的毛病，而是<strong>替未来的每一个玩家踩坑</strong> —— 你踩过一遍，他们就不用踩了。</p>
+
+    <h2>1. 测试的意义</h2>
+    <p>发布出去的世界，每一个玩家都是「第一次玩」：他们不知道你的设计意图，也不会按你想的顺序操作。测试就是站在玩家的视角，把世界当<strong>陌生人第一次打开</strong>来体验一遍。</p>
+
+    <blockquote class="tip"><strong>核心心态：</strong>测试不是「验证我做得对」，而是「证明我可能哪里不对」。改完代码、动过场景、加过功能 —— 都要重新测。一次测试覆盖不了所有时间点。</blockquote>
+
+    <h2>2. 测试类型：四种都要做</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_test_types.png" alt="测试类型对比">
+      <div class="caption">图：功能 / 性能 / 多人 / 边界 —— 四种测试缺一不可</div>
+    </div>
+
+    <table>
+      <tr><th>类型</th><th>测什么</th><th>例子</th></tr>
+      <tr><td><strong>功能测试</strong></td><td>按钮、逻辑、反馈是否符合预期</td><td>按按钮能加分吗？UI 更新吗？</td></tr>
+      <tr><td><strong>性能测试</strong></td><td>帧数、卡顿、内存占用</td><td>粒子多的场景会不会掉帧？</td></tr>
+      <tr><td><strong>多人测试</strong></td><td>同步、权限、掉线恢复</td><td>两人同时按按钮，分数一致吗？</td></tr>
+      <tr><td><strong>边界测试</strong></td><td>极端情况下世界是否崩溃</td><td>狂点按钮、新玩家中途加入、拔线</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>别只测「能玩」：</strong>功能正确只是及格线。VRChat 世界里翻车最多的从来不是「功能不对」，而是「多人不同步」和「边界情况崩了」。</blockquote>
+
+    <h2>3. 测试流程：从自己到全世界</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_test_flow.png" alt="测试流程">
+      <div class="caption">图：自测 → 朋友测试 → 公开测试，问题越早发现修起来越便宜</div>
+    </div>
+
+    <ul>
+      <li><strong>自测：</strong>自己用 Play Mode 和 Build &amp; Test 把每个功能点过一遍（第 2 篇）</li>
+      <li><strong>朋友测试：</strong>拉 1-2 个朋友，重点测多人同步、权限、抢操作（第 2 篇双开）</li>
+      <li><strong>公开测试：</strong>发布后叫朋友进世界，收集真实反馈，继续迭代</li>
+    </ul>
+
+    <h2>4. VRChat 世界的特殊性：别人会乱玩！</h2>
+    <p>普通游戏玩家会守规矩，VRChat 玩家<strong>不会</strong>。你要为以下情况专门做边界测试：</p>
+    <ul>
+      <li><strong>抢按钮：</strong>十个人同时按同一个交互按钮 —— 你的判定逻辑防得住吗？</li>
+      <li><strong>拔线：</strong>玩家玩到一半直接退出 —— 世界里的状态会不会卡死在「等待他」？</li>
+      <li><strong>新玩家中途加入：</strong>游戏进行到一半有人进世界 —— 他能看到正确的状态吗？会不会从 0 开始导致错乱？</li>
+    </ul>
+
+    <blockquote class="warn"><strong>记住这条铁律：</strong>VRChat 世界里的任何玩家都能随时进入、随时退出、随时做任何交互。你的世界必须为「最坏情况的组合」设计，而不是为「想象中的理想玩家」设计。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了四种测试类型（功能/性能/多人/边界）</li>
+      <li>能说出自己的世界的测试流程（自测→朋友→公开）</li>
+      <li>列出了 3 个 VRChat 特有的边界场景（抢按钮/拔线/中途加入）</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：本地测试 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

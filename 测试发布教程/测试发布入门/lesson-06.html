@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 测试与发布入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要测试</a></li>
+      <li><a href="lesson-02.html">2. 本地测试</a></li>
+      <li><a href="lesson-03.html">3. 性能检查</a></li>
+      <li><a href="lesson-04.html">4. 上传发布</a></li>
+      <li><a href="lesson-05.html">5. 实战：发布一个世界</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 — 术语、常见问题、进阶路线</h1>
+    <p>本篇把全套教程压缩成三张表：忘了就翻回来。</p>
+
+    <h2>1. 术语速查</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查表">
+      <div class="caption">图：12 个核心术语 —— 聊天、看文档、问人都用得上</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>含义</th></tr>
+      <tr><td><strong>Build &amp; Test</strong></td><td>SDK 一键构建并在本地 VRChat 客户端启动世界（不发布）</td></tr>
+      <tr><td><strong>Publish</strong></td><td>上传世界到 VRChat，公开可搜索、可进入</td></tr>
+      <tr><td><strong>Play Mode</strong></td><td>Unity 编辑器内直接运行场景，快速测逻辑</td></tr>
+      <tr><td><strong>双开 / -multi</strong></td><td>复制 VRChat 快捷方式加 -multi 参数，同时开两个客户端测多人</td></tr>
+      <tr><td><strong>Console</strong></td><td>Unity 日志窗口，分 Info / Warning / Error 三级</td></tr>
+      <tr><td><strong>Stats 面板</strong></td><td>Game 窗口性能指标：Draw Call、SetPass、Tris 等</td></tr>
+      <tr><td><strong>Frame Debugger</strong></td><td>逐帧查看每个绘制调用，定位 Draw Call 元凶</td></tr>
+      <tr><td><strong>性能报告</strong></td><td>上传时生成的关卡/图形/音频评级（Good/Medium/Poor）</td></tr>
+      <tr><td><strong>边界测试</strong></td><td>极端情况测试：狂点、拔线、新玩家中途加入</td></tr>
+      <tr><td><strong>版本更新</strong></td><td>重新 Publish 覆盖内容 —— 无版本号概念，旧版不存在</td></tr>
+      <tr><td><strong>回滚</strong></td><td>恢复旧版内容 —— 只能靠 git 提交或备份工程重传</td></tr>
+      <tr><td><strong>预览图</strong></td><td>世界的缩略图，首次上传需审核通过才可见</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题对照表">
+      <div class="caption">图：六条高频问题 —— 现象、原因、解决办法</div>
+    </div>
+
+    <table>
+      <tr><th>问题现象</th><th>常见原因</th><th>解决办法</th></tr>
+      <tr><td><strong>上传失败 / 报错</strong></td><td>网络问题或 SDK 版本过旧</td><td>重试；更新 SDK 到最新版本</td></tr>
+      <tr><td><strong>没有发布权限</strong></td><td>VRChat 账号没完成设置</td><td>检查账号邮箱验证 / 内容创建者设置</td></tr>
+      <tr><td><strong>世界太大传不上</strong></td><td>工程里有超大贴图 / 模型</td><td>压缩贴图、清理未用资源后再传</td></tr>
+      <tr><td><strong>别人说我世界卡</strong></td><td>性能报告或实测数据差</td><td>看 Stats + 性能报告，逐个砍性能杀手</td></tr>
+      <tr><td><strong>更新没生效</strong></td><td>老会话不重载 / 忘了重新 Publish</td><td>退出重新进世界；确认重新上传成功</td></tr>
+      <tr><td><strong>预览图不对</strong></td><td>图没传上去或还在审核</td><td>重新上传预览图并等审核通过</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>调试心法：</strong>先看 Console 报错，再看 Stats 数据，最后才问别人 —— 90% 的问题自己能查到。顺序反了就变成「到处乱猜」。</blockquote>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线图">
+      <div class="caption">图：从「能测会传」到「全流程运营」</div>
+    </div>
+
+    <ul>
+      <li><strong>入门 · 能测会传（现在）：</strong>Build &amp; Test + 双开，完整走一遍发布流程</li>
+      <li><strong>熟练 · 会查性能（1 周）：</strong>Stats + Frame Debugger，看懂性能报告并优化</li>
+      <li><strong>进阶 · 自动化测试（1 个月）：</strong>网络同步边界测试、多人玩法压力测试</li>
+      <li><strong>精通 · 全流程（长期）：</strong>测试 → 发布 → 迭代，运营自己的世界</li>
+    </ul>
+
+    <blockquote class="tip">下一步建议：把《网络同步》教程学了 —— 多人测试时你遇到的大部分「奇怪现象」，根源都在同步模型。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>12 个术语能用自己的话解释清楚</li>
+      <li>六条常见问题的排查顺序刻进脑子</li>
+      <li>知道自己的下一步进阶方向</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章：实战发布</a>
+      <a class="next-btn" href="index.html">返回首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 网络同步入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要同步</a></li>
+      <li><a href="lesson-02.html">2. 同步变量</a></li>
+      <li><a href="lesson-03.html">3. 同步事件</a></li>
+      <li><a href="lesson-04.html">4. 权限与所有权</a></li>
+      <li><a href="lesson-05.html">5. 实战：同步计分板</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 — 术语、常见问题、进阶路线</h1>
+    <p>把整套教程浓缩成三张图 + 两张表，遇到问题直接来这里查。</p>
+
+    <h2>1. 术语速查（12 个）</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="术语速查表">
+      <div class="caption">图：同步变量 / 同步事件 / owner / 回调…… 全部术语一图收</div>
+    </div>
+
+    <table>
+      <tr><th>术语</th><th>一句话解释</th></tr>
+      <tr><td><strong>[UdonSynced]</strong></td><td>标记变量会被网络同步，只有 owner 能写</td></tr>
+      <tr><td><strong>OnDeserialization()</strong></td><td>收到同步数据后自动调用的回调，刷新 UI 的地方</td></tr>
+      <tr><td><strong>SendCustomNetworkEvent</strong></td><td>全网广播调用一个方法，适合音效/特效</td></tr>
+      <tr><td><strong>owner</strong></td><td>物体的所有者，唯一有写权限的玩家</td></tr>
+      <tr><td><strong>Networking.LocalPlayer</strong></td><td>本端玩家，配合 IsOwner() 判断身份</td></tr>
+      <tr><td><strong>RequestOwnership</strong></td><td>请求成为某物体的 owner</td></tr>
+      <tr><td><strong>OnOwnershipTransferred()</strong></td><td>所有权转移成功后触发的回调</td></tr>
+      <tr><td><strong>VRC_ObjectSync</strong></td><td>同步物体位置/旋转，拿起物体自动转移所有权</td></tr>
+      <tr><td><strong>序列化</strong></td><td>把变量打包成网络数据的过程</td></tr>
+      <tr><td><strong>反序列化</strong></td><td>把网络数据解包还原成变量的过程（OnDeserialization）</td></tr>
+      <tr><td><strong>NetworkEventTarget.All</strong></td><td>广播给所有人（含自己）；Others = 除自己外</td></tr>
+      <tr><td><strong>一致性</strong></td><td>数据只有一处权威来源，别各端各算</td></tr>
+    </table>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题对照表">
+      <div class="caption">图：问题现象 → 常见原因 → 解决办法，直接照着排查</div>
+    </div>
+
+    <table>
+      <tr><th>问题现象</th><th>常见原因</th><th>解决办法</th></tr>
+      <tr><td>别人看不到我改的分</td><td>变量没加 [UdonSynced]</td><td>给变量加 [UdonSynced] 属性</td></tr>
+      <tr><td>非 owner 改了没反应</td><td>只有 owner 能写同步变量</td><td>先 RequestOwnership，再写数据</td></tr>
+      <tr><td>新玩家没有分数状态</td><td>事件不重放</td><td>用同步变量存状态，事件只播动作</td></tr>
+      <tr><td>分数每个人不一样</td><td>各端各算分数</td><td>统一由 owner 一处算分，其他端只读</td></tr>
+      <tr><td>改分后 UI 不刷新</td><td>没写 OnDeserialization</td><td>在回调里刷新 UI</td></tr>
+      <tr><td>拿东西权限冲突</td><td>所有权没转移</td><td>给物体加 VRC_ObjectSync 组件</td></tr>
+    </table>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线图">
+      <div class="caption">图：同步变量 → 同步事件 → 所有权 → 一致性与优化</div>
+    </div>
+
+    <blockquote class="tip"><strong>调试心法：</strong>同步出了问题，先问两件事 —— 「谁是 owner？」「变量加没加 [UdonSynced]？」八成问题都出在这两处。</blockquote>
+
+    <blockquote class="warn"><strong>记住网络有延迟：</strong>写完变量到别人看到，中间有几十毫秒的网络延迟，这是正常的，不是 bug。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能说出 12 个术语里至少 8 个的含义</li>
+      <li>对照常见问题表能独立排查同步 bug</li>
+      <li>知道自己下一步该学什么（进阶路线）</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章：实战：同步计分板</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

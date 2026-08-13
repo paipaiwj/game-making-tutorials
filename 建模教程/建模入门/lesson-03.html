@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：基础建模操作</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Blender 建模入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 建模是什么</a></li>
+      <li><a href="lesson-02.html">2. Blender 基础操作</a></li>
+      <li><a href="lesson-03.html" class="active">3. 基础建模操作</a></li>
+      <li><a href="lesson-04.html">4. UV 与材质</a></li>
+      <li><a href="lesson-05.html">5. 导出到 Unity</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：基础建模操作 — 挤出、环切、修改器</h1>
+    <p>会移动物体之后，真正「造形状」靠的是编辑模式里的几个神技：<strong>挤出</strong>长出形状，<strong>环切</strong>加细节，<strong>修改器</strong>批量处理。本篇最后做个箱子 → 椅子实操。</p>
+
+    <h2>1. 编辑模式 Tab</h2>
+    <p>按 <code>Tab</code> 进入<strong>编辑模式</strong>，此时操作的是网格本身（顶点/边/面）而不是整个物体：</p>
+    <ul>
+      <li>右键 = 选择（和对象模式的左键不同，注意！）</li>
+      <li>顶部工具栏可切换选择方式：顶点 / 边 / 面</li>
+      <li>选边角模式切换快捷键：<code>1</code> 顶点、<code>2</code> 边、<code>3</code> 面（主键盘区）</li>
+      <li>选中后同样用 G / R / S 操作，但改的是网格形状</li>
+    </ul>
+
+    <h2>2. 挤出 Extrude（E）—— 建模第一神技</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_extrude.png" alt="挤出操作">
+      <div class="caption">图：选中顶面 → E → 拖动 → 箱子长高、长出手柄、长出椅子腿</div>
+    </div>
+
+    <ol>
+      <li>按 <code>Tab</code> 进编辑模式，切到面选择（<code>3</code>）</li>
+      <li>右键选中一个面</li>
+      <li>按 <code>E</code>（Extrude），鼠标拖动，选中的面「长」出一段新网格</li>
+      <li>左键确认。想要精确高度：按 <code>E</code> 后输入数字如 <code>0.5</code> 回车</li>
+    </ol>
+
+    <h2>3. 环切 Ctrl+R 与细分</h2>
+    <ul>
+      <li><strong>环切 Loop Cut（Ctrl+R）</strong>：在网格上切一圈新的边线。把鼠标移到面上，出现紫线预览，滚轮可增加圈数，左键确认。椅子腿要做 4 根？先环切出 4 个区</li>
+      <li><strong>细分 Subdivide</strong>：右键菜单（或 <code>Ctrl+B</code> 区域细分）把面切成更小的面，用于增加细节密度</li>
+    </ul>
+    <blockquote class="tip"><strong>逻辑：</strong>挤出 = 加「长」的部分；环切 = 加「分段」；细分 = 加「密度」。VRChat 建模 90% 的场景，这三样 + 缩放开拉就够。</blockquote>
+
+    <h2>4. 修改器：细分 / 镜像 / 布尔</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_modifiers.png" alt="修改器">
+      <div class="caption">图：修改器像给网格套「滤镜」—— 细分变圆滑、镜像做对称、布尔挖洞</div>
+    </div>
+
+    <p>修改器在右侧属性面板的<strong>扳手图标</strong>里，Add Modifier 添加。本教程常用的三个：</p>
+    <table>
+      <tr><th>修改器</th><th>作用</th><th>典型用途</th></tr>
+      <tr><td><strong>细分 Subdivision Surface</strong></td><td>把网格变光滑、面数变多</td><td>圆润的枕头、坐垫；等级 2 就够</td></tr>
+      <tr><td><strong>镜像 Mirror</strong></td><td>只做一半，自动对称出另一半</td><td>对称的椅子、桌子、花瓶 —— 只做半边省一半功夫</td></tr>
+      <tr><td><strong>布尔 Boolean</strong></td><td>用 A 减去 B 或合并</td><td>挖洞、开窗、做镂空</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>别忘了 Apply：</strong>修改器不改变原始网格，导出到 Unity 前必须在修改器上点 <code>Apply</code>（Ctrl+A 也可以应用）。否则 Unity 里看到的还是没改过的模型。细分/布尔会大量增加面数，应用前先看预算（第 1 篇讲过）。</blockquote>
+
+    <h2>5. 实操：做一个箱子 → 一把椅子</h2>
+    <ol>
+      <li><strong>箱子</strong>：默认场景自带立方体 → 进编辑模式（Tab）→ 选中顶面 → <code>E</code> 向上挤出 0.5 → 选中四个侧面下半部分？不用，箱子只要改尺寸：退出编辑模式，按 <code>S</code> 缩放 X 轴（<code>S+X</code>）拉扁 → 完成</li>
+      <li><strong>椅子</strong>：新建立方体（Shift+A → Mesh → Cube）作为椅面，<code>S</code> 缩放成 40x4x40 扁方体</li>
+      <li>椅腿：切到顶视图（<code>7</code>）→ 编辑模式 → <code>Ctrl+R</code> 环切椅面加一圈线 → 面选择模式选中四角区域的面 → <code>E</code> 向下挤出 15（输入数字）→ 四个腿就长出来了</li>
+      <li>椅背：选中后边的一个面 → <code>E</code> 向上挤出 30 → 再从顶部面向后挤出 5</li>
+      <li>检查：Tab 切回对象模式，<code>1/3/7</code> 各视图看一眼有没有穿模；按 <code>A</code> 全选后统一材质颜色</li>
+    </ol>
+
+    <blockquote class="tip"><strong>第一次做的建议：</strong>跟着做一遍别嫌丑。做坏了就 Ctrl+Z，做成了就记住这串手感。第一次完整做出椅子的成就感，比看 10 个视频都强。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能在编辑模式和对象模式间切换（Tab）</li>
+      <li>会用 E 挤出、Ctrl+R 环切</li>
+      <li>会添加细分/镜像/布尔修改器，知道导出前要 Apply</li>
+      <li>独立做出了一个箱子 → 椅子的完整流程</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一章：Blender 基础操作</a>
+      <a class="next-btn" href="lesson-04.html">下一章：UV 与材质 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

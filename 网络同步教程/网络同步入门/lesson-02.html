@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 2 篇：同步变量</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 网络同步入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要同步</a></li>
+      <li><a href="lesson-02.html" class="active">2. 同步变量</a></li>
+      <li><a href="lesson-03.html">3. 同步事件</a></li>
+      <li><a href="lesson-04.html">4. 权限与所有权</a></li>
+      <li><a href="lesson-05.html">5. 实战：同步计分板</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 2 篇：同步变量 — [UdonSynced] 与 OnDeserialization</h1>
+    <p>同步变量是网络同步的基础。这一篇讲清楚三件事：怎么声明、谁有权改、收到数据后做什么。</p>
+
+    <h2>1. 声明同步变量</h2>
+    <p>在变量上贴 <code>[UdonSynced]</code> 属性，它就变成同步变量：</p>
+    <pre><code>[UdonSynced] public int score;   // 同步的分数
+[UdonSynced] public bool isPlaying; // 同步的开关</code></pre>
+    <p>能同步的类型包括 int、float、bool、string、Vector3 等常见类型。它的原理很简单：<strong>owner 修改 → 打包发送到网络 → 其他端收到后覆盖本地值</strong>。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L02_01_synced_var.png" alt="同步变量工作原理">
+      <div class="caption">图：owner 写 → 网络发送 → 其他端接收覆盖，全自动</div>
+    </div>
+
+    <h2>2. 谁改谁负责：只有 owner 能写</h2>
+    <p>同步变量<strong>只有 owner 能修改</strong>。非 owner 写了会怎样？改动不会被服务器认可，甚至会被纠正回去 —— 所以写代码前一定要判断自己是不是 owner：</p>
+    <pre><code>public void AddScore()
+{
+    // 只有 owner 才真正加分
+    if (!Networking.LocalPlayer.IsOwner(gameObject)) return;
+    score += 1;
+}</code></pre>
+
+    <blockquote class="warn"><strong>别硬改：</strong>如果想让别的玩家加分，应该先请求所有权（第 4 篇），而不是在对方端直接改变量 —— 那是改不进去的。</blockquote>
+
+    <h2>3. OnDeserialization()：收到数据后做什么</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L02_02_ondeserialization.png" alt="OnDeserialization 流程">
+      <div class="caption">图：数据到达 → 自动回调 → 你在这里刷新 UI</div>
+    </div>
+
+    <p>当其他端收到同步数据时，Udon 会把新值写进变量，然后<strong>自动调用</strong> <code>OnDeserialization()</code>。这是你更新 UI、播放反馈的地方：</p>
+    <pre><code>public override void OnDeserialization()
+{
+    // 同步数据到了，刷新计分板文字
+    scoreText.text = "分数：" + score.ToString();
+}</code></pre>
+
+    <blockquote class="tip"><strong>注意：</strong>自己改变量的那端不会收到回调（数据本来就是自己写的），所以 owner 端要自己顺手刷新 UI。</blockquote>
+
+    <h2>4. [SerializeField] 与 [UdonSynced] 组合</h2>
+    <p>两个属性可以同时用：<code>[SerializeField]</code> 让变量在 Inspector 里可见可配（UdonSharp 里必须用它才能在面板显示），<code>[UdonSynced]</code> 让它同步。顺序无所谓：</p>
+    <pre><code>[SerializeField, UdonSynced] public int startScore; // 面板可配 + 网络同步</code></pre>
+
+    <h2>5. 完整示例：同步分数</h2>
+    <pre><code>using UdonSharp;
+using UnityEngine;
+using VRC.SDKBase;
+
+public class ScoreComponent : UdonSharpBehaviour
+{
+    [SerializeField] private TMPro.TextMeshProUGUI scoreText;
+    [SerializeField, UdonSynced] private int score;
+
+    public override void OnDeserialization()
+    {
+        // 其他端收到新分数，刷新显示
+        scoreText.text = "分数：" + score.ToString();
+    }
+
+    public void AddScore()
+    {
+        if (!Networking.LocalPlayer.IsOwner(gameObject)) return;
+        score += 1;
+        scoreText.text = "分数：" + score.ToString(); // owner 自己刷新
+    }
+}</code></pre>
+
+    <blockquote class="warn"><strong>常见坑：</strong>收到数据后在 OnDeserialization 里又去改同一个同步变量，会造成「同步回环」（A 发 → B 改回 → A 又收到）。回调里只读、只刷新显示。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能写出带 [UdonSynced] 的变量声明</li>
+      <li>知道只有 owner 能修改同步变量</li>
+      <li>会在 OnDeserialization() 里刷新 UI</li>
+      <li>知道 [SerializeField] 和 [UdonSynced] 可以组合使用</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-01.html">← 上一章：为什么要同步</a>
+      <a class="next-btn" href="lesson-03.html">下一章：同步事件 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 6 篇：速查表</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Blender 建模入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 建模是什么</a></li>
+      <li><a href="lesson-02.html">2. Blender 基础操作</a></li>
+      <li><a href="lesson-03.html">3. 基础建模操作</a></li>
+      <li><a href="lesson-04.html">4. UV 与材质</a></li>
+      <li><a href="lesson-05.html">5. 导出到 Unity</a></li>
+      <li><a href="lesson-06.html" class="active">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 6 篇：速查表 — 快捷键、常见问题、进阶路线</h1>
+    <p>学完前五篇，你已经能把一个模型从 Blender 一路送进 VRChat。这篇把整套课程浓缩成三张表：建模时贴在屏幕边的快捷键、出问题先查的对照表、以及继续前进的路线图。</p>
+
+    <h2>1. 快捷键速查表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_01_cheatsheet.png" alt="快捷键速查表">
+      <div class="caption">图：12 个键覆盖建模 90% 的操作 —— 先记住 G/R/S/E/Tab 五个</div>
+    </div>
+
+    <table>
+      <tr><th>快捷键</th><th>功能</th><th>记忆点</th></tr>
+      <tr><td><code>Tab</code></td><td>对象模式 / 编辑模式切换</td><td>建模的门把手，先记这个</td></tr>
+      <tr><td><code>G / R / S</code></td><td>移动 / 旋转 / 缩放</td><td>加 X/Y/Z 锁定轴向，加数字精确输入</td></tr>
+      <tr><td><code>E</code></td><td>挤出 Extrude</td><td>编辑模式下选面/边/点后按</td></tr>
+      <tr><td><code>Ctrl+R</code></td><td>环切 Loop Cut</td><td>加分段；滚轮调圈数</td></tr>
+      <tr><td><code>A</code></td><td>全选</td><td>Alt+A 取消全选</td></tr>
+      <tr><td><code>Z</code></td><td>线框 / 实体显示切换</td><td>快速看内部结构</td></tr>
+      <tr><td><code>Shift+右键</code></td><td>放置 3D 游标</td><td>新物体生成在游标位置</td></tr>
+      <tr><td><code>Ctrl+Z</code></td><td>撤销</td><td>建模保险丝</td></tr>
+      <tr><td><code>X</code></td><td>删除</td><td>Del 键也行</td></tr>
+      <tr><td><code>Ctrl+A</code></td><td>应用变换</td><td>导出前必做（含 Apply 修改器）</td></tr>
+      <tr><td><code>Shift+A</code></td><td>添加物体</td><td>菜单里选 Mesh → Cube 等</td></tr>
+      <tr><td><code>1 / 3 / 7</code></td><td>前 / 右 / 顶 正交视图</td><td>小键盘；5 切透视</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>记忆策略：</strong>第一周只强迫自己用 G / R / S / E / Tab 五个键，其他键查到才用。一周后自然就记住了 —— 快捷键是「用熟」的不是「背熟」的。</blockquote>
+
+    <h2>2. 常见问题对照表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_02_common_issues.png" alt="常见问题对照表">
+      <div class="caption">图：出问题先查这张表 —— 八成问题出在法线和单位</div>
+    </div>
+
+    <table>
+      <tr><th>问题现象</th><th>常见原因</th><th>解决办法</th></tr>
+      <tr><td>模型是黑的 / 半透明</td><td>法线方向反了</td><td>编辑模式全选 → <code>Shift+N</code> 重算；必要时 Flip Normals 再导出</td></tr>
+      <tr><td>导入后巨大或微小</td><td>单位或 Scale 不对</td><td>确认 Blender 单位是米，导出勾 Apply Transforms，Unity Scale Factor = 1</td></tr>
+      <tr><td>导出后发白没贴图</td><td>材质 / 贴图没带上</td><td>FBX 勾选嵌入贴图，或贴图放 Assets 重新指定</td></tr>
+      <tr><td>面数爆炸、进世界卡</td><td>细分 / 网格太密</td><td>看三角面数统计，降细分等级，用减面修改器或 LOD</td></tr>
+      <tr><td>位置 / 朝向不对</td><td>没应用变换</td><td>导出前 <code>Ctrl+A</code> 应用全部变换，再重新导出</td></tr>
+      <tr><td>布尔后破面烂边</td><td>布尔网格质量差</td><td>布尔前先 Ctrl+A 并检查法线；必要时手动补面</td></tr>
+    </table>
+
+    <h2>3. 进阶路线图</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L06_03_roadmap.png" alt="进阶路线图">
+      <div class="caption">图：入门 → 熟练 → 进阶 → 精通，每一步都建立在「把东西做出来」上</div>
+    </div>
+
+    <p>接下来怎么走：</p>
+    <ul>
+      <li><strong>入门（1 周）</strong>：把本教程的箱子 → 椅子再做两遍，直到不查教程</li>
+      <li><strong>熟练（2-4 周）</strong>：用 E / Ctrl+R / 镜像做桌、凳、柜、路牌等小物件，每个都导进 VRChat 测试</li>
+      <li><strong>进阶（1-2 月）</strong>：学会展 UV + 画贴图 + 优化面数，做出「能直接放世界」的完整资产</li>
+      <li><strong>精通（长期）</strong>：整套场景资产制作，面数/贴图预算按 VRChat 性能规范执行</li>
+    </ul>
+
+    <blockquote class="warn"><strong>最后一句：</strong>建模是手艺，不是知识。看十小时教程不如亲手做十个小时。把椅子做完、导出、在 VRChat 里看到它的那一刻，你就正式入门了。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>能不看表说出 G / R / S / E / Tab 的用途</li>
+      <li>遇到黑面、尺寸不对、没贴图知道先查对照表</li>
+      <li>明确了自己接下来 1 个月的练习计划</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-05.html">← 上一章：导出到 Unity</a>
+      <a class="next-btn" href="index.html">回到首页 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

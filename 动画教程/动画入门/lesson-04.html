@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：物体动画与交互</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 动画入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 动画是什么</a></li>
+      <li><a href="lesson-02.html">2. Animator 状态机</a></li>
+      <li><a href="lesson-03.html">3. 动画剪辑</a></li>
+      <li><a href="lesson-04.html" class="active">4. 物体动画与交互</a></li>
+      <li><a href="lesson-05.html">5. 动手：开关门</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：物体动画与交互 — 开门、按钮反馈</h1>
+    <p>动画做出来是为了"被触发"。这一篇把动画和 VRChat 的交互串起来：玩家碰一下 → 动画播放。</p>
+
+    <h2>1. 交互 → 动画 的完整链路</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_interact_flow.png" alt="交互流程">
+      <div class="caption">图：Interact（玩家操作）→ Udon（处理）→ SetBool → Animator → 动画切换</div>
+    </div>
+
+    <ol>
+      <li><strong>玩家交互</strong>：VRC_Interactable / UIShape 被按、或碰撞触发</li>
+      <li><strong>Udon 组件</strong>：收到信号，判断逻辑（状态、权限）</li>
+      <li><strong>SetBool</strong>：把参数写给 Animator</li>
+      <li><strong>Animator</strong>：根据参数条件切换状态和动画</li>
+    </ol>
+
+    <blockquote class="tip">这条链路正好对应你项目的架构：<strong>Trigger（Interact）→ SignalSender（路由）→ Component（Udon 逻辑）→ Animator（表现）</strong>。</blockquote>
+
+    <h2>2. 按钮反馈动画</h2>
+    <p>除了功能动画，别忘了"反馈动画"——按钮按下要有下沉/变色，门开了要有灯亮。反馈动画让世界"活"：</p>
+    <ul>
+      <li><strong>按下反馈</strong>：按钮 Clip 下移 2cm，0.1s</li>
+      <li><strong>状态反馈</strong>：灯、提示条随开关变色</li>
+      <li><strong>声音配合</strong>：动画切换时播音效（AudioSource，见《音频教程》）</li>
+    </ul>
+
+    <h2>3. 常见坑</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_pitfalls.png" alt="常见坑">
+      <div class="caption">图：Udon 抢动画控制、参数名不一致、Transform 冲突</div>
+    </div>
+
+    <table>
+      <tr><th>坑</th><th>现象</th><th>解法</th></tr>
+      <tr><td><strong>Udon 和动画抢控制</strong></td><td>脚本每帧改位置，动画不生效</td><td>同一属性别同时被动画和脚本写</td></tr>
+      <tr><td><strong>参数名不一致</strong></td><td>SetBool 没反应</td><td>核对 Animator 里的参数名（不报错！）</td></tr>
+      <tr><td><strong>多 Animator 冲突</strong></td><td>子物体动画被父物体影响</td><td>动画只动自己的 Transform</td></tr>
+    </table>
+
+    <blockquote class="warn"><strong>黄金法则：</strong>一个属性，一个主人。要么动画管，要么脚本管，别两个都碰同一个 Transform。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>做了一条 Interact → Udon → Animator 的链路</li>
+      <li>给按钮加了按下反馈动画</li>
+      <li>知道"一个属性一个主人"的黄金法则</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章</a>
+      <a class="next-btn" href="lesson-05.html">下一章：动手做开关门 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

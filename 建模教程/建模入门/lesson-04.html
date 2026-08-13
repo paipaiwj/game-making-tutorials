@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：UV 与材质</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Blender 建模入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 建模是什么</a></li>
+      <li><a href="lesson-02.html">2. Blender 基础操作</a></li>
+      <li><a href="lesson-03.html">3. 基础建模操作</a></li>
+      <li><a href="lesson-04.html" class="active">4. UV 与材质</a></li>
+      <li><a href="lesson-05.html">5. 导出到 Unity</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：UV 与材质 — 给模型上色</h1>
+    <p>网格决定了模型的<strong>形状</strong>，而<strong>颜色和细节</strong>来自材质与贴图。想让箱子有木纹、有贴纸，就要懂 UV 和材质面板。本篇也讲清楚 VRChat 里贴图尺寸的讲究。</p>
+
+    <h2>1. 什么是 UV（贴图坐标）</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_uv_unwrap.png" alt="UV 展开">
+      <div class="caption">图：UV 展开 = 把 3D 表面「摊平」成一张 2D 地图</div>
+    </div>
+
+    <p>想象你给一个立方体包礼物纸：把包装纸摊开，它是一张平面。UV 就是这个「摊平后的坐标」—— 它告诉贴图图片：<strong>模型的每个面，颜色从图片的哪一块取</strong>。</p>
+    <ul>
+      <li>U = 图片的横向坐标，V = 图片的纵向坐标（所以叫 UV）</li>
+      <li>没有 UV，贴图会像贴纸乱贴一样：拉花、错位、颜色乱</li>
+      <li>简单物体（箱子、椅子）Blender 自动展开就够；复杂物体要手动切缝（Mark Seam）</li>
+    </ul>
+
+    <h2>2. 展 UV 的操作</h2>
+    <ol>
+      <li>编辑模式（<code>Tab</code>）→ 按 <code>A</code> 全选所有面</li>
+      <li>按 <code>U</code> 打开 UV 菜单 → 选 <code>Unwrap</code>（智能展开 Smart UV Project 也可）</li>
+      <li>顶部切换出 UV 编辑器窗口（或把窗口一角拖成两栏），看到摊平后的形状</li>
+      <li>形状越方正、越少拉伸，贴图效果越好</li>
+    </ol>
+
+    <blockquote class="tip"><strong>判断拉伸：</strong>UV 编辑器里带棋盘格贴图检查。棋盘格看起来变形得越厉害，说明这个面 UV 拉伸越严重 —— 大块复杂表面（墙面、桌面）建议手动 Mark Seam 切开再 Unwrap。</blockquote>
+
+    <h2>3. 材质面板：上色</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_material.png" alt="材质与贴图流程">
+      <div class="caption">图：建模 → 展 UV → 画贴图 → 建材质 → 指定贴图</div>
+    </div>
+
+    <ol>
+      <li>选中模型 → 右侧属性面板点<strong>材质（球图标）</strong></li>
+      <li>点 <code>New</code> 新建材质，起个名字（如 box_wood）</li>
+      <li>只想要纯色？<code>Base Color</code>（基础色）直接选颜色</li>
+      <li>想要贴图？Base Color 右侧小圆点 → Image Texture → 打开你的贴图图片</li>
+      <li>如果图片显示位置不对，回第 2 步重新展 UV</li>
+    </ol>
+
+    <blockquote class="warn"><strong>VRChat 材质注意：</strong>VRChat 世界用的是 PBR 材质流程。Blender 里能预览的效果（如 Cycles 光照），导入 Unity 后要换成 Unity 的 Standard/PBR Shader 重新调 —— 贴图本身（颜色贴图）可以无缝带过去，光照效果会不同，这很正常。</blockquote>
+
+    <h2>4. 贴图尺寸对 VRChat 的意义</h2>
+    <table>
+      <tr><th>尺寸</th><th>用途</th><th>说明</th></tr>
+      <tr><td><strong>512</strong></td><td>小道具</td><td>杯子、球、小装饰 —— 完全够</td></tr>
+      <tr><td><strong>1024</strong></td><td>常规道具/家具</td><td>箱子、椅子、门 —— VRChat 最常用</td></tr>
+      <tr><td><strong>2048</strong></td><td>大表面/重点物件</td><td>墙面、招牌、展示品 —— 已是世界级贴图上限附近</td></tr>
+    </table>
+
+    <p>贴图越大越清晰，但也越吃<strong>显存（VRAM）</strong>。VRChat 里同时显示的贴图总量决定世界卡不卡：</p>
+    <ul>
+      <li>小物件用 512/1024，别一上来就 4096</li>
+      <li>多个小物件可以共用一张贴图（合图/图集），一个物体只采样一次贴图最省</li>
+      <li>贴图格式推荐 PNG（带透明时）或 JPG（无透明压体积）</li>
+    </ul>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解 UV 是「3D 表面到 2D 图片的映射」</li>
+      <li>会全选 → U 菜单 → Unwrap 展 UV</li>
+      <li>会建材质、改 Base Color、指定贴图</li>
+      <li>知道 VRChat 常用贴图尺寸 1024/2048，不无脑用大贴图</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章：基础建模操作</a>
+      <a class="next-btn" href="lesson-05.html">下一章：导出到 Unity →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：实战：给露营场景定色调</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 色彩入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 色彩基础</a></li>
+      <li><a href="lesson-02.html">2. 配色方案</a></li>
+      <li><a href="lesson-03.html">3. 色彩情绪</a></li>
+      <li><a href="lesson-04.html">4. Unity 色彩实践</a></li>
+      <li><a href="lesson-05.html" class="active">5. 实战：露营场景</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：实战：给露营场景定色调</h1>
+    <p>目标：一个「夜晚 · 篝火」的露营场景，要<strong>温馨带一点神秘</strong>。素材不用多 —— 帐篷、篝火、树木、夜空，按下面五步走。</p>
+
+    <h2>五步流程</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_steps.png" alt="实战五步">
+      <div class="caption">图：定情绪 → 选配色 → 调天空和主光 → 材质统一色板 → 后处理微调</div>
+    </div>
+
+    <h2>步骤 1：定情绪</h2>
+    <p>写一句话需求：<strong>「温馨 + 一点神秘：暖火把周围照亮，远处理在深蓝夜色里」</strong>。这句话写下来，之后每一步调色都对照它。</p>
+
+    <h2>步骤 2：选配色方案</h2>
+    <p>夜晚场景用<strong>分裂互补</strong>：主色夜空深蓝，强调色篝火橙黄（蓝色的互补色是橙色，用橙+红橙就构成分裂互补），辅色用近似于蓝的墨绿、暖棕。</p>
+    <blockquote class="tip"><strong>为什么是它：</strong>纯互补（蓝+橙）对比最强适合按钮，但大面积看会累；分裂互补保留了「蓝橙对比」的浪漫感，又耐看 —— 正好配「温馨+神秘」。</blockquote>
+
+    <h2>步骤 3：调天空盒和主光</h2>
+    <ul>
+      <li><strong>天空盒</strong>：深蓝夜空，Tint 微微偏紫（神秘感）</li>
+      <li><strong>主光</strong>：Directional Light 模拟月光 → 冷色 6500K 以上，强度压低（0.3-0.5）</li>
+      <li><strong>篝火光</strong>：加一盏 Point Light 在火堆处 → 暖色 2800-3200K，强度高、范围小</li>
+      <li><strong>环境光</strong>：设为深蓝灰 —— 阴影发蓝不发黑，符合「阴影冷」</li>
+    </ul>
+
+    <h2>步骤 4：材质统一色板</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_palette.png" alt="露营场景色板">
+      <div class="caption">图：本场景色板 —— 主色 60%、辅色 30%、强调色 10%</div>
+    </div>
+
+    <ul>
+      <li><strong>主色（大面积）</strong>：夜空深蓝 <code>#1C2B4A</code>、树影墨绿 <code>#2F4A3A</code>、大地暖棕 <code>#8A6A4F</code></li>
+      <li><strong>辅色（细节）</strong>：木柴深棕 <code>#5A3E2B</code>、原木浅棕 <code>#A88B6A</code>、草绿 <code>#4A5D46</code></li>
+      <li><strong>强调色（光源/交互物）</strong>：篝火橙 <code>#FF8C42</code>、暖黄 <code>#FFD166</code>、暖白 <code>#FFE8D6</code></li>
+    </ul>
+    <p>把这张色板做成一个备忘图（截图放桌面或场景里），所有材质 Base Color 从里面取，<strong>禁止手写新颜色</strong>。面积比大约 6:3:1，画面才稳。</p>
+
+    <blockquote class="warn"><strong>常见翻车：</strong>给材质加了自己喜欢的蓝色做装饰 —— 色板外的新色相会把「蓝橙对比」冲散。想加变化，就加色板的「变体」（饱和度/明度变体），不加新色相。</blockquote>
+
+    <h2>步骤 5：后处理微调</h2>
+    <ul>
+      <li><strong>Color Adjustments</strong>：曝光 -0.2 压暗夜空，对比度 +10 让火堆更亮，饱和度保持或微降（夜场景别太艳）</li>
+      <li><strong>White Balance</strong>：画面整体偏黄就把 Temperature 往冷拉一点，反之加暖 —— 目标是「火堆暖、夜空冷」各归其位</li>
+      <li><strong>Tonemapping</strong>：选 ACES，高光（火苗）不刺眼、暗部不发灰</li>
+      <li><strong>雾</strong>：开启 Fog，深蓝灰色、低密度 —— 远处树木融入夜色，神秘感拉满</li>
+    </ul>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>用一句话写出了场景的情绪定位</li>
+      <li>能说出自己用了哪种配色方案、为什么</li>
+      <li>天空盒、月光（冷）、篝火（暖）三个颜色各就各位</li>
+      <li>所有材质颜色来自色板，没有色板外的颜色</li>
+      <li>后处理只做了微调，没有靠它「救」材质</li>
+      <li>截图前后对比：白天默认光 vs 调色后，能说出差在哪</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一章：Unity 色彩实践</a>
+      <a class="next-btn" href="lesson-06.html">下一章：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

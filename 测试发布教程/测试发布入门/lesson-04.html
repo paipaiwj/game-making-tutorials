@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 4 篇：上传发布</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 测试与发布入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要测试</a></li>
+      <li><a href="lesson-02.html">2. 本地测试</a></li>
+      <li><a href="lesson-03.html">3. 性能检查</a></li>
+      <li><a href="lesson-04.html" class="active">4. 上传发布</a></li>
+      <li><a href="lesson-05.html">5. 实战：发布一个世界</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 4 篇：上传发布 — 发布流程、命名规范、版本管理</h1>
+    <p>测试都通过了，终于到了把世界交给全 VRChat 的时刻。发布不难，但<strong>发布前的一串小设置</strong>决定了别人找不找得到你、怎么看你。</p>
+
+    <h2>1. 上传流程：SDK 面板三步</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_01_publish_flow.png" alt="上传发布流程">
+      <div class="caption">图：填写信息 → Build &amp; Test → Publish → 完成</div>
+    </div>
+
+    <ol>
+      <li>打开 <strong>VRChat SDK → Show Control Panel</strong>，进入 Content Manager</li>
+      <li>确认场景是<strong>当前打开的场景</strong>（坑：开错了场景传上去就是老世界）</li>
+      <li>填写世界名称、描述，上传预览图</li>
+      <li>点击 <strong>Publish</strong>，等待构建与上传进度完成</li>
+      <li>首次发布预览图需要审核通过，审核期间世界可能不可见</li>
+    </ol>
+
+    <h2>2. 世界命名与描述规范</h2>
+    <ul>
+      <li><strong>名称：</strong>简洁、能搜到 —— 用你的世界核心卖点命名，别用「test1」「新建世界」这类</li>
+      <li><strong>描述：</strong>写清楚玩法、人数建议、注意事项（如「建议 4 人游玩」「需要 PC 模式」）</li>
+      <li><strong>语言：</strong>面向谁就写谁的语言；面向国际就写英文</li>
+    </ul>
+
+    <blockquote class="warn"><strong>预览图会决定第一印象：</strong>别人在世界的缩略图列表里看到的就是它。别用默认灰屏 —— 传一张能代表世界亮点、光线充足的截图。预览图在发布后仍可更新，更新后需要重新审核。</blockquote>
+
+    <h2>3. 版本管理：更新是覆盖式的！</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L04_02_update_flow.png" alt="版本更新流程">
+      <div class="caption">图：修改 → Build &amp; Test → 重新 Publish —— 同一世界 ID，内容被覆盖</div>
+    </div>
+
+    <p>VRChat 世界没有「版本号」概念：<strong>每次重新 Publish 都是覆盖式更新</strong>，旧版本不存在。这带来三个必须记住的规则：</p>
+    <ul>
+      <li><strong>改完必须重新上传：</strong>本地改了但没 Publish，线上永远是旧内容</li>
+      <li><strong>上传失败 = 还是旧版：</strong>看到上传报错就修，别以为「反正传过了」</li>
+      <li><strong>回滚靠备份：</strong>想退回旧版本，只能靠 git 提交记录或备份的工程重新上传</li>
+    </ul>
+
+    <blockquote class="warn"><strong>最容易误解的事：</strong>你在更新前就进入的世界，即使作者更新了，你的会话里仍是旧版（世界不会在会话中重载）。验证更新是否生效，要<strong>退出后重新进入</strong>。</blockquote>
+
+    <h2>4. 发布后测试：重新进世界验证</h2>
+    <p>上传完成 ≠ 结束。发布后立刻：</p>
+    <ol>
+      <li>在 VRChat 里搜索你的世界名称，确认能搜到、缩略图正确</li>
+      <li>以「陌生玩家」身份进入（换一个不常用的账号，或叫朋友进）</li>
+      <li>完整走一遍玩法流程，确认线上内容和本地一致</li>
+    </ol>
+
+    <blockquote class="tip">「我自己进过没问题」≈「在编辑器和 Build &amp; Test 里没问题」之间还有一层 —— 线上世界加载的是上传的构建产物。所以发布后验证这步不能省，发现不对立刻修、立刻重传。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>会走完整的发布流程（信息 → Build &amp; Test → Publish）</li>
+      <li>知道世界命名和描述的注意事项</li>
+      <li>理解了「覆盖式更新」和回滚只能靠备份</li>
+      <li>发布后会重新进世界验证新内容</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-03.html">← 上一章：性能检查</a>
+      <a class="next-btn" href="lesson-05.html">下一章：实战：发布一个世界 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

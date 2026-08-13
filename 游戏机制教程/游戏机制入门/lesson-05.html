@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 5 篇：动手做抢答小游戏</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 游戏机制入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 机制是什么</a></li>
+      <li><a href="lesson-02.html">2. 状态与变量</a></li>
+      <li><a href="lesson-03.html">3. 计分与计时</a></li>
+      <li><a href="lesson-04.html">4. 胜负与重置</a></li>
+      <li><a href="lesson-05.html" class="active">5. 动手：抢答小游戏</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 5 篇：动手做抢答小游戏</h1>
+    <p>把前四篇串起来：状态机 + 计分 + 计时 + 胜负 + 重置，做一个<strong>抢答得分</strong>小游戏。规则：玩家按按钮抢答，答对 +10 分，先到 100 分获胜。</p>
+
+    <div class="img-box">
+      <img src="教程资源/L05_01_steps.png" alt="制作步骤">
+      <div class="caption">图：五步流程 — 定规则 → 搭场景 → 写逻辑 → 连信号 → 测试</div>
+    </div>
+
+    <h2>第一步：定规则（一句话）</h2>
+    <p>"玩家在 60 秒内按按钮抢答，答对加 10 分，先到 100 分获胜。"—— 写在纸上，对照做。</p>
+
+    <h2>第二步：搭场景</h2>
+    <ol>
+      <li>一个可交互按钮（碰撞体 + VRC_Interactable 或 UIShape）</li>
+      <li>一个 Canvas：分数文本 + 倒计时文本 + 状态提示文本</li>
+      <li>一个空物体 <code>GameManager</code>（挂逻辑）</li>
+    </ol>
+
+    <h2>第三步：写组件（按你的架构）</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L05_02_result.png" alt="小游戏结构">
+      <div class="caption">图：GameManager / Score / Timer / Scoreboard 四个组件 + 信号流</div>
+    </div>
+
+    <pre><code>// GameManagerComponent.cs（状态机 + 胜负 + 重置）
+public class GameManagerComponent : UdonSharpBehaviour
+{
+    public enum GameState { Ready, Playing, Over }
+    [UdonSynced] public int state = (int)GameState.Ready;
+
+    public void StartGame() { state = (int)GameState.Playing; }
+    public void EndGame()   { state = (int)GameState.Over; }
+    public void ResetAll()  { state = (int)GameState.Ready; }
+    public bool IsPlaying() { return state == (int)GameState.Playing; }
+}</code></pre>
+
+    <pre><code>// ScoreComponent.cs（计分 + 防重复 + 广播）
+public class ScoreComponent : UdonSharpBehaviour
+{
+    public GameManagerComponent manager;
+    [UdonSynced] public int score = 0;
+    private bool alreadyScored = false;
+
+    public void OnButtonPressed()
+    {
+        if (!manager.IsPlaying() || alreadyScored) return;
+        alreadyScored = true;
+        score += 10;
+        if (score >= 100) manager.EndGame();   // 胜负判定
+    }
+}</code></pre>
+
+    <h2>第四步：连信号</h2>
+    <ul>
+      <li>按钮 <strong>Trigger</strong>（Interact）→ <code>SignalSender</code> → ScoreComponent.OnButtonPressed</li>
+      <li>倒计时 <strong>TimerComponent</strong> 时间到 → 信号 → manager.StartGame() / EndGame()</li>
+      <li>分数变化 → 信号 → <strong>ScoreboardComponent</strong> 更新 UI</li>
+    </ul>
+
+    <h2>第五步：测试</h2>
+    <ol>
+      <li>Build &amp; Test 单人试玩：规则是否成立？</li>
+      <li>开第二个客户端（双开）测试同步：分数是否一致？</li>
+      <li>按你的检查清单逐条打勾：没开始能得分吗？结束后还能按吗？重开清零了吗？</li>
+    </ol>
+
+    <blockquote class="tip">第一次能玩就成功了。之后再加：抢答音效、按钮特效、名次结算、每轮新题目 —— 但记住：机制通了再美化。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>完成了一个可玩的抢答小游戏</li>
+      <li>状态判定拦住了"没开始/已结束"的得分</li>
+      <li>分数显示在 UI 上且同步正确</li>
+      <li>重置后能完整再来一局</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-04.html">← 上一章</a>
+      <a class="next-btn" href="lesson-06.html">下一章：速查表 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

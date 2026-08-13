@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 1 篇：游戏机制是什么</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 游戏机制入门</h1>
+    <ol>
+      <li><a href="lesson-01.html" class="active">1. 机制是什么</a></li>
+      <li><a href="lesson-02.html">2. 状态与变量</a></li>
+      <li><a href="lesson-03.html">3. 计分与计时</a></li>
+      <li><a href="lesson-04.html">4. 胜负与重置</a></li>
+      <li><a href="lesson-05.html">5. 动手：抢答小游戏</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 1 篇：游戏机制是什么 — 目标、规则、反馈、挑战</h1>
+    <p>做游戏的第一步不是建模，也不是写代码，而是<strong>想清楚规则</strong>。游戏机制（Game Mechanic）就是游戏的规则：玩家能做什么、世界怎么回应。</p>
+
+    <h2>1. 机制的四大要素</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_01_what_is_mechanic.png" alt="机制四要素">
+      <div class="caption">图：目标、规则、反馈、挑战 —— 一个好游戏缺一不可</div>
+    </div>
+
+    <table>
+      <tr><th>要素</th><th>是什么</th><th>例子（捉迷藏）</th></tr>
+      <tr><td><strong>目标</strong></td><td>玩家要达成的目的</td><td>找到所有藏起来的玩家</td></tr>
+      <tr><td><strong>规则</strong></td><td>能做什么、不能做什么</td><td>藏的人不能移动</td></tr>
+      <tr><td><strong>反馈</strong></td><td>世界对行为的回应</td><td>找到时音效 + 记一分</td></tr>
+      <tr><td><strong>挑战</strong></td><td>难度与成长曲线</td><td>时间限制越来越紧</td></tr>
+    </table>
+
+    <blockquote class="tip"><strong>机制 vs 画面：</strong>机制是"好玩"，画面是"好看"。机制不行，画面再精致也留不住人。VRChat 里大量「好逛但不好玩」的世界，就是只有画面没有机制。</blockquote>
+
+    <h2>2. 核心循环 Core Loop</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L01_02_core_loop.png" alt="核心循环">
+      <div class="caption">图：行动 → 反馈 → 推进 → 再行动，这是游戏的骨架</div>
+    </div>
+
+    <p>核心循环是玩家<strong>反复做的最小动作圈</strong>。小游戏通常只有一个循环，它越顺畅，游戏越好玩：</p>
+    <ul>
+      <li>扔飞镖 → 命中 → 加分 + 音效 → 解锁新飞镖 → 再扔</li>
+      <li>钓鱼 → 提竿 → 上钩 → 收获 → 换位置 → 再钓</li>
+      <li>抢答 → 按按钮 → 得分 → 领先 → 继续抢</li>
+    </ul>
+
+    <h2>3. 用一句话写规则</h2>
+    <p>开始做之前，先把游戏压缩成一句话。写不出来 = 还没想清楚。</p>
+    <pre><code>例子："玩家在 60 秒内按按钮抢答，答对加 10 分，先到 100 分获胜。"</code></pre>
+    <p>这句话里包含：时间（60 秒）、操作（按按钮）、规则（抢答）、计分（10 分）、目标（100 分获胜）—— 全是机制。</p>
+
+    <blockquote class="warn"><strong>建议：</strong>这句话写下来贴在屏幕边。写代码时每遇到"要不要加这个功能"，都拿它来对照 —— 与规则无关的功能先不做。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>理解了机制四要素（目标/规则/反馈/挑战）</li>
+      <li>能说出自己的游戏的核心循环</li>
+      <li>用一句话写出了自己的游戏规则</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="index.html">← 回到首页</a>
+      <a class="next-btn" href="lesson-02.html">下一章：状态与变量 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>

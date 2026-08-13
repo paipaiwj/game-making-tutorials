@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第 3 篇：性能检查</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h1>Unity 测试与发布入门</h1>
+    <ol>
+      <li><a href="lesson-01.html">1. 为什么要测试</a></li>
+      <li><a href="lesson-02.html">2. 本地测试</a></li>
+      <li><a href="lesson-03.html" class="active">3. 性能检查</a></li>
+      <li><a href="lesson-04.html">4. 上传发布</a></li>
+      <li><a href="lesson-05.html">5. 实战：发布一个世界</a></li>
+      <li><a href="lesson-06.html">6. 速查表</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <h1>第 3 篇：性能检查 — Stats 面板、Frame Debugger、性能报告</h1>
+    <p>「我能跑 120 帧」不代表玩家能跑。VRChat 玩家设备五花八门，本篇教你<strong>用数据而不是感觉</strong>判断世界卡不卡。</p>
+
+    <h2>1. Game 窗口 Stats 面板：性能体检表</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_01_stats_panel.png" alt="Stats 面板指标">
+      <div class="caption">图：Game 窗口右上角 → Stats，实时显示渲染指标</div>
+    </div>
+
+    <p>在 Game 窗口标题栏点 <strong>Stats</strong>（或 Game 视图右上角），弹出实时面板。重点看三个：</p>
+    <ul>
+      <li><strong>Draw Call：</strong>引擎一次「画命令」，越小越好，VRChat 世界建议控制在 60 以下</li>
+      <li><strong>SetPass calls：</strong>切换着色器 pass 的次数，越高越伤 GPU，理想 20 以下</li>
+      <li><strong>Tris / Verts：</strong>当前画面的三角面与顶点数，VRChat 性能报告会据此评级</li>
+    </ul>
+
+    <blockquote class="tip">Draw Call 破百就要警惕：先用下面第 2 节的 Frame Debugger 找到「谁在刷」，再对症下药 —— 而不是瞎删东西。</blockquote>
+
+    <h2>2. Frame Debugger：找到卡顿元凶</h2>
+    <p>菜单 <strong>Window → Analysis → Frame Debugger</strong>，运行中打开，点击 <strong>Enable</strong> 冻结一帧，左侧是这一帧的<strong>每一个绘制调用</strong>：</p>
+    <ul>
+      <li>点开任意一个 Draw Call，右侧显示它绘制的是哪个物体、什么材质</li>
+      <li>从头翻到尾，找「重复出现同一物体/材质」的 —— 那就是 Draw Call 的制造者</li>
+      <li>同一个物体被多个相机/阴影/透明渲染重复绘制时，也能在这里看见</li>
+    </ul>
+
+    <blockquote class="warn"><strong>阴影是隐形杀手：</strong>Frame Debugger 里常能看到一个物体被画 3-4 次（正常 + 阴影 + 反射）。实时光源越多，重复越多 —— 详见《渲染入门》第 4 篇的光照优化。</blockquote>
+
+    <h2>3. VRChat 性能报告：官方体检单</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_02_perf_report.png" alt="VRChat 性能报告">
+      <div class="caption">图：上传时自动生成 —— 关卡/对象/图形/音频逐项评级</div>
+    </div>
+
+    <p>执行 <strong>Build &amp; Test 或 Publish</strong> 时，VRChat SDK 会自动生成一份性能报告（Performance Report）：</p>
+    <ul>
+      <li><strong>Good（绿）：</strong>流畅运行，目标状态</li>
+      <li><strong>Medium（黄）：</strong>会降级渲染（去掉部分效果）</li>
+      <li><strong>Poor（红）：</strong>可能卡顿，甚至部分玩家打不开</li>
+    </ul>
+    <p>报出 Poor 不阻止发布，但体验会差。它从光照、碰撞体、音频、对象复杂度等多维度打分，点每一项能看到具体原因和建议。</p>
+
+    <h2>4. 常见性能杀手清单</h2>
+
+    <div class="img-box">
+      <img src="教程资源/L03_03_perf_killers.png" alt="性能杀手清单">
+      <div class="caption">图：实时光源 / 粒子 / 材质数 / 贴图大小 —— 排查卡顿按这个顺序来</div>
+    </div>
+
+    <table>
+      <tr><th>杀手</th><th>为什么伤</th><th>对策</th></tr>
+      <tr><td><strong>实时光源</strong></td><td>每个实时灯都要额外算一次阴影和光照</td><td>静态场景用烘焙光照，少用实时灯</td></tr>
+      <tr><td><strong>粒子系统</strong></td><td>粒子数量 × 存活时间 = 同时活跃的粒子总量</td><td>限制发射率和存活时间</td></tr>
+      <tr><td><strong>材质数量</strong></td><td>材质越多 Draw Call 越多</td><td>同类物体共用材质（Atlas 合并）</td></tr>
+      <tr><td><strong>贴图太大</strong></td><td>4K 贴图是显存/内存杀手</td><td>远处物体用 512/1024，压缩格式</td></tr>
+    </table>
+
+    <blockquote class="tip">本篇只讲「怎么发现和判断」，具体怎么优化（烘焙、LOD、图集）是《渲染入门》第 4 篇的内容 —— 测出问题后去那里翻解决方案。</blockquote>
+
+    <h2>学前检查清单</h2>
+    <ul class="checklist">
+      <li>会打开 Stats 面板并读出 Draw Call / Tris</li>
+      <li>会用 Frame Debugger 定位「谁在刷 Draw Call」</li>
+      <li>能看懂 VRChat 性能报告的 Good / Medium / Poor</li>
+      <li>记住了四大性能杀手（实时光/粒子/材质/贴图）</li>
+    </ul>
+
+    <div class="nav-row">
+      <a class="prev-btn" href="lesson-02.html">← 上一章：本地测试</a>
+      <a class="next-btn" href="lesson-04.html">下一章：上传发布 →</a>
+    </div>
+  </main>
+</div>
+</body>
+</html>
